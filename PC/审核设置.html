@@ -202,6 +202,8 @@
   .lv-high { background: #ffecec; color: #e60012; }
   .lv-medium { background: #fff7e6; color: #fa8c16; }
   .lv-low { background: #fff8e0; color: #d48806; }
+  .lv-info { background: #e6f7ff; color: #1890ff; }
+  .lv-hint { background: #f4f5f7; color: #8c8c8c; }
 
   /* 开关 */
   .switch {
@@ -507,7 +509,7 @@
           <div class="switch-item">
             <div class="switch-head">
               <span class="switch-name">冷却水温高</span>
-              <span class="lv-tag lv-high">高风险</span>
+              <span class="lv-tag lv-hint">停车提示</span>
               <span class="switch on" onclick="toggleSwitch(this)"></span>
             </div>
             <div class="auth-row">
@@ -541,7 +543,7 @@
           <div class="switch-item">
             <div class="switch-head">
               <span class="switch-name">SOC过低</span>
-              <span class="lv-tag lv-medium">中风险</span>
+              <span class="lv-tag lv-info">提示</span>
               <span class="switch on" onclick="toggleSwitch(this)"></span>
             </div>
             <div class="auth-row">

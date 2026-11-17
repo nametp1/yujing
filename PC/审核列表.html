@@ -221,6 +221,10 @@
   }
   .lv-high { background: #ffecec; color: #e60012; }
   .lv-medium { background: #fff7e6; color: #fa8c16; }
+  .lv-low  { background: #fff8e0; color: #d48806; }
+  .lv-info { background: #e6f7ff; color: #1890ff; }
+  .lv-hint { background: #f4f5f7; color: #8c8c8c; }
+
 
   .checkbox {
     width: 15px; height: 15px; border: 1px solid #cfd6df; border-radius: 3px;
@@ -645,7 +649,7 @@
                       </div>
                     </div>
                   </td>
-                  <td><span class="lv-tag lv-medium">中风险</span></td>
+                  <td><span class="lv-tag lv-low">低风险</span></td>
                   <td>2026-11-10 12:14:49</td>
                   <td>
                     <div class="device-empty">-</div>
@@ -697,7 +701,7 @@
                       </div>
                     </div>
                   </td>
-                  <td><span class="lv-tag lv-high">高风险</span></td>
+                  <td><span class="lv-tag lv-medium">中风险</span></td>
                   <td>2026-11-10 10:11:43</td>
                   <td>
                     <div class="device-name">TH1056CB0495</div>
@@ -708,7 +712,72 @@
                   <td><span class="cell-empty">-</span></td>
                   <td><a class="link-detail" onclick="showToast('查看详情')">详情</a></td>
                 </tr>
-              </tbody>
+              
+                  <tr>
+                  <td><span class="checkbox" onclick="toggleCheck(this)"></span></td>
+                  <td>
+                    <div class="event-cell">
+                      <div class="thumb">
+                        <svg width="36" height="28" viewBox="0 0 62 40" fill="none">
+                          <path d="M2 17 L2 9 L35 9 L35 17 Z" fill="#b8bcc2"/>
+                          <path d="M38 17 L38 8.5 L49 8.5 L55 17 Z" fill="#d94b4b"/>
+                          <rect x="1" y="17" width="55" height="4" rx="1.5" fill="#6b7280"/>
+                          <circle cx="13" cy="23" r="4.6" fill="#4b5563"/>
+                          <circle cx="45" cy="23" r="4.6" fill="#4b5563"/>
+                        </svg>
+                      </div>
+                      <div class="event-main">
+                        <div class="event-line1">
+                          <span class="event-name-cell">保养临期</span>
+                        </div>
+                        <div class="event-desc">距下次保养不足 50 小时</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="lv-tag lv-info">提示</span></td>
+                  <td>2026-11-10 09:20:11</td>
+                  <td>
+                    <div class="device-empty">-</div>
+                    <div class="device-name">搅拌车</div>
+                  </td>
+                  <td><span class="status-pending">待处理</span></td>
+                  <td><span class="cell-empty">-</span></td>
+                  <td><span class="cell-empty">-</span></td>
+                  <td><a class="link-detail" onclick="showToast('查看详情')">详情</a></td>
+                </tr>
+                  <tr>
+                  <td><span class="checkbox" onclick="toggleCheck(this)"></span></td>
+                  <td>
+                    <div class="event-cell">
+                      <div class="thumb">
+                        <svg width="36" height="28" viewBox="0 0 62 40" fill="none">
+                          <path d="M2 17 L2 9 L35 9 L35 17 Z" fill="#b8bcc2"/>
+                          <path d="M38 17 L38 8.5 L49 8.5 L55 17 Z" fill="#d94b4b"/>
+                          <rect x="1" y="17" width="55" height="4" rx="1.5" fill="#6b7280"/>
+                          <circle cx="13" cy="23" r="4.6" fill="#4b5563"/>
+                          <circle cx="45" cy="23" r="4.6" fill="#4b5563"/>
+                        </svg>
+                      </div>
+                      <div class="event-main">
+                        <div class="event-line1">
+                          <span class="event-name-cell">停车未熄火</span>
+                        </div>
+                        <div class="event-desc">停机后未熄火超过 10 分钟</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="lv-tag lv-hint">停车提示</span></td>
+                  <td>2026-11-10 08:05:33</td>
+                  <td>
+                    <div class="device-empty">-</div>
+                    <div class="device-name">搅拌车</div>
+                  </td>
+                  <td><span class="status-pending">待处理</span></td>
+                  <td><span class="cell-empty">-</span></td>
+                  <td><span class="cell-empty">-</span></td>
+                  <td><a class="link-detail" onclick="showToast('查看详情')">详情</a></td>
+                </tr>
+                </tbody>
             </table>
           </div>
 

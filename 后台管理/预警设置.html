@@ -1,258 +1,339 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>预警设置 - SanVIST 通用预警事件中心</title>
-  <style>
-  :root{--red:#29BECE;--red2:#e9f9fb;--blue:#1899a8;--green:#20b26b;--orange:#fa8c16;--ink:#202936;--muted:#657080;--line:#e5e9ef;--bg:#f4f6f8;--white:#fff;--shadow:0 6px 24px rgba(26,39,60,.09)}
-  *{box-sizing:border-box}
-  body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Arial,sans-serif;color:var(--ink);background:var(--bg)}
-  button,input,select,textarea{font:inherit}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>预警设置 - SanVIST 设备智能监控平台</title>
+<style>
+    :root{--red:#29BECE;--red2:#e9f9fb;--blue:#1899a8;--green:#20b26b;--orange:#fa8c16;--ink:#202936;--muted:#657080;--line:#e5e9ef;--bg:#f4f6f8;--white:#fff;--shadow:0 6px 24px rgba(26,39,60,.09)}
+    *{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Arial,sans-serif;color:var(--ink);background:var(--bg)}button,input,select,textarea{font:inherit}.logo{font-size:23px;font-weight:900;font-style:italic;color:var(--red);letter-spacing:-1px}.avatar{width:31px;height:31px;border-radius:50%;background:#dbe9ff;display:grid;place-items:center}.nav:hover{background:#f6f7f9}.nav.active{background:var(--red2);color:var(--red);font-weight:650}.nav.active small{background:#fff;color:var(--red)}
+    main{margin-left:218px;padding:88px 24px 30px;min-width:1050px}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:flex-end;align-items:center;margin-bottom:18px}.page-head h1{margin:0 0 4px;font-size:24px}.page-head p{margin:0;color:var(--muted)}
+    .btn{height:36px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:0 15px;cursor:pointer;color:#384353}.btn:hover{border-color:#aeb7c3}.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}.btn.link{border:0;color:var(--blue);padding:0 5px;background:none;height:auto}.btn.danger{color:var(--red)}
+    .card{background:#fff;border:1px solid #edf0f3;border-radius:10px;box-shadow:0 1px 3px rgba(20,35,55,.03);margin-bottom:16px}.filters{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.control{height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#4e5968;padding:0 11px;min-width:128px}.spacer{flex:1}.notice{padding:12px 15px;background:#eef7ff;color:#3574b8;border-radius:7px;margin:16px;display:flex;gap:10px}.notice b{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#4694ef;color:#fff;font-size:12px}
+    .table-wrap{overflow:auto;padding:0 16px}.table{width:100%;border-collapse:collapse;white-space:nowrap}.table th{background:#f7f8fa;color:#505b69;font-weight:600;text-align:left;border:1px solid var(--line);padding:11px 12px}.table td{padding:12px;border-bottom:1px solid var(--line);color:#3f4956}.table tr:hover td{background:#fafbfd}.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:12px}.tag.high{background:#e0f7fa;color:#1899a8}.tag.mid{background:#fff0dc;color:#ed7b0b}.tag.yellow{background:#fff7df;color:#ad7a00}.tag.green{background:#e9f7ef;color:#17945b}.tag.low{background:#eef2f5;color:#657080}.tag.info{background:#e9f7ef;color:#17945b}.tag.gray{background:#f0f2f4;color:#737d89}.dot:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}.pages .on{background:var(--red);color:#fff;border-color:var(--red)}.tab{padding:15px 2px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent}.tab.active{color:var(--red);border-color:var(--red);font-weight:650}.sub{display:block;font-size:12px;color:#929ba7;margin-top:1px}.arrow{color:#a3abb6}.drawer-head,.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.drawer-foot,.modal-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}.x{border:0;background:none;font-size:23px;color:#7d8793;cursor:pointer}.time-item:before{content:"";position:absolute;width:9px;height:9px;background:#fff;border:2px solid var(--blue);border-radius:50%;left:-25px;top:4px}.modal-body{padding:20px 24px;overflow:auto}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 18px}.field label{display:block;margin-bottom:6px;color:#4f5967}.field label i{color:var(--red);font-style:normal}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:#3d4652;background:#fff}.field textarea{min-height:68px;resize:vertical}.field.full{grid-column:1/-1}.radio-row{display:flex;gap:20px;padding-top:7px}.switch{width:36px;height:20px;border-radius:10px;background:#c8ced6;position:relative;display:inline-block;vertical-align:middle;cursor:pointer}.switch:after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.2s}.switch.on{background:var(--green)}.switch.on:after{left:18px}.toast{position:fixed;left:50%;top:78px;transform:translateX(-50%);background:#26313e;color:#fff;padding:10px 18px;border-radius:7px;z-index:300;box-shadow:var(--shadow);display:none}.toast.show{display:block}
+  
+    /* ===== 后台管理导航样式 ===== */
   .logo{font-size:23px;font-weight:900;font-style:italic;color:var(--red);letter-spacing:-1px}
-  main{margin-left:218px;padding:88px 24px 30px;min-width:1050px}
-  .page{display:none}
-  .page.active{display:block}
-  .btn{height:36px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:0 15px;cursor:pointer;color:#384353}
-  .btn:hover{border-color:#aeb7c3}
-  .btn.primary{background:var(--red);color:#fff;border-color:var(--red)}
-  .btn.link{border:0;color:var(--blue);padding:0 5px;background:none;height:auto}
-  .filters{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .control{height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#4e5968;padding:0 11px;min-width:128px}
-  .search{min-width:220px}
-  .spacer{flex:1}
-  .table-wrap{overflow:auto;padding:0 16px}
-  .table{width:100%;border-collapse:collapse;white-space:nowrap}
-  .table th{background:#f7f8fa;color:#505b69;font-weight:600;text-align:left;border:1px solid var(--line);padding:11px 12px}
-  .table td{padding:12px;border-bottom:1px solid var(--line);color:#3f4956}
-  .table tr:hover td{background:#fafbfd}
-  .footer{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
-  .pages{display:flex;gap:7px;align-items:center}
-  .pages span{width:31px;height:31px;border:1px solid var(--line);display:grid;place-items:center;border-radius:5px}
-  .pages .on{background:var(--red);color:#fff;border-color:var(--red)}
-  .modal-mask{display:none;position:fixed;inset:0;background:rgba(22,30,40,.42);z-index:30}
-  .modal-mask.open{display:block}
-  .modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
-  .modal-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
-  .x{border:0;background:none;font-size:23px;color:#7d8793;cursor:pointer}
-  .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:780px;max-height:88vh;background:#fff;border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column}
-  .modal-body{padding:20px 24px;overflow:auto}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 18px}
-  .field label{display:block;margin-bottom:6px;color:#4f5967}
-  .field label i{color:var(--red);font-style:normal}
-  .field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:#3d4652;background:#fff}
-  .field textarea{min-height:68px;resize:vertical}
-  .field.full{grid-column:1/-1}
-  .toast{position:fixed;left:50%;top:78px;transform:translateX(-50%);background:#26313e;color:#fff;padding:10px 18px;border-radius:7px;z-index:60;box-shadow:var(--shadow);display:none}
-  .toast.show{display:block}
-  .app-wrapper{display: flex; flex-direction: column; min-height: 100vh;}
-  .main-wrapper{display: flex; flex: 1; min-height: 0; overflow: hidden;}
-  .main-wrapper > main{flex: 1; min-width: 0; margin: 0; padding: 24px; min-height: 0; overflow-y: auto;}
-  .navbar{height: 50px; background: #172742; border-bottom: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0;}
-  .navbar-left{display: flex; align-items: center; gap: 8px;}
-  .navbar .logo{font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px;}
-  .navbar-right{display: flex; align-items: center; gap: 20px; font-size: 14px; color: rgba(255,255,255,.72);}
-  .navbar-item{display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color .2s;}
-  .navbar-item:hover{color: #fff;}
-  .sidebar-menu{list-style: none; padding: 8px 0; margin: 0;}
-  .sidebar-item{position: relative;}
-  .sidebar-link{display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 14px; color: rgba(255,255,255,.75); text-decoration: none; transition: all .2s; cursor: pointer;}
-  .sidebar-link:hover{color: #fff; background: rgba(255,255,255,.07);}
-  .sidebar-icon{width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
-  .sidebar-submenu{list-style: none; padding: 0; margin: 0;}
-  .sidebar-submenu .sidebar-link{padding-left: 42px; font-size: 13px;}
-  .sidebar-item.active > .sidebar-link, .sidebar-link.active{background: linear-gradient(90deg, rgba(41,190,206,0) 0%, #29BECE 100%); color: #fff; font-weight: 600; box-shadow: inset 3px 0 0 #29BECE;}
-  .cat-group td{background:#f7f9fb;font-weight:600}
-  .cat-caret{display:inline-block;width:0;height:0;border-left:6px solid #8b94a0;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
-  .cat-caret.closed{transform:rotate(0)}
-  .cat-group em{font-style:normal;font-size:12px;font-weight:500;color:#8b94a0;margin-left:8px}
-  .cat-child .cat-child .child-desc{color:#7a8290;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .lang-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .lang-head label em{font-style:normal;font-weight:400;color:#a6adb8;font-size:12px}
-  .lang-toggle{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#1899a8;background:none;border:none;cursor:pointer;font-family:inherit;padding:2px 0}
-  .lang-toggle:hover{color:#29BECE}
-  .lang-toggle svg{transition:transform .2s}
-  .lang-list{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;max-height:206px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:14px;background:#fcfdfe}
-  .lang-item{display:flex;align-items:center;gap:8px;min-width:0}
-  .lang-item span{width:62px;flex-shrink:0;font-size:13px;color:#4e5968;white-space:nowrap}
-  .lang-item input{flex:1;min-width:0;height:30px;border:1px solid var(--line);border-radius:5px;padding:0 9px;font-size:13px;font-family:inherit;outline:none;background:#fff}
-  .lang-item input:focus{border-color:#29BECE}
-  
-  /* 关联预警事件多选 */
-  .child-events{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ev-chip{display:inline-block;background:#f2f5f8;color:#5a6472;font-size:12px;padding:1px 7px;border-radius:4px;margin:1px 4px 1px 0}
-  .cell-empty{color:#b6bcc4}
-  .cat-child td[rowspan]{vertical-align:middle}
-  .cat-child .child-events{padding-top:10px;padding-bottom:10px}
-  .cfg-cats-head{font-size:12px;color:#9aa3af;padding:4px 10px 8px}
-  .cfg-cat{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:6px;cursor:pointer;font-size:13.5px;color:#3a4452;position:relative}
-  .cfg-cat:hover{background:#f5f9fa}
-  .cfg-cat.active{background:#e9f9fb;color:#1899a8;font-weight:500}
-  .cfg-cat-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .cfg-cat em{flex-shrink:0;font-style:normal;font-size:11px;color:#9aa3af;background:#f0f2f4;border-radius:9px;padding:1px 6px}
-  .cfg-cat-ops{display:none;gap:4px}
-  .cfg-cat:hover .cfg-cat-ops{display:flex}
-  .cfg-cat-ops b{font-weight:400;font-size:12px;color:#9aa3af;cursor:pointer;padding:0 2px}
-  .cfg-cat-ops b:hover{color:#1899a8}
-  .cfg-events-title b{font-size:15px;color:#1f2329}
-  .cfg-events-title em{font-style:normal;font-size:12px;color:#9aa3af;margin-left:8px}
-  .st-toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
-  .thing-col{font-family:Menlo,Consolas,monospace;font-size:12px;color:#657080;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
-  .desc-col{color:#7a8290;font-size:12.5px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  
-  /* ==== 从预警事件页补齐 ==== */
-  .drawer-mask,.modal-mask{display:none;position:fixed;inset:0;background:rgba(22,30,40,.42);z-index:30}
-  
-  /* ===== 管理后台深色主题导航 ===== */
-  .app-wrapper{display: flex; flex-direction: column; min-height: 100vh;}
+  .app-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+  .main-wrapper { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+  .main-wrapper > main { flex: 1; min-width: 0; margin: 0; padding: 24px; min-height: 0; overflow-y: auto; }
+  .navbar {
+    height: 50px; background: #172742; border-bottom: 1px solid rgba(255,255,255,.06);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; flex-shrink: 0;
+  }
+  .navbar-left { display: flex; align-items: center; gap: 8px; }
+  .navbar .logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .navbar-right { display: flex; align-items: center; gap: 20px; font-size: 14px; color: rgba(255,255,255,.72); }
+  .navbar-item { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color .2s; }
+  .navbar-item:hover { color: #fff; }
+  .sidebar {
+    width: 210px; background: #1E3255; border-right: 1px solid rgba(255,255,255,.06);
+    display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
+  }
+  .sidebar-menu { list-style: none; padding: 8px 0; margin: 0; }
+  .sidebar-item { position: relative; }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    font-size: 14px; color: rgba(255,255,255,.75); text-decoration: none;
+    transition: all .2s; cursor: pointer;
+  }
+  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,.07); }
+  .sidebar-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sidebar-submenu { list-style: none; padding: 0; margin: 0; }
+  .sidebar-submenu .sidebar-link { padding-left: 42px; font-size: 13px; }
   .sidebar-item.active > .sidebar-link,
-  .sidebar-link.active{background: linear-gradient(90deg, rgba(41,190,206,0) 0%, #29BECE 100%); color: #fff; font-weight: 600; box-shadow: inset 3px 0 0 #29BECE;}
+  .sidebar-link.active {
+    background: linear-gradient(90deg, rgba(41,190,206,0) 0%, #29BECE 100%);
+    color: #fff; font-weight: 600; box-shadow: inset 3px 0 0 #29BECE;
+  }
+
+  .ev-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:7px;padding:14px;background:#fcfdfe}
+  .ev-opt{display:flex;align-items:center;gap:9px;font-size:13px;color:#3f4956;cursor:pointer;padding:6px 8px;border-radius:5px;transition:background .12s}
+  .ev-opt:hover{background:#f2fbfc}
+  .ev-opt input{accent-color:#29BECE}
+  .ev-stat .tag{margin-right:6px}
+
+  .cfg-ev:hover{background:#f6fbfc}
+  .cfg-th:focus{border-color:#29BECE}
+  .ev-panel::-webkit-scrollbar{width:6px}
+  .ev-panel::-webkit-scrollbar-thumb{background:#d8dee6;border-radius:3px}
+  .cfg-ev{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:7px 16px 7px 34px;transition:background .12s}
+  .cfg-ev:hover{background:#f6fbfc}
+  .cfg-th{height:30px;border:1px solid #dfe4ea;border-radius:6px;padding:0 8px;font-size:12px;font-family:inherit;color:#3f4956;background:#fff;outline:none;min-width:116px;cursor:pointer;transition:border-color .16s}
+  .cfg-th:hover{border-color:#ade4ea}
+  .cfg-th:focus{border-color:#29BECE;box-shadow:0 0 0 2px rgba(41,190,206,.12)}
+  .cat-caret{display:inline-block;width:0;height:0;border-left:5px solid #9aa3af;border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;vertical-align:middle}
+  
+  .cfg-ev{gap:10px}
+  .cfg-ev{justify-content:space-between}
+  .dev-panel{flex:1;min-width:0;display:flex;flex-direction:column}
+  .dev-toolbar{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #f0f3f7;background:#fbfcfd}
+  .dev-all{display:flex;align-items:center;gap:6px;font-size:13px;color:#4a5462;cursor:pointer;white-space:nowrap}
+  .dev-all input{accent-color:#29BECE}
+  .dev-group-head{padding:9px 14px;background:#f5f7fa;font-size:13px;font-weight:600;color:#202936;position:sticky;top:0}
+  .dev-group-head em{font-style:normal;font-size:11px;font-weight:500;color:#8b94a0;margin-left:8px}
+  .dev-item{display:flex;align-items:center;gap:9px;padding:8px 14px 8px 26px;font-size:13px;color:#3f4956;cursor:pointer;border-bottom:1px solid #f6f8fa}
+  .dev-item:hover{background:#f6fbfc}
+  .dev-item input{width:15px;height:15px;accent-color:#29BECE;cursor:pointer}
+  .dev-sel-count{display:inline-flex;align-items:center;gap:5px;margin-right:auto;font-size:13px;color:#4a5462;background:#f2f5f8;border-radius:14px;padding:5px 14px}
+  .dev-sel-count b{color:#1899a8;font-size:15px}
+  .dh-name{padding-left:23px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dh-alias{text-align:center}
+  .dh-th{}
+
+  /* 设备阈值配置弹窗 */
+  .dm-title{display:flex;align-items:center;gap:10px}
+  .dm-icon{width:30px;height:30px;border-radius:8px;background:#e9f9fb;color:#1899a8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .dm-tag{font-size:12px;color:#1899a8;background:#e9f9fb;border-radius:11px;padding:3px 11px;font-weight:500}
+  .dm-search{display:flex;align-items:center;gap:8px;flex:1;height:32px;border:1px solid #e2e7ee;border-radius:7px;padding:0 11px;background:#fff;transition:border-color .16s}
+  .dm-search:focus-within{border-color:#29BECE;box-shadow:0 0 0 2px rgba(41,190,206,.1)}
+  .dm-search svg{color:#a8b0bb;flex-shrink:0}
+  .dm-search input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:13px;font-family:inherit;color:#202936}
+  .dm-search input::placeholder{color:#b6bcc4}
+
+  .dev-split{display:flex;gap:0;border:1px solid #e8ecf1;border-radius:10px;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+
+  .dev-toolbar{padding:11px 14px;gap:12px}
+  .dev-alias-txt{font-size:11.5px;letter-spacing:.3px;font-weight:500;color:#657080;font-family:ui-monospace,Menlo,monospace;text-align:center;background:#f4f6f8;border-radius:4px;padding:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dev-default{background:#f2fbfc}
+  .dev-default:hover{background:#e9f8fa}
+  .dev-default .dev-name{color:#1899a8;font-weight:500}
+  .dev-sel-count{display:inline-flex;align-items:center;gap:5px;margin-right:auto;font-size:13px;color:#4a5462;background:#f2f5f8;border-radius:14px;padding:5px 14px}
+  .dev-sel-count b{color:#1899a8;font-size:14px}
+  #deviceModal .modal-foot{background:#fbfcfd;border-top:1px solid #eef1f5}
+  #deviceModal .btn.primary{box-shadow:0 2px 8px rgba(41,190,206,.28)}
+  .footer{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+
+  #deviceModal{z-index:200}
+  #deviceModal .modal{box-shadow:0 24px 64px rgba(20,30,45,.32)}
+
   .pages{display:flex;gap:7px;align-items:center}
   .pages span{width:31px;height:31px;border:1px solid var(--line);display:grid;place-items:center;border-radius:5px;font-size:13px;color:#4a5462;cursor:pointer;transition:all .14s}
   .pages span:hover{border-color:#29BECE;color:#1899a8}
   .pages .on{background:var(--red);color:#fff;border-color:var(--red)}
-  .cat-child .sub-col{color:#657080;font-size:13px}
-  .cat-child .cat-col{color:#4a5462;font-size:13px}
-  .cat-child .sub-col{color:#657080;font-size:13px}
-  .cat-child .desc-col{color:#7a8290;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .radio-row{display:flex;align-items:center;gap:18px;min-height:36px}
-  .radio-row label{display:flex;align-items:center;gap:6px;font-size:13px;color:#4a5462;cursor:pointer;white-space:nowrap}
-  .radio-row input[type=radio]{width:15px;height:15px;accent-color:#29BECE;cursor:pointer;margin:0}
-  .card-head .title{font-size:15px;font-weight:600;color:#1f2329}
-  #evTable tbody tr:hover{background:#fafcfd}
-  
-  /* ==== 标签与开关 ==== */
-  .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;line-height:1.7;white-space:nowrap}
-  .tag.high{background:#fdecee;color:#d92b3a}
-  .tag.mid{background:#fff0dc;color:#ed7b0b}
-  .tag.yellow{background:#fff8e1;color:#d9a600}
-  .tag.green{background:#e8f7ee;color:#1a9c5b}
-  .tag.gray{background:#f0f2f4;color:#737d89}
-  .tag.info{background:#e0f7fa;color:#1899a8}
-  .switch{display:inline-block;position:relative;width:38px;height:20px;background:#c8cfd8;border-radius:10px;cursor:pointer;transition:background .2s;flex-shrink:0;vertical-align:middle}
-  .switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.22)}
-  .switch.on{background:#20b26b}
-  .switch.on::after{left:20px}
-  .st-txt{font-size:12.5px;color:#657080}
-  .st-toggle .switch.on + .st-txt{color:#1899a8}
-  
-  /* ==== 布局宽度修正 ==== */
-  .sidebar{flex:0 0 210px;width:210px;height:100vh;background:#1E3255;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow-y:auto}
-  
-  /* ===== 布局（统一重写） ===== */
-  html,body{height:100%;margin:0}
-  body{display:flex;height:100vh;overflow:hidden;background:#f4f6f8}
-  .main{flex:1 1 0;min-width:0;width:auto;height:100vh;display:flex;flex-direction:column;align-items:stretch;padding:14px 16px;box-sizing:border-box;overflow:hidden}
-  .card{flex:1 1 auto;width:100%;max-width:none;min-width:0;min-height:0;margin:0;display:flex;flex-direction:column;box-sizing:border-box;background:#fff;border:1px solid #edf0f3;border-radius:10px;box-shadow:0 1px 3px rgba(20,35,55,.03);overflow:hidden}
-  .card-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid #f0f3f7}
-  .cfg-layout{flex:1 1 auto;display:flex;align-items:stretch;width:100%;min-height:0;box-sizing:border-box;padding:0 14px 14px;gap:12px}
-  .cfg-cats{flex:0 0 186px;width:186px;border-right:1px solid #edf0f3;padding:8px 10px 0 0;box-sizing:border-box;overflow-y:auto}
-  .cfg-cats-head{font-size:12px;color:#9aa3af;padding:4px 8px 8px}
-  .cfg-cat{display:flex;align-items:center;gap:6px;padding:9px 10px;border-radius:6px;cursor:pointer;font-size:13.5px;color:#3a4452}
-  .cfg-cat:hover{background:#f5f9fa}
-  .cfg-cat.active{background:#e9f9fb;color:#1899a8;font-weight:500}
-  .cfg-cat-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .cfg-cat em{flex-shrink:0;font-style:normal;font-size:11px;color:#9aa3af;background:#f0f2f4;border-radius:9px;padding:1px 6px}
-  .cfg-cat-ops{display:none;gap:4px}
-  .cfg-cat:hover .cfg-cat-ops{display:flex}
-  .cfg-cat-ops b{font-weight:400;font-size:12px;color:#9aa3af;cursor:pointer;padding:0 2px}
-  .cfg-cat-ops b:hover{color:#1899a8}
-  .cfg-events{flex:1 1 0;min-width:0;min-height:0;display:flex;flex-direction:column;box-sizing:border-box;padding-top:8px}
-  .cfg-events-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:12px}
-  .cfg-events-title b{font-size:15px;color:#1f2329}
-  .cfg-events-title em{font-style:normal;font-size:12px;color:#9aa3af;margin-left:8px}
-  .tbl-wrap{flex:1 1 auto;width:100%;min-height:0;overflow:auto;border:1px solid #f0f3f7;border-radius:6px}
-  #evTable{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
-  #evTable th{background:#fafbfc;color:#3a4452;font-weight:500;font-size:12.5px;text-align:left;padding:9px 10px;border-bottom:1px solid #edf0f3;white-space:nowrap}
-  #evTable td{padding:10px 10px;border-bottom:1px solid #f3f5f7;color:#3a4452;vertical-align:middle}
-  #evTable tbody tr:hover{background:#fafcfd}
+  .dev-grouplabel{padding:8px 14px 4px;font-size:12px;color:#8b94a0;font-weight:500;background:#fbfcfd;border-bottom:1px solid #f0f3f7}
+  .dev-grouprow{background:#f2fbfc}
+  .dev-grouprow:hover{background:#e9f8fa}
+  .dev-grouprow .dev-name{color:#1899a8;font-weight:500}
 
-  /* ==== 表格列宽（铺满不溢出） ==== */
-  #evTable th:nth-child(1),#evTable td:nth-child(1){width:12%}
-  #evTable th:nth-child(2),#evTable td:nth-child(2){width:10%}
-  #evTable th:nth-child(3),#evTable td:nth-child(3){width:9%}
-  #evTable th:nth-child(4),#evTable td:nth-child(4){width:9%}
-  #evTable th:nth-child(5),#evTable td:nth-child(5){width:11%}
-  #evTable th:nth-child(6),#evTable td:nth-child(6){width:14%}
-  #evTable th:nth-child(7),#evTable td:nth-child(7){width:14%}
-  #evTable th:nth-child(8),#evTable td:nth-child(8){width:15%}
-  #evTable th:nth-child(9),#evTable td:nth-child(9){width:6%}
-  #evTable th{white-space:normal;line-height:1.4}
-  #evTable td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  #evTable td b{font-weight:600}
-  .cfg-events{overflow:hidden}
-  .tbl-wrap{width:100%;overflow-x:hidden;overflow-y:auto}
-  .cfg-cat-btn{flex-shrink:0;margin-left:2px;padding:1px 6px;font-size:11px;line-height:1.6;
-    color:#1899a8;background:#e9f9fb;border:0;border-radius:4px;cursor:pointer;font-family:inherit}
-  .cfg-cat-btn:hover{background:#d4f2f6}
-  .cfg-cat.active .cfg-cat-btn{background:#fff;color:#1899a8}
+  /* 租户多选下拉 */
+  .tms{position:relative}
+  .tms-head{min-height:36px;border:1px solid var(--line);border-radius:6px;padding:5px 28px 5px 10px;
+    cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:4px;background:#fff;box-sizing:border-box}
+  .tms-head:hover{border-color:#c8d2de}
+  .tms-tag{display:inline-flex;align-items:center;gap:4px;background:#e9f9fb;color:#1899a8;
+    border-radius:4px;padding:1px 6px;font-size:12px;line-height:1.7}
+  .tms-tag b{font-weight:400;cursor:pointer;font-size:13px;line-height:1}
+  .tms-tag b:hover{color:#e60012}
+  .tms-ph{color:#9aa3af;font-size:13px}
+  .tms-arrow{position:absolute;right:10px;top:18px;color:#9aa3af;font-size:12px;transition:transform .18s;pointer-events:none}
+  .tms.open .tms-arrow{transform:rotate(180deg)}
+  .tms-panel{display:none;margin-top:4px;max-height:200px;overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px;box-shadow:0 4px 14px rgba(20,35,55,.06)}
+  .tms.open .tms-panel{display:block}
+  .tms-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:5px;cursor:pointer;font-size:13px;color:#3a4452}
+  .tms-item:hover{background:#f5f9fa}
+  .tms-item input{margin:0;flex-shrink:0}
+  .tms-empty{padding:10px;color:#9aa3af;font-size:12.5px;text-align:center}
+  .tenant-info{display:flex;flex-direction:column;gap:14px;margin-bottom:14px}
+  .cfg-ev label{display:flex;align-items:center;gap:7px;cursor:pointer;flex:1;min-width:0;font-size:13px;color:#3a4452}
+  .cfg-ev label input{margin:0;flex-shrink:0}
+  .uid-col{font-family:Menlo,Consolas,monospace;font-size:12.5px;color:#657080}
+  .ev-split{display:flex;min-height:300px;max-height:400px;border:1px solid #e5e9ef;border-radius:8px;overflow:hidden;background:#fff}
+  .ev-cats{width:146px;flex-shrink:0;background:#f7f9fb;border-right:1px solid #eef1f5;overflow-y:auto;padding:6px 0}
+  .ev-cat{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 12px;font-size:13px;color:#4a5462;cursor:pointer;transition:background .14s}
+  .ev-cat:hover{background:#eef7f9}
+  .ev-cat.active{background:#e9f9fb;color:#1899a8;font-weight:600;box-shadow:inset 3px 0 0 #29BECE}
+  .ev-cat em{font-style:normal;font-size:11px;color:#9aa3af;background:#eef1f5;border-radius:9px;padding:0 6px;line-height:16px}
+  .ev-cat.active em{background:#fff;color:#1899a8}
+  .ev-panel{flex:1;min-width:0;overflow-y:auto;padding:4px 0}
+  .ev-cat-body{display:none}
+  .ev-cat-body.active{display:block}
+  .ev-cat input.cat-all{margin:0;flex-shrink:0;cursor:pointer;accent-color:#29BECE}
+  .ev-cat-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ==== 弹窗与表单基础 ==== */
+  .modal-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #f0f3f7}
+  .modal-head .x{border:0;background:none;font-size:22px;line-height:1;color:#9aa3af;cursor:pointer;padding:0 4px}
+  .modal-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:18px 20px}
+  .modal-foot{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid #f0f3f7;background:#fcfdfe}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .field.full{grid-column:1/-1}
+  .field > label{font-size:13px;color:#3a4452;line-height:1.4}
+  .field > label i{color:#e60012;font-style:normal;margin-right:3px}
+  .field input,.field select,.field textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;color:#3a4452;background:#fff;outline:none}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#29BECE;box-shadow:0 0 0 2px rgba(41,190,206,.12)}
+  .field input[readonly],.field input:disabled{background:#f7f8fa;color:#657080}
+  .field textarea{resize:vertical;min-height:60px;line-height:1.6}
+  .ev-cnt{font-size:13px;color:#657080}
+  .ev-cnt b{color:#1899a8;font-weight:600}
+
+  .modal-mask{display:none;position:fixed;inset:0;background:rgba(20,35,55,.45);z-index:200}
+  .modal-mask.open{display:block}
+  .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:780px;max-height:88vh;background:#fff;border-radius:10px;box-shadow:0 24px 64px rgba(20,35,55,.22);display:flex;flex-direction:column;overflow:hidden;z-index:201}
+
+  .catm-row{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #f3f5f7}
+  .catm-row:last-child{border-bottom:0}
+  .catm-name{flex:1;min-width:0;font-size:13.5px;color:#3a4452}
+  .catm-row em{font-style:normal;font-size:11px;color:#1899a8;background:#e3f7fa;border-radius:9px;padding:1px 7px}
+
+  /* 页面结构与显示修复 */
+  html, body { min-height:100%; }
+  body { min-width:320px; }
+  .app-wrapper { min-height:100vh; }
+  .main-wrapper { min-height:calc(100vh - 50px); }
+  .main-wrapper > main.main { flex:1; min-width:0; width:calc(100% - 210px); margin:0; padding:24px; overflow-x:hidden; }
+  .sidebar { min-height:calc(100vh - 50px); }
+  .card { overflow:hidden; }
+  .card-head { min-height:62px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:14px; border-bottom:1px solid #edf0f3; }
+  .card-head .title { font-size:17px; font-weight:650; color:#202936; }
+  .filters { padding:14px 18px; }
+  .filters .search { flex:1 1 220px; min-width:180px; }
+  .table-wrap { width:100%; overflow-x:auto; padding:0 16px 14px; }
+  .table { min-width:1120px; width:100%; }
+  .table th { position:sticky; top:0; z-index:1; }
+  .table td { max-width:260px; }
+  .thing-col { max-width:190px; overflow:hidden; text-overflow:ellipsis; }
+  .desc-col { max-width:220px; overflow:hidden; text-overflow:ellipsis; }
+  .st-toggle { display:inline-flex; align-items:center; gap:7px; cursor:pointer; white-space:nowrap; }
+  @media (max-width:900px) {
+    .navbar { padding:0 14px; }
+    .navbar-right { gap:10px; }
+    .main-wrapper > main.main { padding:16px; }
+    .sidebar { width:180px; }
+    .main-wrapper > main.main { width:calc(100% - 180px); }
+    .filters .spacer { display:none; }
+  }
+  @media (max-width:640px) {
+    .navbar-right .navbar-item:first-child { display:none; }
+    .sidebar { width:58px; }
+    .sidebar-link { justify-content:center; padding:12px 8px; font-size:0; }
+    .sidebar-link svg, .sidebar-icon { flex:0 0 18px; }
+    .sidebar-submenu .sidebar-link { padding-left:8px; }
+    .main-wrapper > main.main { width:calc(100% - 58px); padding:12px; }
+    .card-head { align-items:flex-start; flex-direction:column; }
+    .filters { align-items:stretch; }
+    .filters .control, .filters .btn { flex:1 1 100%; width:100%; }
+    .form-grid { grid-template-columns:1fr; }
+    .field.full { grid-column:auto; }
+    .modal { width:calc(100vw - 24px) !important; max-height:90vh; }
+  }
+
+  /* 右侧分类导航与页面交互增强 */
+  .content-layout{display:flex;flex-direction:column;gap:12px}
+  .event-card{min-width:0}
+  .category-rail{background:#fff;border:1px solid #edf0f3;border-radius:10px;box-shadow:0 1px 3px rgba(20,35,55,.03);overflow:hidden}
+  .category-rail-head{padding:16px;border-bottom:1px solid #edf0f3;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .category-rail-title{font-size:15px;font-weight:650;color:#202936}
+  .category-rail-list{display:flex;align-items:center;gap:8px;padding:10px 12px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin}
+  .category-nav-actions{display:flex;gap:1px;opacity:0;transition:opacity .15s}.category-nav-row:hover .category-nav-actions{opacity:1}.category-nav-action{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:0;background:transparent;color:#8b95a2;cursor:pointer;border-radius:4px;padding:0;transition:background .14s,color .14s}.category-nav-action:hover{background:#eef7f8;color:#168d9b}.category-nav-row{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;color:#4b5664;cursor:pointer;flex:0 0 auto;white-space:nowrap;transition:background .14s}
+  .category-nav-row:hover{background:#f5f8fa}
+  .category-nav-row.active{background:#e9f9fb;color:#168d9b}
+  .category-nav-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .category-nav-count{font-size:12px;color:#8b95a2;background:#f0f3f6;border-radius:12px;padding:2px 8px;flex-shrink:0}
+  .category-nav-row.active .category-nav-count{background:#fff;color:#168d9b}
+  .empty-category{padding:24px 10px;text-align:center;color:#9aa3af;font-size:13px}
+  .filters .search{flex:1 1 190px}
+  .table .btn.link{margin-right:4px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  @media(max-width:1120px){.main-wrapper > main.main{padding:18px}}
+  
+  @media(max-width:640px){.category-rail-head{padding:12px}.category-nav-row{padding:8px 10px}.filters .control,.filters .btn{flex:1 1 100%;width:100%}}
+
+  .result-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px 14px;flex-wrap:wrap}
+  .result-summary{color:#8b95a2;font-size:12px;min-width:0}
+  .pager{display:flex;align-items:center;gap:6px;font-size:12px;color:#4a5462;flex-shrink:0}
+  .pager button{min-width:28px;height:28px;padding:0 8px;border:1px solid var(--line);border-radius:6px;
+  background:#fff;color:#4a5462;font-family:inherit;font-size:12px;cursor:pointer;transition:all .14s}
+  .pager button:hover:not(:disabled){border-color:#29BECE;color:#1899a8}
+  .pager button.active{background:#29BECE;border-color:#29BECE;color:#fff;font-weight:500}
+  .pager button:disabled{opacity:.4;cursor:not-allowed}
+  .pager .pager-info{color:#8b95a2;margin:0 4px}
+  .ths-col{padding:6px 10px !important}
+  .category-nav-action.danger:hover{background:#fdecee;color:#e60012}
+  .category-nav-row.active .category-nav-name{color:#168d9b;font-weight:650}
+  .key-col{font-family:Menlo,Consolas,monospace;font-size:12px;color:#657080}
+  .category-rail-list::-webkit-scrollbar{height:6px}
+  .category-rail-list::-webkit-scrollbar-thumb{background:#dfe5ec;border-radius:3px}
+  .category-rail-list::-webkit-scrollbar-track{background:transparent}
+  .filters .search.kw{flex:1 1 140px;min-width:120px;max-width:200px}
 </style>
 </head>
-
 <body>
+<div class="app-wrapper">
+  <header class="navbar">
+    <div class="navbar-left">
+      <span class="logo">SanVIST</span>
+      <span style="color:rgba(255,255,255,.45);font-size:12px">设备智能监控平台</span>
+    </div>
+    <div class="navbar-right">
+      <span class="navbar-item">管理后台</span>
+      <span class="navbar-item"><span class="avatar">管</span> 管理员</span>
+    </div>
+  </header>
+  <div class="main-wrapper">
 <aside class="sidebar">
       <ul class="sidebar-menu">
-        <li class="sidebar-item active">
+        <li class="sidebar-item">
           <a class="sidebar-link">
             <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
             预警中心
           </a>
           <ul class="sidebar-submenu">
             <li class="sidebar-item"><a class="sidebar-link" href="预警等级.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h4V10H3z"/><path d="M10 20h4V4h-4z"/><path d="M17 20h4v-7h-4z"/></svg> 预警等级</a></li>
-            <li class="sidebar-item active"><a class="sidebar-link" href="预警设置.html" class="active" class="active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V5a2 2 0 0 1 2-2h7a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg> 预警设置</a></li>
-            <li class="sidebar-item"></li><li class="sidebar-item"><a class="sidebar-link" href="租户设置.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:-2px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>租户设置</a></li>
-          </ul>
+            <li class="sidebar-item active"><a class="sidebar-link active" href="预警设置.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V5a2 2 0 0 1 2-2h7a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg> 预警设置</a></li>
+            <li class="sidebar-item"></li>
+          <li class="sidebar-item"><a class="sidebar-link" href="租户设置.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:-2px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>租户设置</a></li></ul>
         </li>
       </ul>
     </aside>
-  <main class="main">
 
-    <div class="card">
-      <div class="card-head">
-        <div class="title">预警设置</div>
-        <button class="btn primary" onclick="newCategory()">＋ 新增分类</button>
-      </div>
-      <div class="cfg-layout">
-        <div class="cfg-cats">
-          <div class="cfg-cats-head">分类</div>
-          <div id="catList"></div>
+  <main class="main">
+    <div class="content-layout">
+      <aside class="category-rail">
+        <div class="category-rail-head"><span class="category-rail-title">预警分类</span><button class="btn primary" style="height:30px;padding:0 9px;font-size:12px" onclick="newCategory()">＋ 新增</button></div>
+        <div class="category-rail-list" id="categoryNav"></div>
+      </aside><section class="card event-card">
+        <div class="filters">
+          <input class="control search kw" id="kwName" placeholder="搜索事件名称" oninput="renderEvents()"/><input class="control search kw" id="kwThing" placeholder="搜索物模型 ID" oninput="renderEvents()"/><input class="control search kw" id="kwKey" placeholder="搜索事件键值" oninput="renderEvents()"/>
+          <select class="control" id="lvlFilter" onchange="renderEvents()">
+            <option value="">全部预警等级</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option><option value="停车提示">停车提示</option>
+          </select>
+          <select class="control" id="statusFilter" onchange="renderEvents()"><option value="">全部状态</option><option value="1">开启</option><option value="0">关闭</option></select>
+          <button class="btn" onclick="resetQuery()">重置</button><button class="btn primary" onclick="renderEvents()">搜索</button><button class="btn primary" onclick="newEvent()">＋ 新增预警事件</button>
         </div>
-        <div class="cfg-events">
-          <div class="cfg-events-head">
-            <div class="cfg-events-title"><b id="curCatName">-</b><em id="curCatCount"></em></div>
-            <button class="btn primary" onclick="newEvent()">＋ 新增预警事件</button>
-          </div>
-          <div class="tbl-wrap">
-            <table class="table" id="evTable">
-              <thead>
-                <tr>
-                  <th>预警事件</th>
-                  <th>预警等级</th>
-                  <th>状态</th>
-                  <th>是否审核</th>
-                  <th>是否预警处理</th>
-                  <th>是否支持阈值配置</th>
-                  <th>物模型 ID</th>
-                  <th>预警说明</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody id="evBody"></tbody>
-            </table>
-          </div>
+        <div class="table-wrap">
+          <table class="table" id="evTable">
+            <thead><tr><th>预警事件</th><th>事件键值</th><th>预警等级</th><th>状态</th><th>是否审核</th><th>阈值配置</th><th>物模型 ID</th><th>预警说明</th><th>操作</th></tr></thead>
+            <tbody id="evBody"></tbody>
+          </table>
         </div>
-      </div>
+        <div class="result-bar"><div id="resultSummary" class="result-summary"></div><div class="pager" id="pager"></div></div>
+      </section>
+      
     </div>
   </main>
+  </div>
+</div>
 
   <!-- 分类弹窗 -->
   <div class="modal-mask" id="catModal" onclick="maskClose(event,'catModal')">
-    <div class="modal" style="width:480px">
-      <div class="modal-head"><b style="font-size:18px" id="catTitle">新增分类</b><button class="x" onclick="closeLayer('catModal')">×</button></div>
+    <div class="modal" style="width:460px">
+      <div class="modal-head">
+        <b style="font-size:16px" id="catTitle">新增分类</b>
+        <button class="x" onclick="closeLayer('catModal')">×</button>
+      </div>
       <div class="modal-body">
-        <div class="form-grid">
-          <div class="field full"><label><i>*</i> 分类名称</label><input id="catName" placeholder="如 设备异常"/></div>
-          <div class="field full"><label>备注</label><input id="catDesc" placeholder="选填"/></div>
+        <div class="field full">
+          <label><i>*</i> 分类名称</label>
+          <input id="catName" placeholder="如 设备异常"/>
+        </div>
+          <div class="field full" style="margin-top:12px"><label><i>*</i> 分类键值</label><input id="catKey" placeholder="如 device_abnormal" autocomplete="off"/></div>
+        <div class="field full" style="margin-top:12px">
+          <label>分类备注</label>
+          <input id="catDesc" placeholder="选填"/>
         </div>
       </div>
       <div class="modal-foot">
@@ -264,24 +345,51 @@
 
   <!-- 事件弹窗 -->
   <div class="modal-mask" id="evModal" onclick="maskClose(event,'evModal')">
-    <div class="modal" style="width:720px">
-      <div class="modal-head"><b style="font-size:18px" id="evTitle">新增预警事件</b><button class="x" onclick="closeLayer('evModal')">×</button></div>
+    <div class="modal" style="width:640px">
+      <div class="modal-head">
+        <b style="font-size:16px" id="evTitle">新增预警事件</b>
+        <button class="x" onclick="closeLayer('evModal')">×</button>
+      </div>
       <div class="modal-body">
         <div class="form-grid">
-          <div class="field"><label><i>*</i> 事件名称</label><input id="evName" placeholder="如 冷却水温高"/></div>
-          <div class="field"><label>预警等级</label><select id="evLevel"><option>高危</option><option>中危</option><option>低危</option><option>提示</option></select></div>
-          <div class="field"><label>状态</label><div class="radio-row"><label><input type="radio" name="evStatus" value="1" checked/> 开启</label><label><input type="radio" name="evStatus" value="0"/> 关闭</label></div></div>
-          <div class="field"><label>是否审核</label><div class="radio-row"><label><input type="radio" name="evAudit" value="1" checked/> 是</label><label><input type="radio" name="evAudit" value="0"/> 否</label></div></div>
-          <div class="field"><label>是否预警处理</label><div class="radio-row"><label><input type="radio" name="evProc" value="1" checked/> 是</label><label><input type="radio" name="evProc" value="0"/> 否</label></div></div>
-          <div class="field"><label>是否支持阈值配置</label><div class="radio-row"><label><input type="radio" name="evTh" value="1" checked/> 是</label><label><input type="radio" name="evTh" value="0"/> 否</label></div></div>
-          <div class="field full"><label>物模型 ID</label><textarea id="evThing" placeholder="多个 ID 用英文分号 ; 分隔" style="min-height:60px"></textarea></div>
-          <div class="field full"><label>预警说明</label><textarea id="evDesc" placeholder="选填" style="min-height:60px"></textarea></div>
+          <div class="field"><label><i>*</i> 事件名称</label><input id="evName" placeholder="如 冷却水温高"/></div><div class="field"><label><i>*</i> 事件键值</label><input id="evKey" placeholder="如 coolant_temp_high" autocomplete="off"/></div>
+          <div class="field"><label><i>*</i> 所属分类</label><select id="evCat"></select></div>
+          <div class="field"><label>预警等级</label>
+            <select id="evLevel"><option>高危</option><option>中危</option><option>低危</option><option>提示</option><option>停车提示</option></select>
+          </div>
+          <div class="field"><label>状态</label>
+            <select id="evOn"><option value="1">开启</option><option value="0">关闭</option></select>
+          </div>
+          <div class="field"><label>是否审核</label>
+            <select id="evAudit"><option value="1">是</option><option value="0">否</option></select>
+          </div>
+          <div class="field"><label>是否支持阈值配置</label>
+            <select id="evTh" onchange="toggleThsField()"><option value="1">是</option><option value="0">否</option></select>
+          </div>
+          <div class="field full" id="thsField" style="display:none"><label>阈值配置</label><input id="evThs" placeholder="多条用逗号分隔，如 70,75,80"/></div>
+          <div class="field"><label>物模型 ID</label><input id="evThing" placeholder="如 WL-CoolantTemp"/></div>
+          <div class="field full"><label>预警说明</label><input id="evDesc" placeholder="选填"/></div>
         </div>
       </div>
       <div class="modal-foot">
-        <button class="btn" onclick="closeLayer('catModal')" style="display:none"></button>
         <button class="btn" onclick="closeLayer('evModal')">取消</button>
         <button class="btn primary" onclick="saveEv()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分类管理 -->
+  <div class="modal-mask" id="catListModal" onclick="maskClose(event,'catListModal')">
+    <div class="modal" style="width:520px">
+      <div class="modal-head">
+        <b style="font-size:16px">分类管理</b>
+        <button class="x" onclick="closeLayer('catListModal')">×</button>
+      </div>
+      <div class="modal-body" style="padding:8px 20px 16px">
+        <div id="catListBody"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeLayer('catListModal')">关闭</button>
       </div>
     </div>
   </div>
@@ -289,245 +397,183 @@
   <!-- 删除确认 -->
   <div class="modal-mask" id="delModal" onclick="maskClose(event,'delModal')">
     <div class="modal" style="width:400px">
-      <div class="modal-head"><b style="font-size:18px">确认删除</b><button class="x" onclick="closeLayer('delModal')">×</button></div>
-      <div class="modal-body"><p id="delTip" style="margin:0;font-size:14px;line-height:1.7;color:#4a5462">确定要删除吗？删除后不可恢复。</p></div>
+      <div class="modal-head">
+        <b style="font-size:16px">确认删除</b>
+        <button class="x" onclick="closeLayer('delModal')">×</button>
+      </div>
+      <div class="modal-body" style="padding:22px 20px;font-size:14px;color:#3a4452" id="delTip">确定要删除吗？</div>
       <div class="modal-foot">
         <button class="btn" onclick="closeLayer('delModal')">取消</button>
-        <button class="btn primary" onclick="doDel()">确认删除</button>
+        <button class="btn primary" style="background:#e60012;border-color:#e60012" onclick="doDel()">确定删除</button>
       </div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
-<script>
-  var CATS = [
-    { name: '设备异常', desc: '设备冷却液温度超过安全阈值时触发' },
-    { name: '作业安全', desc: '设备怠速停车时长超过配置阈值' },
-    { name: '位置', desc: '设备驶出预设电子围栏范围' },
-    { name: '燃油', desc: '燃油消耗速率异常波动' },
-    { name: '保养', desc: '' },
-    { name: '提示', desc: '停车状态提示，不属于危险等级' }
+  <script>
+  var DEFAULT_CATS = [
+    {name:'设备异常',key:'device_abnormal',desc:'设备运行参数异常或故障'},
+    {name:'作业安全',key:'work_safety',desc:'作业过程中的安全风险'},
+    {name:'位置',key:'location',desc:'设备位置及电子围栏异常'},
+    {name:'燃油',key:'fuel',desc:'燃油消耗及液位异常'},
+    {name:'保养',key:'maintenance',desc:'设备保养提醒'},
+    {name:'提示',key:'notice',desc:'一般状态提示'}
   ];
-
-  var EVENTS = [
-    { cat: '设备异常', name: '冷却水温高', level: '高危', on: 1, audit: 1, proc: 1, th: 1, thing: 'WL-CoolantTemp;WL-EngineTemp', desc: '设备冷却液温度超过安全阈值' },
-    { cat: '设备异常', name: '液压油温度高', level: '高危', on: 1, audit: 1, proc: 1, th: 1, thing: 'WL-HydOilTemp', desc: '液压系统油温异常升高' },
-    { cat: '设备异常', name: '设备离线', level: '中危', on: 1, audit: 1, proc: 0, th: 1, thing: 'WL-Offline', desc: '设备连续未上报数据' },
-    { cat: '设备异常', name: '故障码', level: '中危', on: 1, audit: 0, proc: 1, th: 1, thing: 'WL-FaultCode', desc: '设备上报故障码时自动生成' },
-    { cat: '作业安全', name: '危险力矩', level: '高危', on: 1, audit: 1, proc: 1, th: 1, thing: 'WL-Torque', desc: '作业力矩超过安全阈值' },
-    { cat: '作业安全', name: '超速', level: '高危', on: 1, audit: 1, proc: 1, th: 1, thing: 'WL-Speed', desc: '行驶速度超过安全上限' },
-    { cat: '作业安全', name: '疲劳驾驶', level: '中危', on: 1, audit: 1, proc: 0, th: 0, thing: 'WL-Fatigue', desc: '连续驾驶时长超过安全上限' },
-    { cat: '作业安全', name: '主动安全报警', level: '中危', on: 0, audit: 0, proc: 0, th: 0, thing: 'WL-ActiveSafety', desc: 'AI 识别到现场安全隐患' },
-    { cat: '位置', name: '电子围栏报警', level: '中危', on: 1, audit: 1, proc: 1, th: 1, thing: 'WL-GeoFence', desc: '设备驶出预设电子围栏范围' },
-    { cat: '燃油', name: '油耗异常', level: '低危', on: 1, audit: 0, proc: 1, th: 1, thing: 'WL-FuelRate', desc: '燃油消耗速率偏离正常区间' },
-    { cat: '燃油', name: '燃油液位偏低', level: '低危', on: 1, audit: 1, proc: 1, th: 1, thing: 'WL-FuelLevel', desc: '油箱液位低于安全阈值' },
-    { cat: '提示', name: '保养临期', level: '提示', on: 1, audit: 0, proc: 0, th: 0, thing: 'WL-Maintain', desc: '保养周期临近提醒' }
+  var DEFAULT_EVENTS = [
+    {cat:'设备异常',name:'冷却水温高',key:'coolant_temp_high',level:'高危',on:1,audit:1,proc:1,th:1,thing:'WL-CoolantTemp;WL-EngineTemp',desc:'设备冷却液温度超过安全阈值'},
+    {cat:'设备异常',name:'液压油温度高',key:'hyd_oil_temp_high',level:'高危',on:1,audit:1,proc:1,th:1,thing:'WL-HydOilTemp',desc:'液压系统油温异常升高'},
+    {cat:'设备异常',name:'设备离线',key:'device_offline',level:'中危',on:1,audit:1,proc:0,th:1,thing:'WL-Offline',desc:'设备连续未上报数据'},
+    {cat:'设备异常',name:'故障码',key:'fault_code',level:'中危',on:1,audit:0,proc:1,th:1,thing:'WL-FaultCode',desc:'设备上报故障码时自动生成'},
+    {cat:'作业安全',name:'危险力矩',key:'dangerous_torque',level:'高危',on:1,audit:1,proc:1,th:1,thing:'WL-Torque',desc:'作业力矩超过安全阈值'},
+    {cat:'作业安全',name:'超速',key:'overspeed',level:'高危',on:1,audit:1,proc:1,th:1,thing:'WL-Speed',desc:'行驶速度超过安全上限'},
+    {cat:'作业安全',name:'疲劳驾驶',key:'fatigue_driving',level:'中危',on:1,audit:1,proc:0,th:0,thing:'WL-Fatigue',desc:'连续驾驶时长超过安全上限'},
+    {cat:'作业安全',name:'主动安全报警',key:'active_safety_alarm',level:'中危',on:0,audit:0,proc:0,th:0,thing:'WL-ActiveSafety',desc:'AI 识别到现场安全隐患'},
+    {cat:'位置',name:'电子围栏报警',key:'geofence_alarm',level:'中危',on:1,audit:1,proc:1,th:1,thing:'WL-GeoFence',desc:'设备驶出预设电子围栏范围'},
+    {cat:'燃油',name:'油耗异常',key:'fuel_abnormal',level:'低危',on:1,audit:0,proc:1,th:1,thing:'WL-FuelRate',desc:'燃油消耗速率偏离正常区间'},
+    {cat:'燃油',name:'燃油液位偏低',key:'fuel_level_low',level:'低危',on:1,audit:1,proc:1,th:1,thing:'WL-FuelLevel',desc:'油箱液位低于安全阈值'},
+    {cat:'提示',name:'保养临期',key:'maintenance_due',level:'提示',on:1,audit:0,proc:0,th:0,thing:'WL-Maintain',desc:'保养周期临近提醒'}
   ];
-
-  var curCat = CATS[0].name;
-  var editCatIdx = -1;
-  var editEvIdx = -1;
-  var delTarget = null;
-
-  var LV_CLS = { '高危': 'high', '中危': 'mid', '低危': 'yellow', '提示': 'green' };
-
-  function toast(msg){
-    var t = document.getElementById('toast');
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(t._tm);
-    t._tm = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  var STORAGE_KEY='sanvist_alert_settings_v2';
+  var CATS=[], EVENTS=[], curEvIdx=-1, curCatIdx=-1, delTarget=null, activeCategory='';
+  var PAGE_SIZE=10;
+  var curPage=1;
+  var LV_CLS={'高危':'high','中危':'mid','低危':'yellow','提示':'green','停车提示':'gray'};
+  function cloneData(v){return JSON.parse(JSON.stringify(v));}
+  function loadData(){
+    try{var raw=localStorage.getItem(STORAGE_KEY);if(raw){var d=JSON.parse(raw);if(Array.isArray(d.cats)&&Array.isArray(d.events)){CATS=d.cats;EVENTS=d.events;EVENTS.forEach(function(e){if(e.ths===undefined)e.ths=defaultThs(e.name);});return;}}}catch(e){console.warn('本地配置读取失败',e);}
+    CATS=cloneData(DEFAULT_CATS);EVENTS=cloneData(DEFAULT_EVENTS);
+    EVENTS.forEach(function(e){if(e.ths===undefined)e.ths=defaultThs(e.name);});
   }
-
-  function openLayer(id){ document.getElementById(id).classList.add('show'); }
-  function closeLayer(id){ document.getElementById(id).classList.remove('show'); }
-  function maskClose(e, id){ if (e.target.id === id) closeLayer(id); }
-
+  function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({cats:CATS,events:EVENTS}));}catch(e){toast('浏览器存储不可用，本次修改仅在当前页面有效');}}
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function toast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(function(){t.classList.remove('show');},2000);}
+  function openLayer(id){var el=document.getElementById(id);if(el)el.classList.add('open');}
+  function closeLayer(id){var el=document.getElementById(id);if(el)el.classList.remove('open');}
+  function maskClose(e,id){if(e.target.id===id)closeLayer(id);}
+  function setCategory(name){activeCategory=name;curPage=1;renderCats();renderEvents();}
+  function setCategoryByIndex(i){if(CATS[i])setCategory(CATS[i].name);}
   function renderCats(){
-    var box = document.getElementById('catList');
-    box.innerHTML = CATS.map(function (c, i) {
-      var n = EVENTS.filter(function (e) { return e.cat === c.name; }).length;
-      return '<div class="cfg-cat' + (c.name === curCat ? ' active' : '') + '" onclick="selectCat(\'' + c.name + '\')">'
-        + '<span class="cfg-cat-name">' + c.name + '</span>'
-        + '<em>' + n + '</em>'
-        + '<button class="cfg-cat-btn" onclick="event.stopPropagation();selectCat(\'' + c.name + '\');toast(\'正在维护「' + c.name + '」\')">配置</button>'
-        + '<span class="cfg-cat-ops">'
-        + '<b title="编辑分类" onclick="event.stopPropagation();editCat(' + i + ')">✎</b>'
-        + '<b title="删除分类" onclick="event.stopPropagation();delCat(' + i + ')">✕</b>'
-        + '</span></div>';
-    }).join('');
+    var evSel=document.getElementById('evCat');
+    if(evSel){var old=evSel.value;evSel.innerHTML=CATS.map(function(c){return '<option value="'+esc(c.name)+'">'+esc(c.name)+'</option>';}).join('');if(CATS.some(function(c){return c.name===old;}))evSel.value=old;}
+    var nav=document.getElementById('categoryNav');if(nav){var total=EVENTS.length;nav.innerHTML='<div class="category-nav-row '+(!activeCategory?'active':'')+'" onclick="setCategory(\'\')">'+'<span class="category-nav-name">全部分类</span>'+'<span class="category-nav-count">'+total+'</span></div>'+CATS.map(function(c,i){var n=EVENTS.filter(function(e){return e.cat===c.name;}).length;return '<div class="category-nav-row '+(activeCategory===c.name?'active':'')+'" onclick="setCategoryByIndex('+i+')">'+'<span class="category-nav-name" title="'+esc(c.desc)+'">'+esc(c.name)+'</span>'+'<span class="category-nav-actions" onclick="event.stopPropagation()">'+'<button class="category-nav-action" title="编辑分类" onclick="editCat('+i+')"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z\"/></svg></button>'+'<button class="category-nav-action danger" title="删除分类" onclick="delCat('+i+')"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18\"/><path d=\"M8 6V4h8v2\"/><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\"/><path d=\"M10 11v6\"/><path d=\"M14 11v6\"/></svg></button>'+'</span>'+'<span class="category-nav-count">'+n+'</span>'+'</div>';}).join('')+(CATS.length?'':'<div class="empty-category">暂无分类，请先新增</div>');}
   }
-
-  function selectCat(name){
-    curCat = name;
-    renderCats();
-    renderEvents();
-  }
-
   function renderEvents(){
-    var c = CATS.filter(function (x) { return x.name === curCat; })[0] || {};
-    document.getElementById('curCatName').textContent = curCat;
-    var list = EVENTS.filter(function (e) { return e.cat === curCat; });
-    document.getElementById('curCatCount').textContent = list.length;
+    var cat=(activeCategory || '');
+    function gv(id){var el=document.getElementById(id);return el?(el.value||'').trim().toLowerCase():'';}
+    var kwName=gv('kwName'), kwThing=gv('kwThing'), kwKey=gv('kwKey');
+    var lvlEl=document.getElementById('lvlFilter');
+    var lvl=lvlEl?lvlEl.value:'';
+    var stEl=document.getElementById('statusFilter');
+    var status=stEl?stEl.value:'';
 
-    var body = document.getElementById('evBody');
-    if (!list.length) {
-      body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#9aa3af;padding:32px">该分类下暂无预警事件</td></tr>';
-      return;
-    }
+    var all=EVENTS.map(function(e,i){return {e:e,i:i};}).filter(function(x){
+      var e=x.e;
+      if(cat && e.cat!==cat) return false;
+      if(lvl && e.level!==lvl) return false;
+      if(status!=='' && String(e.on)!==status) return false;
+      if(kwName && (e.name||'').toLowerCase().indexOf(kwName)<0) return false;
+      if(kwThing && (e.thing||'').toLowerCase().indexOf(kwThing)<0) return false;
+      if(kwKey && (e.key||'').toLowerCase().indexOf(kwKey)<0) return false;
+      return true;
+    });
 
-    body.innerHTML = list.map(function (e) {
-      var idx = EVENTS.indexOf(e);
-      var tag = function (v) { return v ? '<span class="tag info">是</span>' : '<span class="tag gray">否</span>'; };
-      return '<tr>'
-        + '<td><b>' + e.name + '</b></td>'
-        + '<td><span class="tag ' + (LV_CLS[e.level] || 'gray') + '">' + e.level + '</span></td>'
-        + '<td><span class="st-toggle" onclick="toggleOn(' + idx + ')">'
-          + '<span class="switch' + (e.on ? ' on' : '') + '"></span>'
-          + '<span class="st-txt">' + (e.on ? '开启' : '关闭') + '</span></span></td>'
-        + '<td>' + tag(e.audit) + '</td>'
-        + '<td>' + tag(e.proc) + '</td>'
-        + '<td>' + tag(e.th) + '</td>'
-        + '<td class="thing-col" title="' + (e.thing || '') + '">' + (e.thing || '-') + '</td>'
-        + '<td class="desc-col" title="' + (e.desc || '') + '">' + (e.desc || '-') + '</td>'
-        + '<td><button class="btn link" onclick="editEv(' + idx + ')">编辑</button>'
-        + '<button class="btn link" style="color:var(--red)" onclick="delEv(' + idx + ')">删除</button></td>'
-        + '</tr>';
-    }).join('');
-  }
+    var total=all.length;
+    var pages=Math.max(1, Math.ceil(total/PAGE_SIZE));
+    if (curPage>pages) curPage=pages;
+    if (curPage<1) curPage=1;
+    var start=(curPage-1)*PAGE_SIZE;
+    var list=all.slice(start, start+PAGE_SIZE);
 
-  function toggleOn(idx){
-    EVENTS[idx].on = EVENTS[idx].on ? 0 : 1;
-    renderEvents();
-  }
-
-  // ---- 分类 ----
-  function newCategory(){
-    editCatIdx = -1;
-    document.getElementById('catTitle').textContent = '新增分类';
-    document.getElementById('catName').value = '';
-    document.getElementById('catDesc').value = '';
-    openLayer('catModal');
-  }
-
-  function editCat(i){
-    editCatIdx = i;
-    document.getElementById('catTitle').textContent = '编辑分类';
-    document.getElementById('catName').value = CATS[i].name;
-    document.getElementById('catDesc').value = CATS[i].desc || '';
-    openLayer('catModal');
-  }
-
-  function saveCat(){
-    var name = (document.getElementById('catName').value || '').trim();
-    var desc = (document.getElementById('catDesc').value || '').trim();
-    if (!name) { toast('请填写分类名称'); return; }
-
-    if (editCatIdx >= 0) {
-      var old = CATS[editCatIdx].name;
-      CATS[editCatIdx].name = name;
-      CATS[editCatIdx].desc = desc;
-      EVENTS.forEach(function (e) { if (e.cat === old) e.cat = name; });
-      if (curCat === old) curCat = name;
+    var body=document.getElementById('evBody');
+    if(!body) return;
+    if(!list.length){
+      body.innerHTML='<tr><td colspan="9" style="text-align:center;color:#9aa3af;padding:42px">'
+        + (EVENTS.length ? '暂无匹配的预警事件' : '暂无预警事件，请点击“新增预警事件”创建') + '</td></tr>';
     } else {
-      CATS.push({ name: name, desc: desc });
-      curCat = name;
+      var tag=function(v){return v?'<span class="tag info">是</span>':'<span class="tag gray">否</span>';};
+      body.innerHTML=list.map(function(x){
+        var e=x.e, i=x.i;
+        return '<tr><td><b>'+esc(e.name)+'</b></td>'
+          + '<td class="key-col">'+esc(e.key||'-')+'</td>'
+          + '<td><span class="tag '+(LV_CLS[e.level]||'gray')+'">'+esc(e.level)+'</span></td>'
+          + '<td><span class="st-toggle" onclick="toggleOn('+i+')"><span class="switch'+(e.on?' on':'')+'"></span><span class="st-txt">'+(e.on?'开启':'关闭')+'</span></span></td>'
+          + '<td>'+tag(e.audit)+'</td>'
+          + '<td class="ths-col">'+ (e.th  ? '<span class="cell-ell" style="max-width:150px" title="'+esc(e.ths||'')+'">'+(esc(e.ths||'')||'—')+'</span>'  : '<span class="tag gray">否</span>')+ '</td>'
+          + '<td class="thing-col" title="'+esc(e.thing)+'">'+esc(e.thing||'-')+'</td>'
+          + '<td class="desc-col" title="'+esc(e.desc)+'">'+esc(e.desc||'-')+'</td>'
+          + '<td><button class="btn link" onclick="editEv('+i+')">编辑</button>'
+          + '<button class="btn link danger" onclick="delEv('+i+')">删除</button></td></tr>';
+      }).join('');
     }
-    closeLayer('catModal');
-    renderCats();
-    renderEvents();
-    toast('分类已保存');
-  }
 
-  function delCat(i){
-    delTarget = { type: 'cat', idx: i };
-    var n = EVENTS.filter(function (e) { return e.cat === CATS[i].name; }).length;
-    document.getElementById('delTip').textContent =
-      '确定要删除分类「' + CATS[i].name + '」吗？' + (n ? '该分类下的 ' + n + ' 个预警事件将一并删除。' : '');
-    openLayer('delModal');
-  }
-
-  function doDel(){
-    if (!delTarget) return;
-    if (delTarget.type === 'cat') {
-      var name = CATS[delTarget.idx].name;
-      EVENTS = EVENTS.filter(function (e) { return e.cat !== name; });
-      CATS.splice(delTarget.idx, 1);
-      if (curCat === name) curCat = CATS.length ? CATS[0].name : '';
-    } else {
-      EVENTS.splice(delTarget.idx, 1);
+    var sum=document.getElementById('resultSummary');
+    if(sum){
+      sum.textContent='共 '+total+' 条记录';
     }
-    delTarget = null;
-    closeLayer('delModal');
-    renderCats();
-    renderEvents();
-    toast('已删除');
+    renderPager(total);
   }
-
-  // ---- 事件 ----
-  function newEvent(){
-    if (!curCat) { toast('请先选择分类'); return; }
-    editEvIdx = -1;
-    document.getElementById('evTitle').textContent = '新增预警事件';
-    document.getElementById('evName').value = '';
-    document.getElementById('evLevel').selectedIndex = 1;
-    document.getElementById('evThing').value = '';
-    document.getElementById('evDesc').value = '';
-    document.querySelector('input[name="evStatus"][value="1"]').checked = true;
-    document.querySelector('input[name="evAudit"][value="1"]').checked = true;
-    document.querySelector('input[name="evProc"][value="1"]').checked = true;
-    document.querySelector('input[name="evTh"][value="1"]').checked = true;
-    openLayer('evModal');
-  }
-
-  function editEv(idx){
-    editEvIdx = idx;
-    var e = EVENTS[idx];
-    document.getElementById('evTitle').textContent = '编辑预警事件';
-    document.getElementById('evName').value = e.name;
-    document.getElementById('evLevel').value = e.level;
-    document.getElementById('evThing').value = e.thing || '';
-    document.getElementById('evDesc').value = e.desc || '';
-    document.querySelector('input[name="evStatus"][value="' + (e.on ? '1' : '0') + '"]').checked = true;
-    document.querySelector('input[name="evAudit"][value="' + (e.audit ? '1' : '0') + '"]').checked = true;
-    document.querySelector('input[name="evProc"][value="' + (e.proc ? '1' : '0') + '"]').checked = true;
-    document.querySelector('input[name="evTh"][value="' + (e.th ? '1' : '0') + '"]').checked = true;
-    openLayer('evModal');
-  }
-
-  function saveEv(){
-    var name = (document.getElementById('evName').value || '').trim();
-    if (!name) { toast('请填写事件名称'); return; }
-    var obj = {
-      cat: curCat,
-      name: name,
-      level: document.getElementById('evLevel').value,
-      on: document.querySelector('input[name="evStatus"]:checked').value === '1' ? 1 : 0,
-      audit: document.querySelector('input[name="evAudit"]:checked').value === '1' ? 1 : 0,
-      proc: document.querySelector('input[name="evProc"]:checked').value === '1' ? 1 : 0,
-      th: document.querySelector('input[name="evTh"]:checked').value === '1' ? 1 : 0,
-      thing: (document.getElementById('evThing').value || '').trim(),
-      desc: (document.getElementById('evDesc').value || '').trim()
-    };
-    if (editEvIdx >= 0) EVENTS[editEvIdx] = obj;
-    else EVENTS.push(obj);
-    closeLayer('evModal');
-    renderCats();
-    renderEvents();
-    toast('预警事件已保存');
-  }
-
-  function delEv(idx){
-    delTarget = { type: 'ev', idx: idx };
-    document.getElementById('delTip').textContent = '确定要删除该预警事件吗？删除后不可恢复。';
-    openLayer('delModal');
-  }
-
   renderCats();
   renderEvents();
-</script>
 
+  function refresh(){renderCats();renderEvents();}
+  function resetQuery(){
+    curPage=1;['kwName','kwThing','kwKey'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('lvlFilter').value='';document.getElementById('statusFilter').value='';activeCategory='';refresh();}
+  function toggleOn(idx){if(!EVENTS[idx])return;EVENTS[idx].on=EVENTS[idx].on?0:1;persist();refresh();toast(EVENTS[idx].on?'已开启':'已关闭');}
+  function newCategory(){curCatIdx=-1;document.getElementById('catTitle').textContent='新增分类';document.getElementById('catName').value='';document.getElementById('catKey').value='';document.getElementById('catDesc').value='';openLayer('catModal');setTimeout(function(){document.getElementById('catName').focus();},50);}
+  function editCat(i){if(!CATS[i])return;curCatIdx=i;document.getElementById('catTitle').textContent='编辑分类';document.getElementById('catName').value=CATS[i].name;document.getElementById('catKey').value=CATS[i].key||'';document.getElementById('catDesc').value=CATS[i].desc||'';openLayer('catModal');}
+  function saveCat(){var name=(document.getElementById('catName').value||'').trim(),key=(document.getElementById('catKey').value||'').trim(),desc=(document.getElementById('catDesc').value||'').trim();if(!name){toast('请填写分类名称');document.getElementById('catName').focus();return;}if(name.length>20){toast('分类名称不能超过20个字');return;}if(key.length>40){toast('分类键值不能超过40个字符');return;}if(CATS.some(function(c,i){return c.name.toLowerCase()===name.toLowerCase()&&i!==curCatIdx;})){toast('分类名称已存在');return;}if(curCatIdx>=0){var old=CATS[curCatIdx].name;CATS[curCatIdx]={name:name,key:key,desc:desc};EVENTS.forEach(function(e){if(e.cat===old)e.cat=name;});if(activeCategory===old)activeCategory=name;}else{CATS.push({name:name,key:key,desc:desc});}persist();closeLayer('catModal');refresh();toast('分类已保存');}
+  function delCat(i){if(!CATS[i])return;delTarget={type:'cat',idx:i};var n=EVENTS.filter(function(e){return e.cat===CATS[i].name;}).length;document.getElementById('delTip').textContent=n?'确定删除该分类？其下的预警事件也将一并删除。':'确定删除该分类？';openLayer('delModal');}
+  function newEvent(){if(!CATS.length){toast('请先新增预警分类');newCategory();return;}curEvIdx=-1;document.getElementById('evTitle').textContent='新增预警事件';['evName','evKey','evThing','evDesc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('evLevel').value='高危';document.getElementById('evOn').value='1';document.getElementById('evAudit').value='1';document.getElementById('evTh').value='1';var thsEl2=document.getElementById('evThs');if(thsEl2)thsEl2.value='';toggleThsField();document.getElementById('evCat').value=activeCategory||CATS[0].name;openLayer('evModal');}
+  function editEv(idx){var e=EVENTS[idx];if(!e)return;curEvIdx=idx;document.getElementById('evTitle').textContent='编辑预警事件';document.getElementById('evName').value=e.name;
+    var k1=document.getElementById('evKey');if(k1)k1.value=e.key||'';document.getElementById('evThing').value=e.thing||'';document.getElementById('evDesc').value=e.desc||'';document.getElementById('evLevel').value=e.level;document.getElementById('evOn').value=e.on?'1':'0';document.getElementById('evAudit').value=e.audit?'1':'0';document.getElementById('evTh').value=e.th?'1':'0';var thsEl=document.getElementById('evThs');if(thsEl)thsEl.value=e.ths||defaultThs(e.name);toggleThsField();document.getElementById('evCat').value=e.cat;openLayer('evModal');}
+  function saveEv(){var name=(document.getElementById('evName').value||'').trim(),cat=document.getElementById('evCat').value,thing=(document.getElementById('evThing').value||'').trim();if(!name){toast('请填写事件名称');document.getElementById('evName').focus();return;}if(name.length>40){toast('事件名称不能超过40个字');return;}if(!cat||!CATS.some(function(c){return c.name===cat;})){toast('请选择有效的所属分类');return;}if(EVENTS.some(function(e,i){return e.cat===cat&&e.name.toLowerCase()===name.toLowerCase()&&i!==curEvIdx;})){toast('该分类下已存在同名事件');return;}var data={cat:cat,name:name,key:((document.getElementById('evKey')||{}).value||'').trim(),level:document.getElementById('evLevel').value,on:document.getElementById('evOn').value==='1'?1:0,audit:document.getElementById('evAudit').value==='1'?1:0,th:document.getElementById('evTh').value==='1'?1:0,thing:thing,ths:(function(){var el=document.getElementById('evThs');var v=el?(el.value||'').trim():'';return (document.getElementById('evTh').value==='1')?v:'';})(),desc:(document.getElementById('evDesc').value||'').trim()};if(curEvIdx>=0)EVENTS[curEvIdx]=data;else EVENTS.push(data);persist();closeLayer('evModal');activeCategory=cat;refresh();toast('预警事件已保存');}
+  function delEv(idx){if(!EVENTS[idx])return;delTarget={type:'ev',idx:idx};document.getElementById('delTip').textContent='确定删除该预警事件？删除后不可恢复。';openLayer('delModal');}
+  function doDel(){if(!delTarget){closeLayer('delModal');return;}if(delTarget.type==='ev'){EVENTS.splice(delTarget.idx,1);}else{var name=CATS[delTarget.idx]&&CATS[delTarget.idx].name;if(name){CATS.splice(delTarget.idx,1);EVENTS=EVENTS.filter(function(e){return e.cat!==name;});if(activeCategory===name)activeCategory='';}}delTarget=null;persist();closeLayer('delModal');refresh();toast('已删除');}
+  function closeCatEdit(i){closeLayer('catListModal');editCat(i);}
+  function closeCatDelete(i){closeLayer('catListModal');delCat(i);}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){['catModal','evModal','catListModal','delModal'].forEach(closeLayer);}if(e.key==='Enter'&&e.target&&e.target.id==='catName'){e.preventDefault();saveCat();}});
+  loadData();
+  try{refresh();}catch(err){console.error(err);document.getElementById('evBody').innerHTML='<tr><td colspan="9" style="padding:24px;color:#e60012">页面初始化异常：'+esc(err.message)+'</td></tr>';}
+  
+  function renderPager(total){
+    var box=document.getElementById('pager');
+    if(!box) return;
+    var pages=Math.max(1, Math.ceil(total/PAGE_SIZE));
+    if (pages<=1){ box.innerHTML=''; return; }
+
+    var html='';
+    html+='<button'+(curPage===1?' disabled':'')+' onclick="goPage('+(curPage-1)+')">上一页</button>';
+    for(var i=1;i<=pages;i++){
+      html+='<button class="'+(i===curPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
+    }
+    html+='<button'+(curPage===pages?' disabled':'')+' onclick="goPage('+(curPage+1)+')">下一页</button>';
+    html+='<span class="pager-info">共 '+pages+' 页</span>';
+    box.innerHTML=html;
+  }
+
+  function goPage(n){
+    curPage = n;
+    renderEvents();
+  }
+
+  function defaultThs(name){
+    if (/温度|水温|油温|过热/.test(name)) return '70,75,80';
+    if (/离线|超时|时长|疲劳/.test(name)) return '12,24,48';
+    if (/速度|超速|加速|减速/.test(name)) return '20,30,40';
+    if (/油耗|消耗|液位|占比/.test(name)) return '10,20,30';
+    if (/围栏|距离|半径/.test(name)) return '100,200,500';
+    if (/压力|电压|转速|电流/.test(name)) return '1,2,3';
+    return '1,2,3';
+  }
+
+  function toggleThsField(){
+    var th = document.getElementById('evTh');
+    var box = document.getElementById('thsField');
+    if (!th || !box) return;
+    box.style.display = th.value === '1' ? '' : 'none';
+  }
+
+</script>
 </body>
 </html>
