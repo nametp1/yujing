@@ -97,19 +97,6 @@
   .cfg-del:hover{color:var(--red)}
   .cfg-add{margin-top:2px}
   .desc-col{color:#7a8290;font-size:12.5px}
-
-  .cat-group td{background:#f5f7fa;font-weight:600;color:#202936;padding:10px 12px;border-bottom:1px solid #eef1f5}
-  .cat-group em{font-style:normal;font-size:12px;font-weight:500;color:#8b94a0;margin-left:8px}
-  .cat-caret{display:inline-block;width:0;height:0;border-left:6px solid #8b94a0;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
-  .cat-caret.closed{transform:rotate(0)}
-
-  .dev-pick{display:flex;align-items:center;gap:14px}
-  .dev-pick-btn{flex-shrink:0}
-  .dev-summary{font-size:12.5px;color:#7a8290;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .dev-summary.has{color:#1899a8;font-weight:500}
-
-  #evDevModal{z-index:260}
-  #evDevModal .modal{box-shadow:0 24px 64px rgba(20,30,45,.32)}
   .evdev-tools{display:flex;align-items:center;gap:12px;padding-bottom:10px}
   .evdev-all{display:flex;align-items:center;gap:6px;font-size:13px;color:#4a5462;cursor:pointer;white-space:nowrap}
   .evdev-all input{width:15px;height:15px;accent-color:#29BECE;cursor:pointer}
@@ -127,8 +114,8 @@
   .evdev-count b{color:#1899a8;font-size:14px}
   .evdev-group{padding:7px 14px;background:#f7f9fb;font-size:12px;color:#8b94a0;font-weight:500}
 
-  .evdev-split{display:flex;border:1px solid #eef1f5;border-radius:10px;overflow:hidden;background:#fff}
-  .evdev-types{width:148px;flex-shrink:0;background:#f7f9fb;border-right:1px solid #eef1f5;padding:8px;max-height:380px;overflow-y:auto}
+  .evdev-split{display:flex;width:100%;height:392px;border:1px solid #eef1f5;border-radius:10px;overflow:hidden;background:#fff;box-sizing:border-box}
+  .evdev-types{width:158px;flex-shrink:0;background:#f7f9fb;border-right:1px solid #eef1f5;padding:8px;overflow-y:auto;box-sizing:border-box}
   .evdev-type{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;margin-bottom:3px;border-radius:7px;font-size:13px;color:#4a5462;cursor:pointer;position:relative;transition:all .14s}
   .evdev-type:hover{background:#eaf7f9}
   .evdev-type.active{background:#fff;color:#1899a8;font-weight:600;box-shadow:0 1px 4px rgba(20,40,60,.08)}
@@ -146,11 +133,6 @@
   .evdev-grouprow{background:#f2fbfc}
   .evdev-grouprow:hover{background:#e9f8fa}
   .evdev-grouprow .dev-name,.evdev-grouprow label span{color:#1899a8;font-weight:500}
-  .radio-row #evOnTxt{font-size:13px;color:#4a5462}
-  .cat-row{display:flex;align-items:center;justify-content:space-between}
-  .cat-left{display:flex;align-items:center}
-  .cat-add{font-size:12.5px;opacity:.75}
-  .cat-add:hover{opacity:1}
   .st-toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
   .st-toggle:hover .st-txt{color:#1899a8}
   .st-txt{font-size:12.5px;color:#657080;transition:color .15s}
@@ -160,10 +142,49 @@
   .switch.on{background:#20b26b}
   .switch.on::after{left:20px}
 
-  .ptype-col{color:#4a5462;vertical-align:top;padding-top:12px}
+  .ptype-col{color:#4a5462;vertical-align:middle;padding:0 12px 0 14px;border-right:1px solid #f0f3f7}
   .pt-caret{display:inline-block;width:0;height:0;border-left:5px solid #9aa3af;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:6px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
   .pt-caret.closed{transform:rotate(0)}
   .ptype-col.closed{color:#9aa3af}
+
+  /* ==== 预警类型单元格（名称 + 类型级开关） ==== */
+  .pt-head{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+  .pt-name{font-weight:600;color:#1f2329;font-size:13.5px}
+  .pt-sw{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;flex-shrink:0}
+  .pt-txt{font-size:12.5px;color:#657080;line-height:1}
+  .pt-sw .switch.on + .pt-txt{color:#1899a8}
+  .pt-sw .switch.mixed{background:linear-gradient(90deg,#20b26b 50%,#c8cfd8 50%)}
+  .pt-sw .switch.mixed + .pt-txt{color:#ed7b0b}
+  .pt-sw:hover .pt-txt{color:#1899a8}
+  .ptype-col{min-width:182px;white-space:nowrap}
+
+  /* ==== 预警类型独立行 ==== */
+  tr.type-row > td{padding:11px 14px;background:#fafbfc;border-top:1px solid #eef1f5;border-bottom:1px solid #eef1f5}
+  tr.type-row .pt-head{display:flex;align-items:center;gap:8px;margin:0}
+  tr.type-row .pt-name{font-weight:600;color:#1f2329;font-size:13.5px}
+  tr.type-row .pt-sw{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
+  tr.type-row .switch.mixed{background:linear-gradient(90deg,#20b26b 50%,#c8cfd8 50%)}
+  tr.type-row .pt-txt{font-size:12.5px;color:#657080}
+  tr.type-row .switch.on + .pt-txt{color:#1899a8}
+  tr.type-row .switch.mixed + .pt-txt{color:#ed7b0b}
+  tr.ev-row td.ptype-col:empty{width:182px;padding:0}
+  tr.ev-row td{padding-top:10px;padding-bottom:10px}
+  tr.type-row .type-sw-cell{white-space:nowrap;vertical-align:middle}
+  tr.type-row .type-sw-cell .pt-sw{gap:6px}
+  .field input[readonly]{background:#f7f8fa;color:#4a5462;cursor:default}
+  .field input[readonly]:focus{border-color:var(--line)}
+
+  .evdev-block{margin-top:4px}
+  .evdev-block > label{display:block;margin-bottom:8px;color:#3a4452;font-size:13px}
+  .evdev-block .evdev-split{height:340px}
+  #evModal .modal-body{max-height:76vh;overflow-y:auto}
+  #evModal .evdev-list{max-height:260px}
+  /* 分类即事件：单行承载类型名 + 类型开关 + 事件数据 */
+  tr.ev-row-single .pt-head{gap:8px;flex-wrap:nowrap}
+  tr.ev-row-single .pt-name{font-weight:600;color:#1f2329;font-size:13.5px}
+  tr.ev-row-single .pt-txt{font-size:12.5px;color:#657080}
+  tr.ev-row-single .switch.on + .pt-txt{color:#1899a8}
+  tr.ev-row-single .ev-name{color:#4a5462}
 </style>
 </head>
 <body>
@@ -234,7 +255,7 @@
           <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
         </a>
         <ul class="sidebar-submenu">
-          <li class="sidebar-item"><a class="sidebar-link" href="预警列表.html">预警列表</a></li>
+          <li class="sidebar-item"><a class="sidebar-link" href="预警中心.html">预警中心</a></li>
           <li class="sidebar-item active"><a class="sidebar-link" href="预警设置.html">预警设置</a></li>
           <li class="sidebar-item"><a class="sidebar-link" href="审核列表.html">审核列表</a></li>
         </ul>
@@ -282,27 +303,16 @@
   <main>
     <section class="page active" id="strategies">
       
-      <div class="card"><div class="filters"><select class="control" id="catFilter" onchange="filterByCat(this.value)"><option value="">全部预警分类</option><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select><select class="control" id="lvlFilter" onchange="doQuery(this)"><option value="">全部预警等级</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option></select><input class="control search" id="kwName" placeholder="事件名称" onkeydown="if(event.key==='Enter')doQuery(this)"/><span class="spacer"></span><button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="resetQuery()">重置</button></div><div class="table-wrap"><table class="table"><thead><tr><th>预警类型</th><th>预警事件</th><th>风险等级</th><th>预警值</th><th>预警说明</th><th>状态</th><th>操作</th></tr></thead><tbody>
-        <tr class="cat-group" data-cat="设备异常"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>设备异常</b><em>4</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
-        <tr class="ev-row" data-desc="冷却液温度持续超过设定阈值" data-cfgs='[["挖掘机", "70 ℃"], ["装载机", "75 ℃"]]' data-cat="设备异常" data-type="冷却水温高" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="冷却水温高"><span class="pt-caret" onclick="toggleType(this)"></span>冷却水温高</td><td class="ev-name" title="冷却水温高">冷却水温高</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 70 ℃；装载机 75 ℃"><span class="cell-ell" style="max-width:190px">挖掘机 70 ℃；装载机 75 ℃</span></td><td class="desc-col" title="冷却液温度持续超过设定阈值"><span class="cell-ell" style="max-width:180px">冷却液温度持续超过设定阈值</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="液压系统油温异常升高" data-cfgs='[["挖掘机", "80 ℃"]]' data-cat="设备异常" data-type="冷却水温高" data-on="1"><td class="ev-name" title="液压油温度高">液压油温度高</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 80 ℃"><span class="cell-ell" style="max-width:190px">挖掘机 80 ℃</span></td><td class="desc-col" title="液压系统油温异常升高"><span class="cell-ell" style="max-width:180px">液压系统油温异常升高</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="设备长时间未上报数据" data-cfgs='[["全部设备", "24 小时"]]' data-cat="设备异常" data-type="离线" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="离线"><span class="pt-caret" onclick="toggleType(this)"></span>离线</td><td class="ev-name" title="设备离线">设备离线</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="全部设备 24 小时"><span class="cell-ell" style="max-width:190px">全部设备 24 小时</span></td><td class="desc-col" title="设备长时间未上报数据"><span class="cell-ell" style="max-width:180px">设备长时间未上报数据</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="数据上报间隔超过设定时长" data-cfgs='[["全部设备", "12 小时"]]' data-cat="设备异常" data-type="离线" data-on="0"><td class="ev-name" title="数据上报超时">数据上报超时</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="全部设备 12 小时"><span class="cell-ell" style="max-width:190px">全部设备 12 小时</span></td><td class="desc-col" title="数据上报间隔超过设定时长"><span class="cell-ell" style="max-width:180px">数据上报间隔超过设定时长</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="cat-group" data-cat="作业安全"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>作业安全</b><em>6</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
-        <tr class="ev-row" data-desc="离车时未完成安全确认动作" data-cfgs='[["挖掘机", "中"], ["搅拌车", "高"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="1"><td class="ptype-col" rowspan="3" data-span="3" title="危险驾驶报警"><span class="pt-caret" onclick="toggleType(this)"></span>危险驾驶报警</td><td class="ev-name" title="下车危险驾驶报警">下车危险驾驶报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 中；搅拌车 高"><span class="cell-ell" style="max-width:190px">挖掘机 中；搅拌车 高</span></td><td class="desc-col" title="离车时未完成安全确认动作"><span class="cell-ell" style="max-width:180px">离车时未完成安全确认动作</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="瞬时加速度超过安全范围" data-cfgs='[["挖掘机", "中"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="1"><td class="ev-name" title="急加速报警">急加速报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 中"><span class="cell-ell" style="max-width:190px">挖掘机 中</span></td><td class="desc-col" title="瞬时加速度超过安全范围"><span class="cell-ell" style="max-width:180px">瞬时加速度超过安全范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="瞬时减速度超过安全范围" data-cfgs='[["挖掘机", "高"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="0"><td class="ev-name" title="急刹车报警">急刹车报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 高"><span class="cell-ell" style="max-width:190px">挖掘机 高</span></td><td class="desc-col" title="瞬时减速度超过安全范围"><span class="cell-ell" style="max-width:180px">瞬时减速度超过安全范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="AI 识别到现场安全隐患" data-cfgs='[["挖掘机", "低"]]' data-cat="作业安全" data-type="主动安全报警" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="主动安全报警"><span class="pt-caret" onclick="toggleType(this)"></span>主动安全报警</td><td class="ev-name" title="主动安全报警">主动安全报警</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 低"><span class="cell-ell" style="max-width:190px">挖掘机 低</span></td><td class="desc-col" title="AI 识别到现场安全隐患"><span class="cell-ell" style="max-width:180px">AI 识别到现场安全隐患</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="连续驾驶时长超过安全上限" data-cfgs='[["搅拌车", "3 小时"]]' data-cat="作业安全" data-type="主动安全报警" data-on="1"><td class="ev-name" title="疲劳驾驶报警">疲劳驾驶报警</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="搅拌车 3 小时"><span class="cell-ell" style="max-width:190px">搅拌车 3 小时</span></td><td class="desc-col" title="连续驾驶时长超过安全上限"><span class="cell-ell" style="max-width:180px">连续驾驶时长超过安全上限</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="设备未按计划完成作业报备" data-cfgs='[["挖掘机", "3 次"]]' data-cat="作业安全" data-type="设备未报备工作" data-on="1"><td class="ptype-col" rowspan="1" data-span="1" title="设备未报备工作">设备未报备工作</td><td class="ev-name" title="设备未报备工作">设备未报备工作</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 3 次"><span class="cell-ell" style="max-width:190px">挖掘机 3 次</span></td><td class="desc-col" title="设备未按计划完成作业报备"><span class="cell-ell" style="max-width:180px">设备未按计划完成作业报备</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="cat-group" data-cat="位置"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>位置</b><em>2</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
-        <tr class="ev-row" data-desc="设备驶出预设作业范围" data-cfgs='[["全部设备", "100 m"]]' data-cat="位置" data-type="电子围栏报警" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="电子围栏报警"><span class="pt-caret" onclick="toggleType(this)"></span>电子围栏报警</td><td class="ev-name" title="电子围栏报警">电子围栏报警</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="全部设备 100 m"><span class="cell-ell" style="max-width:190px">全部设备 100 m</span></td><td class="desc-col" title="设备驶出预设作业范围"><span class="cell-ell" style="max-width:180px">设备驶出预设作业范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="设备进入禁止作业区域" data-cfgs='[["全部设备", "立即"]]' data-cat="位置" data-type="电子围栏报警" data-on="1"><td class="ev-name" title="驶入禁行区">驶入禁行区</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="全部设备 立即"><span class="cell-ell" style="max-width:190px">全部设备 立即</span></td><td class="desc-col" title="设备进入禁止作业区域"><span class="cell-ell" style="max-width:180px">设备进入禁止作业区域</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="cat-group" data-cat="燃油"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>燃油</b><em>2</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
-        <tr class="ev-row" data-desc="燃油消耗速率偏离正常区间" data-cfgs='[["挖掘机", "35 L/h"], ["装载机", "40 L/h"]]' data-cat="燃油" data-type="油耗异常" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="油耗异常"><span class="pt-caret" onclick="toggleType(this)"></span>油耗异常</td><td class="ev-name" title="油耗异常">油耗异常</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="挖掘机 35 L/h；装载机 40 L/h"><span class="cell-ell" style="max-width:190px">挖掘机 35 L/h；装载机 40 L/h</span></td><td class="desc-col" title="燃油消耗速率偏离正常区间"><span class="cell-ell" style="max-width:180px">燃油消耗速率偏离正常区间</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="ev-row" data-desc="油箱液位低于安全阈值" data-cfgs='[["全部设备", "15 %"]]' data-cat="燃油" data-type="油耗异常" data-on="0"><td class="ev-name" title="燃油液位偏低">燃油液位偏低</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="全部设备 15 %"><span class="cell-ell" style="max-width:190px">全部设备 15 %</span></td><td class="desc-col" title="油箱液位低于安全阈值"><span class="cell-ell" style="max-width:180px">油箱液位低于安全阈值</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
-        <tr class="cat-group" data-cat="提示"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>提示</b><em>1</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
-        <tr class="ev-row" data-desc="设备长时间停放未作业" data-cfgs='[["全部设备", "1 小时"]]' data-cat="提示" data-type="停车提示" data-on="1"><td class="ptype-col" rowspan="1" data-span="1" title="停车提示">停车提示</td><td class="ev-name" title="停车提示">停车提示</td><td class="lv-col"><span class="tag gray">提示</span></td><td class="cfg-col" title="全部设备 1 小时"><span class="cell-ell" style="max-width:190px">全部设备 1 小时</span></td><td class="desc-col" title="设备长时间停放未作业"><span class="cell-ell" style="max-width:180px">设备长时间停放未作业</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+      <div class="card"><div class="filters"><select class="control" id="typeFilter" onchange="filterByType(this.value)"><option value="">全部预警类型</option><option>冷却水温高</option><option>离线</option><option>危险驾驶报警</option><option>主动安全报警</option><option>设备未报备工作</option><option>电子围栏报警</option><option>油耗异常</option><option>停车提示</option></select><select class="control" id="lvlFilter" onchange="doQuery(this)"><option value="">全部预警等级</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option></select><input class="control search" id="kwName" placeholder="事件名称" onkeydown="if(event.key==='Enter')doQuery(this)"/><span class="spacer"></span><button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="resetQuery()">重置</button><button class="btn primary" onclick="addEv()">＋ 新增预警</button></div><div class="table-wrap"><table class="table"><thead><tr><th>预警类型</th><th>预警事件</th><th>风险等级</th><th>预警值</th><th>预警说明</th><th>状态</th><th>操作</th></tr></thead><tbody>
+          <tr class="type-row" data-type="冷却水温高"><td colspan="5"><div class="pt-head"><span class="pt-caret" onclick="toggleType(this)"></span><span class="pt-name">冷却水温高</span></div></td><td class="type-sw-cell"><span class="pt-sw" onclick="toggleTypeAll(this)"><span class="switch on"></span><span class="pt-txt">已开启</span></span></td><td><button class="btn link" onclick="openTypeCfg(this)">配置</button></td></tr>
+          <tr class="ev-row" data-desc="冷却液温度持续超过设定阈值" data-cfgs='[["挖掘机", "70 ℃"], ["装载机", "75 ℃"]]' data-cat="设备异常" data-type="冷却水温高" data-on="1"><td class="ptype-col"></td><td class="ev-name" title="冷却水温高">冷却水温高</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 70 ℃；装载机 75 ℃"><span class="cell-ell" style="max-width:190px">挖掘机 70 ℃；装载机 75 ℃</span></td><td class="desc-col" title="冷却液温度持续超过设定阈值"><span class="cell-ell" style="max-width:180px">冷却液温度持续超过设定阈值</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button></td></tr>
+          <tr class="ev-row" data-desc="液压系统油温异常升高" data-cfgs='[["挖掘机", "80 ℃"]]' data-cat="设备异常" data-type="冷却水温高" data-on="1"><td class="ptype-col"></td><td class="ev-name" title="液压油温度高">液压油温度高</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 80 ℃"><span class="cell-ell" style="max-width:190px">挖掘机 80 ℃</span></td><td class="desc-col" title="液压系统油温异常升高"><span class="cell-ell" style="max-width:180px">液压系统油温异常升高</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button></td></tr>
+          <tr class="type-row" data-type="危险驾驶报警"><td colspan="5"><div class="pt-head"><span class="pt-caret" onclick="toggleType(this)"></span><span class="pt-name">危险驾驶报警</span></div></td><td class="type-sw-cell"><span class="pt-sw" onclick="toggleTypeAll(this)"><span class="switch mixed"></span><span class="pt-txt">部分开启</span></span></td><td><button class="btn link" onclick="openTypeCfg(this)">配置</button></td></tr>
+          <tr class="ev-row" data-desc="离车时未完成安全确认动作" data-cfgs='[["挖掘机", "中"], ["搅拌车", "高"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="1"><td class="ptype-col"></td><td class="ev-name" title="下车危险驾驶报警">下车危险驾驶报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 中；搅拌车 高"><span class="cell-ell" style="max-width:190px">挖掘机 中；搅拌车 高</span></td><td class="desc-col" title="离车时未完成安全确认动作"><span class="cell-ell" style="max-width:180px">离车时未完成安全确认动作</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button></td></tr>
+          <tr class="ev-row" data-desc="瞬时加速度超过安全范围" data-cfgs='[["挖掘机", "中"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="1"><td class="ptype-col"></td><td class="ev-name" title="急加速报警">急加速报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 中"><span class="cell-ell" style="max-width:190px">挖掘机 中</span></td><td class="desc-col" title="瞬时加速度超过安全范围"><span class="cell-ell" style="max-width:180px">瞬时加速度超过安全范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button></td></tr>
+          <tr class="ev-row" data-desc="瞬时减速度超过安全范围" data-cfgs='[["挖掘机", "高"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="0"><td class="ptype-col"></td><td class="ev-name" title="急刹车报警">急刹车报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 高"><span class="cell-ell" style="max-width:190px">挖掘机 高</span></td><td class="desc-col" title="瞬时减速度超过安全范围"><span class="cell-ell" style="max-width:180px">瞬时减速度超过安全范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button></td></tr>
+        
+          <tr class="ev-row ev-row-single" data-type="制动异常" data-cat="制动异常" data-cfgs='[["挖掘机", "85 ℃"], ["装载机", "90 ℃"]]' data-desc="制动系统温度异常升高" data-on="1"><td class="ptype-col"><div class="pt-head"><span class="pt-name">制动异常</span></div></td><td class="ev-name" title="制动异常">制动异常</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col"><span class="cell-ell" style="max-width:190px">挖掘机 85 ℃；装载机 90 ℃</span></td><td class="desc-col"><span class="cell-ell" style="max-width:180px">制动系统温度异常升高</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button></td></tr>
         </tbody></table></div><div class="footer"><span id="totalCount">共 15 条</span><div class="pages"><span class="on" onclick="gotoPage(this)">1</span><span onclick="gotoPage(this)">2</span><span onclick="gotoPage(this)">3</span></div></div></div>
     </section>
   </main>
@@ -312,20 +322,15 @@
   <div class="drawer-mask" id="detailDrawer" onclick="maskClose(event,'detailDrawer')"><div class="drawer"><div class="drawer-head"><div><b style="font-size:18px" id="detailName">预警详情</b><span class="sub">事件编号 EVT-20260826-00128</span></div><button class="x" onclick="closeLayer('detailDrawer')">×</button></div><div class="drawer-body"><div class="section"><h3>事件信息</h3><div class="detail-grid"><div class="kv"><label>事业部</label><span id="detailBU">重起</span></div><div class="kv"><label>风险等级</label><span class="tag high">高危</span></div><div class="kv"><label>设备</label><span>WJ0012 · 挖掘机</span></div><div class="kv"><label>发生时间</label><span>2026-08-26 10:32:16</span></div><div class="kv"><label>来源扩展 / 链路</label><span id="detailSource"></span></div><div class="kv"><label>触发值 / 条件</label><span id="detailValue"></span></div></div></div><div class="section"><h3>来源数据</h3><div class="mapping-demo"><div class="mapping-box"><h4>来源系统原始信息</h4><div class="mapping-row"><span>baseType</span><code>20</code></div><div class="mapping-row"><span>warnType</span><code>03</code></div><div class="mapping-row"><span>temperature</span><code>102</code></div></div><div class="mapping-arrow">→</div><div class="mapping-box"><h4>SanVIST统一事件</h4><div class="mapping-row"><span>标准编码</span><code>ENGINE_TEMP_HIGH</code></div><div class="mapping-row"><span>事件名称</span><span>水温过高</span></div><div class="mapping-row"><span>等级</span><span>高危</span></div></div></div></div><div class="section"><h3>处理记录</h3><div class="timeline"><div class="time-item"><b>系统生成预警记录</b><small class="sub">10:32 · 命中客户“标准档”阈值</small></div><div class="time-item"><b>已发送 App PUSH</b><small class="sub">10:33 · 通知设备管理员等 3 人</small></div></div></div><div class="section"><h3>处理事件</h3><div class="field"><label>处理说明</label><textarea placeholder="请输入原因、处理措施或备注"></textarea></div></div></div><div class="drawer-foot"><button class="btn" onclick="closeLayer('detailDrawer')">关闭</button><button class="btn" onclick="toast('已标记为忽略')">忽略</button><button class="btn primary" onclick="saveAndClose('detailDrawer','事件已处理')">完成处理</button></div></div></div>
 
       <div class="modal-mask" id="evModal" onclick="maskClose(event,'evModal')">
-    <div class="modal" style="width:660px">
+    <div class="modal" style="width:880px">
       <div class="modal-head">
-        <div><b style="font-size:18px">配置预警事件</b><span class="sub" id="evModalName">—</span></div>
+        <b style="font-size:18px">配置预警事件</b>
         <button class="x" onclick="closeLayer('evModal')">×</button>
       </div>
       <div class="modal-body">
-        <div class="form-grid">
-          <div class="field full"><label><i>*</i> 事件名称</label><select id="evName" onchange="onEvPicked(this)"></select></div>
-          <div class="field full"><label>启用状态</label>
-            <div class="radio-row"><span class="switch on" id="evOn" onclick="toggleEvOn(this)"></span><span id="evOnTxt">开启</span></div>
-          </div>
-          <div class="field full"><label id="devFieldLabel">预警值</label><div class="dev-pick"><button type="button" class="btn dev-pick-btn" onclick="openEvDevPicker()">选择设备与阈值</button><div class="dev-summary" id="evDevSummary">未配置设备</div></div></div>
+        <div class="evdev-block"><div class="evdev-split"><div class="evdev-types" id="evDevTypes"></div><div class="evdev-panel"><div class="evdev-tools"><input class="control" style="flex:1" placeholder="搜索型号 / 设备编号" oninput="filterEvDev(this)"/><label class="evdev-all"><input type="checkbox" onchange="toggleAllEvDev(this)"/> 全选本类</label></div><div class="evdev-head"><span>设备（型号 · 编号）</span><span>预警值</span></div><div class="evdev-list" id="evDevList"></div></div></div></div>
           
-        </div>
+        
       </div>
       <div class="modal-foot">
         <button class="btn" onclick="closeLayer('evModal')">取消</button>
@@ -334,51 +339,10 @@
     </div>
   </div>
 
-    <div class="modal-mask" id="evDevModal" onclick="maskClose(event,'evDevModal')">
-    <div class="modal" style="width:820px">
-      <div class="modal-head">
-        <b style="font-size:18px">设备与预警值</b>
-        <button class="x" onclick="closeLayer('evDevModal')">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="evdev-split">
-          <div class="evdev-types" id="evDevTypes"></div>
-          <div class="evdev-panel">
-            <div class="evdev-tools">
-              <input class="control" style="flex:1" placeholder="搜索型号 / 设备编号" oninput="filterEvDev(this)"/>
-              <label class="evdev-all"><input type="checkbox" onchange="toggleAllEvDev(this)"/> 全选本类</label>
-            </div>
-            <div class="evdev-head"><span>设备（型号 · 编号）</span><span>预警值</span></div>
-            <div class="evdev-list" id="evDevList"></div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <span class="evdev-count">已选 <b id="evDevCount">0</b> 台</span>
-        <button class="btn" onclick="closeLayer('evDevModal')">取消</button>
-        <button class="btn primary" onclick="confirmEvDev()">确定</button>
-      </div>
-    </div>
-  </div>
+    
 
-
-  <div class="modal-mask" id="delEvModal" onclick="maskClose(event,'delEvModal')">
-    <div class="modal" style="width:420px">
-      <div class="modal-head">
-        <b style="font-size:18px">确认移除</b>
-        <button class="x" onclick="closeLayer('delEvModal')">×</button>
-      </div>
-      <div class="modal-body">
-        <p id="delEvTip" style="margin:0;font-size:14px;line-height:1.7;color:#4a5462">确定要移除该预警事件吗？移除后相关配置将一并清除。</p>
-      </div>
-      <div class="modal-foot">
-        <button class="btn" onclick="closeLayer('delEvModal')">取消</button>
-        <button class="btn primary" onclick="doDelEv()">确认移除</button>
-      </div>
-    </div>
-  </div>
   
-
+  
 
   <div class="toast" id="toast"></div>
   <script>
@@ -396,7 +360,6 @@
     el.classList.add('on');
   }
 
-
   function toggleMenu(el){
     const li = el.closest('.sidebar-item');
     if (!li) return;
@@ -411,19 +374,22 @@
     }
   }
 
-
-  function doQuery(btn){
+function doQuery(btn){
     var card = (btn && btn.closest && btn.closest('.card')) || document;
     var input = card.querySelector('.control.search');
     var kw = input ? (input.value || '').trim().toLowerCase() : '';
     var lvlEl = document.getElementById('lvlFilter');
     var lvl = lvlEl ? lvlEl.value : '';
+    var typeEl = document.getElementById('typeFilter');
+    var type = typeEl ? typeEl.value : '';
     var shown = 0;
 
     card.querySelectorAll('tbody tr.ev-row').forEach(function (tr) {
       var lv = tr.querySelector('.lv-col');
       var lvTxt = lv ? lv.textContent.trim() : '';
+      var tp = tr.getAttribute('data-type') || '';
       var hit = (!lvl || lvTxt === lvl)
+        && (!type || tp === type)
         && (!kw || tr.textContent.toLowerCase().indexOf(kw) > -1);
       tr.style.display = hit ? '' : 'none';
       if (hit) shown++;
@@ -431,33 +397,20 @@
 
     var total = card.querySelector('#totalCount') || document.getElementById('totalCount');
     if (total) total.textContent = '共 ' + shown + ' 条';
-    if (kw || lvl) toast('已筛选出 ' + shown + ' 条');
+    if (kw || lvl || type) toast('已筛选出 ' + shown + ' 条');
   }
 
-
-  function toggleCat(el){
-    el.classList.toggle('closed');
-    var hide = el.classList.contains('closed');
-    var cat = el.closest('tr').getAttribute('data-cat');
-    document.querySelectorAll('tbody tr.ev-row[data-cat="' + cat + '"]').forEach(function (tr) {
-      tr.style.display = hide ? 'none' : '';
-    });
-  }
-
-
-
-  function filterByCat(cat){
+function filterByType(type){
     document.querySelectorAll('tbody tr.ev-row').forEach(function (tr) {
-      tr.style.display = (!cat || tr.getAttribute('data-cat') === cat) ? '' : 'none';
+      tr.style.display = (!type || tr.getAttribute('data-type') === type) ? '' : 'none';
     });
     var el = document.getElementById('totalCount');
     if (el) {
-      var n = cat ? document.querySelectorAll('tbody tr.ev-row[data-cat="' + cat + '"]').length
-                  : document.querySelectorAll('tbody tr.ev-row').length;
+      var n = type ? document.querySelectorAll('tbody tr.ev-row[data-type="' + type + '"]').length
+                   : document.querySelectorAll('tbody tr.ev-row').length;
       el.textContent = '共 ' + n + ' 条';
     }
   }
-
 
   var EV_TH = {
     '冷却水温高': ['70 °C', '75 °C', '80 °C', '85 °C', '90 °C'],
@@ -489,16 +442,7 @@
 
   var evCfgRow = null;
 
-
-
   var evCfgRow = null;
-  var delEvRow = null;
-
-  function toggleEvOn(el){
-    el.classList.toggle('on');
-    var t = document.getElementById('evOnTxt');
-    if (t) t.textContent = el.classList.contains('on') ? '开启' : '关闭';
-  }
 
   function toggleEvt(el){
     var sw = el.classList.contains('switch') ? el : el.querySelector('.switch');
@@ -511,53 +455,7 @@
     if (txt) txt.textContent = on ? '开启' : '关闭';
   }
 
-  function confirmDelEv(btn){
-    delEvRow = btn.closest('tr');
-    openModal('delEvModal');
-  }
-
-  function doDelEv(){
-    if (delEvRow) {
-      var box = delEvRow.parentNode;
-      delEvRow.remove();
-      delEvRow = null;
-      var n = box.querySelectorAll('tr.ev-row').length;
-      var total = document.getElementById('totalCount');
-      if (total) total.textContent = '共 ' + n + ' 条';
-      toast('已移除该预警事件');
-    }
-    closeLayer('delEvModal');
-  }
-
-
   var EV_META = {"冷却水温高": {"cat": "设备异常", "type": "冷却水温高", "lv": "高危"}, "液压油温度高": {"cat": "设备异常", "type": "冷却水温高", "lv": "中危"}, "设备离线": {"cat": "设备异常", "type": "离线", "lv": "中危"}, "数据上报超时": {"cat": "设备异常", "type": "离线", "lv": "低危"}, "下车危险驾驶报警": {"cat": "作业安全", "type": "危险驾驶报警", "lv": "高危"}, "急加速报警": {"cat": "作业安全", "type": "危险驾驶报警", "lv": "高危"}, "急刹车报警": {"cat": "作业安全", "type": "危险驾驶报警", "lv": "高危"}, "主动安全报警": {"cat": "作业安全", "type": "主动安全报警", "lv": "中危"}, "疲劳驾驶报警": {"cat": "作业安全", "type": "主动安全报警", "lv": "中危"}, "设备未报备工作": {"cat": "作业安全", "type": "设备未报备工作", "lv": "中危"}, "电子围栏报警": {"cat": "位置", "type": "电子围栏报警", "lv": "中危"}, "驶入禁行区": {"cat": "位置", "type": "电子围栏报警", "lv": "低危"}, "油耗异常": {"cat": "燃油", "type": "油耗异常", "lv": "低危"}, "燃油液位偏低": {"cat": "燃油", "type": "油耗异常", "lv": "低危"}, "停车提示": {"cat": "提示", "type": "停车提示", "lv": "提示"}};
-
-  (function renderEvSelect(){
-    var sel = document.getElementById('evName');
-    if (!sel) return;
-    var cats = [];
-    Object.keys(EV_META).forEach(function (k) {
-      var c = EV_META[k].cat;
-      if (cats.indexOf(c) < 0) cats.push(c);
-    });
-    sel.innerHTML = '<option value="">请选择事件</option>' + cats.map(function (c) {
-      var opts = Object.keys(EV_META).filter(function (k) { return EV_META[k].cat === c; })
-        .map(function (k) { return '<option value="' + k + '">' + k + '</option>'; }).join('');
-      return '<optgroup label="' + c + '">' + opts + '</optgroup>';
-    }).join('');
-  })();
-
-  function onEvPicked(sel){
-    var mt = EV_META[sel.value];
-    var dl = document.getElementById('devFieldLabel');
-    if (dl) dl.textContent = (mt && mt.type) ? (mt.type + ' · 预警值') : '预警值';
-    var lv = EV_META[sel.value];
-    if (lv) {
-      var nm = document.getElementById('evModalName');
-      if (nm) nm.textContent = sel.value;
-    }
-  }
-
 
   var evDevData = {};      // {设备: 阈值}
   var evDevName = '';      // 当前事件名
@@ -598,49 +496,36 @@
   function openEvCfg(btn){
     evCfgRow = btn.closest('tr');
     var name = evCfgRow.querySelector('.ev-name').textContent.trim();
-    document.getElementById('evModalName').textContent = name;
 
-    var nameSel = document.getElementById('evName');
-    var exists = Array.prototype.some.call(nameSel.options, function (o) { return o.value === name; });
-    if (!exists) {
-      var op = document.createElement('option');
-      op.value = name; op.textContent = name;
-      nameSel.appendChild(op);
-    }
-    nameSel.value = name;
-
-    var on = evCfgRow.getAttribute('data-on') === '1';
-    var onEl = document.getElementById('evOn');
-    onEl.classList.toggle('on', on);
-    document.getElementById('evOnTxt').textContent = on ? '开启' : '关闭';
-
-    var ptype0 = evCfgRow.getAttribute('data-type') || '';
-    var dl = document.getElementById('devFieldLabel');
-    if (dl) dl.textContent = (ptype0 && ptype0 !== '新建类型') ? (ptype0 + ' · 预警值') : '预警值';
-
+    // 初始化设备配置数据
+    evDevName = name;
     evDevData = {};
     var cfgs = [];
     try { cfgs = JSON.parse(evCfgRow.getAttribute('data-cfgs') || '[]'); } catch (e) { cfgs = []; }
     cfgs.forEach(function (c) { if (c && c[0]) evDevData[c[0]] = c[1]; });
 
-    var sum = document.getElementById('evDevSummary');
-    var txt2 = evDevSummaryText();
-    sum.textContent = txt2;
-    sum.classList.toggle('has', Object.keys(evDevData).length > 0);
+    var thList = EV_TH[evDevName] || guessThList(evDevName);
+    Object.keys(evDevData).forEach(function (k) {
+      if (!evDevData[k] || evDevData[k] === '默认') evDevData[k] = thList[0];
+    });
+
+    evDevType = '默认';
+    renderEvDevTypes();
+    renderEvDevRows('默认');
 
     openModal('evModal');
   }
 
   function saveEvCfg(){
     if (!evCfgRow) return;
-    var name = (document.getElementById('evName').value || '').trim();
-    if (!name) { toast('请选择事件名称'); return; }
+    var name = (evCfgRow.querySelector('.ev-name').textContent || '').trim();
+    if (!name) { toast('未取到事件名称'); return; }
 
     var mt = EV_META[name] || {};
     var cat = mt.cat || (evCfgRow.getAttribute('data-cat') || '');
     var ptype = mt.type || (evCfgRow.getAttribute('data-type') || '');
     var lv = mt.lv || '中危';
-    var on = document.getElementById('evOn').classList.contains('on');
+    var on = evCfgRow.getAttribute('data-on') === '1';
 
     var cfgs = Object.keys(evDevData).map(function (k) { return [k, evDevData[k]]; });
 
@@ -667,10 +552,9 @@
     }
 
     closeLayer('evModal');
-    toast('已保存「' + name + '」的配置');
+    toast('配置已保存');
     evCfgRow = null;
   }
-
 
   var evDevData = {};       // {设备: 阈值}
   var evDevName = '';       // 当前事件名
@@ -786,60 +670,9 @@
     });
   }
 
-  function openEvDevPicker(){
-    evDevName = document.getElementById('evName').value || '';
-    if (!evDevName) { toast('请先选择事件名称'); return; }
-
-    evDevData = {};
-    if (evCfgRow) {
-      var cfgs = [];
-      try { cfgs = JSON.parse(evCfgRow.getAttribute('data-cfgs') || '[]'); } catch (e) { cfgs = []; }
-      cfgs.forEach(function (c) { if (c && c[0]) evDevData[c[0]] = c[1]; });
-    }
-
-    // 清洗历史占位值
-    var thList = EV_TH[evDevName] || guessThList(evDevName);
-    Object.keys(evDevData).forEach(function (k) {
-      if (!evDevData[k] || evDevData[k] === '默认') evDevData[k] = thList[0];
-    });
-
-    evDevType = '默认';
-    renderEvDevTypes();
-    renderEvDevRows('默认');
-    openModal('evDevModal');
-  }
-
-  function evDevSummaryText(){
-    var sets = {};
-    Object.keys(evDevData).forEach(function (k) {
-      var g = null;
-      if (k === '__ALL__') g = '全部设备';
-      else if (k.indexOf(':') > -1) g = k.split(':')[0];
-      else {
-        Object.keys(EVDEV_DEV).forEach(function (gg) {
-          if (EVDEV_DEV[gg].indexOf(k) > -1) g = gg;
-        });
-      }
-      if (g) sets[g] = 1;
-    });
-    var list = Object.keys(sets);
-    return list.length ? ('已配置：' + list.join('、')) : '未配置设备';
-  }
-
-  function confirmEvDev(){
-    var sum = document.getElementById('evDevSummary');
-    if (sum) {
-      var txt = evDevSummaryText();
-      sum.textContent = txt;
-      sum.classList.toggle('has', Object.keys(evDevData).length > 0);
-    }
-    closeLayer('evDevModal');
-  }
-
-
-  function resetQuery(){
-    var cat = document.getElementById('catFilter');
-    if (cat) cat.selectedIndex = 0;
+function resetQuery(){
+    var tf = document.getElementById('typeFilter');
+    if (tf) tf.selectedIndex = 0;
     var lvl = document.getElementById('lvlFilter');
     if (lvl) lvl.selectedIndex = 0;
     var kw = document.getElementById('kwName');
@@ -849,25 +682,15 @@
       tr.style.display = '';
     });
 
-    document.querySelectorAll('tbody tr.cat-group').forEach(function (g) {
-      var c = g.getAttribute('data-cat');
-      var em = g.querySelector('em');
-      if (em) em.textContent = document.querySelectorAll('tbody tr.ev-row[data-cat="' + c + '"]').length;
-    });
-
     var total = document.getElementById('totalCount');
     if (total) total.textContent = '共 ' + document.querySelectorAll('tbody tr.ev-row').length + ' 条';
     toast('已重置查询条件');
   }
 
-
-  function addEvInCat(btn){
-    var groupRow = btn.closest('tr.cat-group');
-    var cat = groupRow.getAttribute('data-cat');
-
+function addEv(){
     var tr = document.createElement('tr');
     tr.className = 'ev-row';
-    tr.setAttribute('data-cat', cat);
+    tr.setAttribute('data-cat', '');
     tr.setAttribute('data-type', '新建类型');
     tr.setAttribute('data-on', '1');
     tr.setAttribute('data-cfgs', '[]');
@@ -877,43 +700,67 @@
       + '<td class="lv-col"><span class="tag mid">中危</span></td>'
       + '<td class="cfg-col"><span class="cell-ell" style="max-width:190px">—</span></td>'
       + '<td class="desc-col"><span class="cell-ell" style="max-width:180px">-</span></td>'
-      + '<td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td>'
+      + '<td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)">'
+      + '<span class="switch on"></span><span class="st-txt">开启</span></span></td>'
       + '<td><button class="btn link" onclick="openEvCfg(this)">配置</button>'
-      + '<button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td>';
-
-    // 插到该分组最后一个事件行之后
-    var last = groupRow;
-    var nxt = groupRow.nextElementSibling;
-    while (nxt && nxt.classList && nxt.classList.contains('ev-row')) {
-      last = nxt;
-      nxt = nxt.nextElementSibling;
-    }
-    last.after(tr);
-
-    var em = groupRow.querySelector('em');
-    if (em) em.textContent = document.querySelectorAll('tbody tr.ev-row[data-cat="' + cat + '"]').length;
-
+      + '</td>';
+    document.querySelector('#evTable tbody, table.table tbody').appendChild(tr);
+    var total = document.getElementById('totalCount');
+    if (total) total.textContent = '共 ' + document.querySelectorAll('tbody tr.ev-row').length + ' 条';
     openEvCfg(tr.querySelector('.btn.link'));
   }
 
-
   function toggleType(el){
-    var cell = el.closest('.ptype-col');
     var tr = el.closest('tr');
-    var cat = tr.getAttribute('data-cat');
-    var type = tr.getAttribute('data-type');
-
-    var closed = cell.classList.toggle('closed');
-    el.classList.toggle('closed', closed);
-
-    var rows = document.querySelectorAll('tr.ev-row[data-cat="' + cat + '"][data-type="' + type + '"]');
-    rows.forEach(function (r, i) {
-      if (i === 0) { r.style.display = ''; return; }
+    var type = tr ? tr.getAttribute('data-type') : '';
+    if (!type) {
+      type = tr.querySelector('.pt-name') ? tr.querySelector('.pt-name').textContent.trim() : '';
+    }
+    var closed = el.classList.toggle('closed');
+    document.querySelectorAll('tbody tr.ev-row').forEach(function (r) {
+      if (r.getAttribute('data-type') !== type) return;
       r.style.display = closed ? 'none' : '';
     });
+  }
 
-    var span = parseInt(cell.getAttribute('data-span') || '1', 10);
-    cell.setAttribute('rowspan', closed ? 1 : span);
+  function toggleTypeAll(el){
+    var sw = el.querySelector('.switch');
+    if (!sw) return;
+    var on = !sw.classList.contains('on');
+    sw.classList.toggle('on', on);
+    var txt = el.querySelector('.pt-txt');
+    if (txt) txt.textContent = on ? '已开启' : '已关闭';
+
+    var tr = el.closest('tr');
+    var type = tr ? tr.getAttribute('data-type') : '';
+    if (!type) return;
+    document.querySelectorAll('#evTable tbody tr.ev-row, table.table tbody tr.ev-row').forEach(function (r) {
+      if (r.getAttribute('data-type') !== type) return;
+      var s2 = r.querySelector('.st-col .switch');
+      var t2 = r.querySelector('.st-col .st-txt');
+      if (s2) s2.classList.toggle('on', on);
+      if (t2) t2.textContent = on ? '开启' : '关闭';
+      r.setAttribute('data-on', on ? '1' : '0');
+    });
+    toast(on ? '已开启该分类下全部预警' : '已关闭该分类下全部预警');
+  }
+
+  function openTypeCfg(btn){
+    var tr = btn.closest('tr');
+    var type = tr.getAttribute('data-type') || '';
+    var rows = document.querySelectorAll('#evTable tbody tr.ev-row');
+    var target = null;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].getAttribute('data-type') === type && !rows[i].classList.contains('ev-row-placeholder')) {
+        target = rows[i];
+        break;
+      }
+    }
+    if (target) {
+      var b = target.querySelector('.btn.link');
+      if (b) { openEvCfg(b); return; }
+    }
+    toast('请先新增预警事件');
   }
 
 </script>
