@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>预警列表</title>
+  <style>
+    :root{--red:#e60012;--red2:#fff1f2;--blue:#1677ff;--green:#20b26b;--orange:#fa8c16;--ink:#202936;--muted:#657080;--line:#e5e9ef;--bg:#f4f6f8;--white:#fff;--shadow:0 6px 24px rgba(26,39,60,.09)}
+    *{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Arial,sans-serif;color:var(--ink);background:var(--bg)}button,input,select,textarea{font:inherit}.logo{font-size:23px;font-weight:900;font-style:italic;color:var(--red);letter-spacing:-1px}.avatar{width:31px;height:31px;border-radius:50%;background:#dbe9ff;display:grid;place-items:center}.nav:hover{background:#f6f7f9}.nav.active{background:var(--red2);color:var(--red);font-weight:650}.nav.active small{background:#fff;color:var(--red)}
+    main{margin-left:218px;padding:88px 24px 30px;min-width:1050px}.page{display:none}.page.active{display:block}
+    .btn{height:36px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:0 15px;cursor:pointer;color:#384353}.btn:hover{border-color:#aeb7c3}.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}.btn.link{border:0;color:var(--blue);padding:0 5px;background:none;height:auto}.btn.danger{color:var(--red)}
+    .card{background:#fff;border:1px solid #edf0f3;border-radius:10px;box-shadow:0 1px 3px rgba(20,35,55,.03);margin-bottom:16px}.filters{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.control{height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#4e5968;padding:0 11px;min-width:128px}.search{min-width:220px}.spacer{flex:1}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr) 2.1fr;gap:12px;padding:0 16px 16px}.metric{border:1px solid var(--line);border-radius:9px;padding:14px}.metric .num{font-size:25px;font-weight:700;margin:6px 0 1px}.metric .lab{color:var(--muted);font-size:13px}.metric.red .num{color:var(--red)}.metric.orange .num{color:var(--orange)}.metric.green .num{color:var(--green)}.chart{display:flex;align-items:flex-end;gap:8px;height:65px;padding:7px 6px 3px;border-bottom:1px solid var(--line)}.bar{flex:1;background:#5c96ee;border-radius:2px 2px 0 0;min-width:7px}.chartbox small{color:var(--muted)}
+    .table-wrap{overflow:auto;padding:0 16px}.table{width:100%;border-collapse:collapse;white-space:nowrap}.table th{background:#f7f8fa;color:#505b69;font-weight:600;text-align:left;border:1px solid var(--line);padding:11px 12px}.table td{padding:12px;border-bottom:1px solid var(--line);color:#3f4956}.table tr:hover td{background:#fafbfd}.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:12px}.tag.high{background:#ffe8ea;color:#e42837}.tag.mid{background:#fff0dc;color:#ed7b0b}.tag.low{background:#e7f1ff;color:#2878df}.tag.info{background:#e9f7ef;color:#17945b}.tag.gray{background:#f0f2f4;color:#737d89}.dot:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}.footer{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}.pages{display:flex;gap:7px;align-items:center}.pages span{width:31px;height:31px;border:1px solid var(--line);display:grid;place-items:center;border-radius:5px}.pages .on{background:var(--red);color:#fff;border-color:var(--red)}.tab{padding:15px 2px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent}.tab.active{color:var(--red);border-color:var(--red);font-weight:650}.sub{display:block;font-size:12px;color:#929ba7;margin-top:1px}.arrow{color:#a3abb6}.customer:hover{background:#f6f7f9}.customer.active{background:var(--red2);color:var(--red)}
+    .drawer-mask,.modal-mask{display:none;position:fixed;inset:0;background:rgba(22,30,40,.42);z-index:30}.drawer-mask.open,.modal-mask.open{display:block}.drawer{position:absolute;right:0;top:0;height:100%;width:700px;background:#fff;box-shadow:-8px 0 28px rgba(0,0,0,.15);display:flex;flex-direction:column}.drawer-head,.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.drawer-body{padding:20px 22px;overflow:auto;flex:1}.drawer-foot,.modal-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}.x{border:0;background:none;font-size:23px;color:#7d8793;cursor:pointer}.section{margin-bottom:24px}.section h3{font-size:15px;margin:0 0 13px;padding-left:9px;border-left:3px solid var(--red)}.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.kv{background:#f7f8fa;border-radius:6px;padding:11px}.kv label{display:block;color:#8b94a0;font-size:12px;margin-bottom:3px}.timeline{border-left:2px solid #e5e9ef;margin-left:8px;padding-left:19px}.time-item{position:relative;margin-bottom:18px}.time-item:before{content:"";position:absolute;width:9px;height:9px;background:#fff;border:2px solid var(--blue);border-radius:50%;left:-25px;top:4px}.time-item small{color:#929ba7}.field label{display:block;margin-bottom:6px;color:#4f5967}.field label i{color:var(--red);font-style:normal}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:#3d4652;background:#fff}.field textarea{min-height:68px;resize:vertical}.field.full{grid-column:1/-1}.switch:after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.2s}.switch.on{background:var(--green)}.switch.on:after{left:18px}.mapping-demo{display:grid;grid-template-columns:1fr 50px 1fr;gap:10px;align-items:center}.mapping-box{border:1px solid var(--line);border-radius:8px;padding:14px}.mapping-box h4{margin:0 0 10px}.mapping-row{display:flex;justify-content:space-between;border-top:1px solid #eef0f3;padding:8px 0}.mapping-arrow{text-align:center;color:var(--red);font-size:22px}.toast{position:fixed;left:50%;top:78px;transform:translateX(-50%);background:#26313e;color:#fff;padding:10px 18px;border-radius:7px;z-index:60;box-shadow:var(--shadow);display:none}.toast.show{display:block}.bulkbar .spacer{flex:1}
+  
+    /* ===== 侧边栏导航（监控中心样式） ===== */
+  .app-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+  .main-wrapper { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+  .main-wrapper > main { flex: 1; min-width: 0; margin: 0; padding: 24px; min-height: 0; overflow-y: auto; }
+  .navbar { height: 50px; background: #fff; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+  .navbar-left { display: flex; align-items: center; gap: 8px; }
+  .navbar .logo { font-size: 20px; font-weight: 700; color: #E60012; letter-spacing: -0.5px; display: inline-block; }
+  .navbar-right { display: flex; align-items: center; gap: 20px; font-size: 14px; color: #666; }
+  .navbar-item { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s; }
+  .navbar-item:hover { color: #E60012; }
+  .navbar-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0; overflow: hidden; }
+
+  .sidebar {
+    width: 216px; background: #fff; border-right: 1px solid #ebeef2;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    overflow-y: auto; padding: 0 0 18px 0; position: relative;
+  }
+  .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+  .sidebar-item { position: relative; }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; font-size: 15px; color: #4a5462;
+    text-decoration: none; transition: background .16s, color .16s; cursor: pointer;
+    position: relative; line-height: 1.3;
+  }
+  .sidebar-link:hover { color: #E60012; background: #fdf5f5; }
+  .sidebar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sidebar-arrow { margin-left: auto; display: flex; align-items: center; color: #9aa3af; flex-shrink: 0; }
+
+  .sidebar-item.active > .sidebar-link { background: #fdeeee; color: #E60012; font-weight: 600; }
+  .sidebar-item.active > .sidebar-link::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #E60012;
+  }
+  .sidebar-link.danger { color: #E60012; }
+  .sidebar-link.danger:hover { background: #fdf5f5; }
+
+  .sidebar-submenu { list-style: none; padding: 0; margin: 0; background: #f8f9fb; }
+  .sidebar-submenu .sidebar-link { padding: 13px 20px 13px 52px; font-size: 15px; color: #4a5462; font-weight: 400; }
+  .sidebar-submenu .sidebar-link:hover { color: #E60012; background: #fdf5f5; }
+  .sidebar-submenu .sidebar-item.active > .sidebar-link { background: #fdeeee; color: #E60012; font-weight: 600; }
+  .sidebar-submenu .sidebar-item.active > .sidebar-link::before { display: none; }
+
+  .sidebar-collapse-btn {
+    position: fixed; left: 216px; top: 50%; transform: translateY(-50%);
+    width: 13px; height: 46px; background: #2f343c; border-radius: 0 4px 4px 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 6;
+  }
+  .table th.th-red{color:var(--red);font-weight:600}
+  .trig-col{color:#505b69;font-variant-numeric:tabular-nums;min-width:150px}
+  .trig-col.text-red{color:var(--red)}
+</style>
+</head>
+<body>
+  <div class="app-wrapper">
+  <nav class="navbar">
+    <div class="navbar-left"><span class="logo">MySANY</span></div>
+    <div class="navbar-right">
+      <div class="navbar-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        简体中文
+      </div>
+      <a class="navbar-item" href="javascript:;" style="text-decoration:none;color:inherit;">
+        <span>Schuck</span>
+        <div class="navbar-avatar"></div>
+      </a>
+    </div>
+  </nav>
+  <div class="main-wrapper">
+  
+    <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span>
+          工作台
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>
+          设备管理
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><polyline points="8 12.5 11 15.5 16 9.5"></polyline></svg></span>
+          审核
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><line x1="7" y1="9" x2="7" y2="15"></line><line x1="12" y1="9" x2="12" y2="15"></line><line x1="17" y1="9" x2="17" y2="15"></line></svg></span>
+          数据大屏
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 16v-4"></path><path d="M12 16V8"></path><path d="M17 16v-6"></path></svg></span>
+          机群报表
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="16.5" x2="13" y2="16.5"></line></svg></span>
+          项目管理
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item open">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1.2" fill="currentColor"></circle></svg></span>
+          监控中心
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
+        </a>
+        <ul class="sidebar-submenu">
+          <li class="sidebar-item active"><a class="sidebar-link" href="预警列表.html">预警列表</a></li>
+          <li class="sidebar-item"><a class="sidebar-link" href="预警设置.html">预警设置</a></li>
+          <li class="sidebar-item"><a class="sidebar-link" href="审核列表.html">审核列表</a></li>
+        </ul>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"></rect><line x1="8" y1="2" x2="8" y2="6"></line><line x1="16" y1="2" x2="16" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+          设备保养
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link danger" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"></path><path d="M8 10V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"></path><path d="M3 14h18"></path></svg></span>
+          服务工单
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><polyline points="8 4 8 10 16 10 16 4"></polyline></svg></span>
+          配件
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2.5 20 7 20 17 12 21.5 4 17 4 7 12 2.5"></polygon></svg></span>
+          企业服务
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><line x1="3" y1="12" x2="21" y2="12"></line><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"></path></svg></span>
+          发电机组运营
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+    </ul>
+    <div class="sidebar-collapse-btn" title="收起">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </div>
+  </aside>
+  <main>
+    <section class="page active" id="events">
+      
+      <div class="card"><div class="filters"><select class="control" id="catFilter" onchange="doQuery(this)"><option value="">全部预警分类</option><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="提示">提示</option></select><select class="control" id="lvlFilter" onchange="doQuery(this)"><option value="">全部预警等级</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option></select><select class="control" id="stFilter" onchange="doQuery(this)"><option value="">全部状态</option><option value="待处理">待处理</option><option value="处理中">处理中</option><option value="已处理">已处理</option><option value="无需处理">无需处理</option></select><input class="control search" placeholder="设备序列号 / 事件名称" onkeydown="if(event.key==='Enter')doQuery(this)"/><span class="spacer"></span><button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="batchAction(this,'已批量处理')">批量处理</button><button class="btn" onclick="toast('已导出当前筛选结果')">导出</button></div>
+        <div class="summary"><div class="metric red"><div class="lab">预警设备</div><div class="num">156</div><small>近30天</small></div><div class="metric orange"><div class="lab">待处理</div><div class="num">12</div><small>需及时关注</small></div><div class="metric"><div class="lab">处理中</div><div class="num">8</div><small>正在跟进</small></div><div class="metric green"><div class="lab">已处理</div><div class="num">136</div><small>处理率 87.2%</small></div><div class="metric chartbox"><small>近14天事件趋势</small><div class="chart"><i class="bar" style="height:34%"></i><i class="bar" style="height:55%"></i><i class="bar" style="height:44%"></i><i class="bar" style="height:76%"></i><i class="bar" style="height:63%"></i><i class="bar" style="height:42%"></i><i class="bar" style="height:85%"></i><i class="bar" style="height:58%"></i><i class="bar" style="height:69%"></i><i class="bar" style="height:47%"></i><i class="bar" style="height:74%"></i><i class="bar" style="height:53%"></i><i class="bar" style="height:38%"></i><i class="bar" style="height:61%"></i></div></div></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th style="width:38px"><input type="checkbox" onclick="toggleAll(this)"/></th><th>预警时间</th><th>设备序列号</th><th>自编号</th><th>设备类型</th><th>所属项目</th><th class="th-red">预警分类</th><th class="th-red">预警等级</th><th>预警事件</th><th class="th-red">触发值 / 条件</th><th class="th-red">处理状态</th><th>处理说明</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead><tbody>
+          <tr><td><input type="checkbox" onclick="updateCount(this)"/></td><td>2026-08-26 10:32</td><td>WJ0012</td><td>ZB003</td><td>挖掘机</td><td>印尼矿山项目</td><td>设备异常</td><td><span class="tag high">高危</span></td><td><b>发动机水温过高</b></td><td class="trig-col text-red" title="当前水温 102℃，超过阈值 95℃ 触发预警">水温 102℃ / 阈值 95℃</td><td><span class="tag mid dot">待处理</span></td><td>—</td><td>—</td><td>—</td><td><button class="btn link" onclick="openDetail('发动机水温过高','海外','新 C自定义规则','102℃ ＞ 95℃')">处理</button></td></tr>
+          <tr><td><input type="checkbox" onclick="updateCount(this)"/></td><td>2026-08-26 09:18</td><td>SY365H-087</td><td>EX-087</td><td>挖掘机</td><td>澳洲示范项目</td><td>设备异常</td><td><span class="tag mid">中危</span></td><td><b>设备离线超时</b></td><td class="trig-col text-red" title="当前已离线 26 小时，超过阈值 24 小时触发预警">离线 26h / 阈值 24h</td><td><span class="tag mid dot">待处理</span></td><td>—</td><td>—</td><td>—</td><td><button class="btn link" onclick="openDetail('设备离线超时','海外','OT设备状态 MQ','离线 26h ＞ 24h')">处理</button></td></tr>
+          <tr><td><input type="checkbox" onclick="updateCount(this)"/></td><td>2026-08-25 16:20</td><td>SAC1200E-19</td><td>QZ-019</td><td>汽车起重机</td><td>华东吊装项目</td><td>作业安全</td><td><span class="tag high">高危</span></td><td><b>未试吊动作</b></td><td class="trig-col text-red" title="当前试吊动作 0 次，低于要求 1 次触发预警">试吊 0 次 / 要求 ≥1 次</td><td><span class="tag low dot">处理中</span></td><td>已联系现场确认</td><td>李工</td><td>2026-08-25 16:35</td><td><button class="btn link" onclick="openDetail('未试吊动作','重起','AIBox → 新 C','视觉模型命中')">继续处理</button></td></tr>
+          <tr><td><input type="checkbox" onclick="updateCount(this)"/></td><td>2026-08-25 08:00</td><td>SY215C-116</td><td>EX-116</td><td>挖掘机</td><td>泰国道路项目</td><td>设备异常</td><td><span class="tag low">低危</span></td><td><b>昨日怠速比过高</b></td><td class="trig-col text-red" title="昨日怠速占比 45%，超过阈值 40% 触发预警">怠速 45% / 阈值 40%</td><td><span class="tag info dot">已处理</span></td><td>已调整作业安排</td><td>王经理</td><td>2026-08-25 10:21</td><td><button class="btn link" onclick="openDetail('昨日怠速比过高','海外','OT指标 T+1','38% ＞ 30%')">详情</button></td></tr>
+          <tr><td><input type="checkbox" onclick="updateCount(this)"/></td><td>2026-08-24 20:41</td><td>SR285-043</td><td>XR-043</td><td>旋挖钻</td><td>粤港基础项目</td><td>设备异常</td><td><span class="tag mid">中危</span></td><td><b>液压油位异常</b></td><td class="trig-col text-red" title="当前液压油位低于下限值触发预警">油位低于下限</td><td><span class="tag gray">无需处理</span></td><td>已补充液压油并检查</td><td>陈师傅</td><td>2026-08-24 22:05</td><td><button class="btn link" onclick="openDetail('液压油位异常','重起','外部 HTTP','外部事件接入')">详情</button></td></tr>
+        </tbody></table></div><div class="footer"><span>共 156 条数据</span><div class="pages"><span onclick="gotoPage(this)">‹</span><span class="on" onclick="gotoPage(this)">1</span><span onclick="gotoPage(this)">2</span><span onclick="gotoPage(this)">3</span><span>…</span><span onclick="gotoPage(this)">16</span><span onclick="gotoPage(this)">›</span></div></div>
+      </div>
+    </section>
+  </main>
+  </div>
+</div>
+
+  <div class="drawer-mask" id="detailDrawer" onclick="maskClose(event,'detailDrawer')"><div class="drawer"><div class="drawer-head"><div><b style="font-size:18px" id="detailName">预警详情</b><span class="sub">事件编号 EVT-20260826-00128</span></div><button class="x" onclick="closeLayer('detailDrawer')">×</button></div><div class="drawer-body"><div class="section"><h3>事件信息</h3><div class="detail-grid"><div class="kv"><label>事业部</label><span id="detailBU">重起</span></div><div class="kv"><label>风险等级</label><span class="tag high">高危</span></div><div class="kv"><label>设备</label><span>WJ0012 · 挖掘机</span></div><div class="kv"><label>发生时间</label><span>2026-08-26 10:32:16</span></div><div class="kv"><label>来源扩展 / 链路</label><span id="detailSource"></span></div><div class="kv"><label>触发值 / 条件</label><span id="detailValue"></span></div></div></div><div class="section"><h3>来源数据</h3><div class="mapping-demo"><div class="mapping-box"><h4>来源系统原始信息</h4><div class="mapping-row"><span>baseType</span><code>20</code></div><div class="mapping-row"><span>warnType</span><code>03</code></div><div class="mapping-row"><span>temperature</span><code>102</code></div></div><div class="mapping-arrow">→</div><div class="mapping-box"><h4>SanVIST统一事件</h4><div class="mapping-row"><span>标准编码</span><code>ENGINE_TEMP_HIGH</code></div><div class="mapping-row"><span>事件名称</span><span>水温过高</span></div><div class="mapping-row"><span>等级</span><span>高危</span></div></div></div></div><div class="section"><h3>处理记录</h3><div class="timeline"><div class="time-item"><b>系统生成预警记录</b><small class="sub">10:32 · 命中客户“标准档”阈值</small></div><div class="time-item"><b>已发送 App PUSH</b><small class="sub">10:33 · 通知设备管理员等 3 人</small></div></div></div><div class="section"><h3>处理事件</h3><div class="field"><label>处理说明</label><textarea placeholder="请输入原因、处理措施或备注"></textarea></div></div></div><div class="drawer-foot"><button class="btn" onclick="closeLayer('detailDrawer')">关闭</button><button class="btn" onclick="toast('已标记为忽略')">忽略</button><button class="btn primary" onclick="saveAndClose('detailDrawer','事件已处理')">完成处理</button></div></div></div>
+
+
+
+  <div class="toast" id="toast"></div>
+  <script>
+    document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{t.parentElement.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active')});
+    function openModal(id){document.getElementById(id).classList.add('open')}
+    function closeLayer(id){document.getElementById(id).classList.remove('open')}
+    function maskClose(e,id){if(e.target.id===id)closeLayer(id)}
+    function openDetail(name,bu,source,value){document.getElementById('detailName').textContent=name;document.getElementById('detailBU').textContent=bu;document.getElementById('detailSource').textContent=source;document.getElementById('detailValue').textContent=value;openModal('detailDrawer')}
+    function saveAndClose(id,msg){closeLayer(id);toast(msg)}
+    function tableOf(el){return el.closest('.card')}
+    function updateCount(el){const card=tableOf(el),n=card.querySelectorAll('tbody input[type=checkbox]:checked').length;card.querySelectorAll('.selected-count').forEach(x=>x.textContent=n)}
+    function toggleAll(el){const card=tableOf(el);card.querySelectorAll('tbody input[type=checkbox]').forEach(x=>x.checked=el.checked);updateCount(el)}
+    function batchAction(el,msg){const card=tableOf(el),n=card.querySelectorAll('tbody input[type=checkbox]:checked').length;if(!n){toast('请先选择预警事件');return}toast(msg+' '+n+' 项');card.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);card.querySelectorAll('.selected-count').forEach(x=>x.textContent=0)}
+    function toast(msg){const el=document.getElementById('toast');el.textContent='✓ '+msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+  
+  function gotoPage(el){
+    const box = el.parentElement;
+    box.querySelectorAll('span').forEach(function(x){ x.classList.remove('on'); });
+    el.classList.add('on');
+  }
+
+
+  function toggleMenu(el){
+    const li = el.closest('.sidebar-item');
+    if (!li) return;
+    const sub = li.querySelector('.sidebar-submenu');
+    if (sub) {
+      const hidden = sub.style.display === 'none';
+      sub.style.display = hidden ? '' : 'none';
+      const arrow = el.querySelector('.sidebar-arrow svg');
+      if (arrow) arrow.style.transform = hidden ? '' : 'rotate(180deg)';
+    } else {
+      toast(el.textContent.trim() + ' 模块暂未开放');
+    }
+  }
+
+
+  function doQuery(btn){
+    var card = (btn && btn.closest && btn.closest('.card')) || document;
+    var input = card.querySelector('.control.search');
+    var kw = input ? (input.value || '').trim().toLowerCase() : '';
+    var el = function (id) { return document.getElementById(id); };
+    var cat = el('catFilter') ? el('catFilter').value : '';
+    var lvl = el('lvlFilter') ? el('lvlFilter').value : '';
+    var st = el('stFilter') ? el('stFilter').value : '';
+    var shown = 0;
+
+    card.querySelectorAll('tbody tr').forEach(function (tr) {
+      if (tr.classList.contains('cat-group')) return;
+      var tds = tr.querySelectorAll('td');
+      var cell = function (i) { return tds[i] ? tds[i].textContent.trim() : ''; };
+      var hit = (!cat || cell(6) === cat)
+        && (!lvl || cell(7) === lvl)
+        && (!st || cell(10) === st)
+        && (!kw || tr.textContent.toLowerCase().indexOf(kw) > -1);
+      tr.style.display = hit ? '' : 'none';
+      if (hit) shown++;
+    });
+
+    var total = card.querySelector('#totalCount') || document.getElementById('totalCount');
+    if (total) total.textContent = '共 ' + shown + ' 条';
+    if (kw) toast('已筛选出 ' + shown + ' 条');
+  }
+
+</script>
+</body>
+</html>

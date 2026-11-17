@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>预警设置</title>
+  <style>
+    :root{--red:#e60012;--red2:#fff1f2;--blue:#1677ff;--green:#20b26b;--orange:#fa8c16;--ink:#202936;--muted:#657080;--line:#e5e9ef;--bg:#f4f6f8;--white:#fff;--shadow:0 6px 24px rgba(26,39,60,.09)}
+    *{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Arial,sans-serif;color:var(--ink);background:var(--bg)}button,input,select,textarea{font:inherit}.logo{font-size:23px;font-weight:900;font-style:italic;color:var(--red);letter-spacing:-1px}.avatar{width:31px;height:31px;border-radius:50%;background:#dbe9ff;display:grid;place-items:center}.nav:hover{background:#f6f7f9}.nav.active{background:var(--red2);color:var(--red);font-weight:650}.nav.active small{background:#fff;color:var(--red)}
+    main{margin-left:218px;padding:88px 24px 30px;min-width:1050px}.page{display:none}.page.active{display:block}
+    .btn{height:36px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:0 15px;cursor:pointer;color:#384353}.btn:hover{border-color:#aeb7c3}.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}.btn.link{border:0;color:var(--blue);padding:0 5px;background:none;height:auto}.btn.danger{color:var(--red)}
+    .card{background:#fff;border:1px solid #edf0f3;border-radius:10px;box-shadow:0 1px 3px rgba(20,35,55,.03);margin-bottom:16px}.filters{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.control{height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#4e5968;padding:0 11px;min-width:128px}.search{min-width:220px}.spacer{flex:1}
+    .table-wrap{overflow:auto;padding:0 16px}.table{width:100%;border-collapse:collapse;white-space:nowrap}.table th{background:#f7f8fa;color:#505b69;font-weight:600;text-align:left;border:1px solid var(--line);padding:11px 12px}.table td{padding:12px;border-bottom:1px solid var(--line);color:#3f4956}.table tr:hover td{background:#fafbfd}.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:12px}.tag.high{background:#ffe8ea;color:#e42837}.tag.mid{background:#fff0dc;color:#ed7b0b}.tag.low{background:#e7f1ff;color:#2878df}.tag.info{background:#e9f7ef;color:#17945b}.tag.gray{background:#f0f2f4;color:#737d89}.dot:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}.footer{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}.pages{display:flex;gap:7px;align-items:center}.pages span{width:31px;height:31px;border:1px solid var(--line);display:grid;place-items:center;border-radius:5px}.pages .on{background:var(--red);color:#fff;border-color:var(--red)}.tab{padding:15px 2px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent}.tab.active{color:var(--red);border-color:var(--red);font-weight:650}.sub{display:block;font-size:12px;color:#929ba7;margin-top:1px}.arrow{color:#a3abb6}.cap{display:inline-block;border:1px solid #b9d4ff;background:#f2f7ff;color:#3775c3;border-radius:4px;padding:1px 6px;margin:2px}.customer:hover{background:#f6f7f9}.customer.active{background:var(--red2);color:var(--red)}
+    .drawer-mask,.modal-mask{display:none;position:fixed;inset:0;background:rgba(22,30,40,.42);z-index:30}.drawer-mask.open,.modal-mask.open{display:block}.drawer{position:absolute;right:0;top:0;height:100%;width:700px;background:#fff;box-shadow:-8px 0 28px rgba(0,0,0,.15);display:flex;flex-direction:column}.drawer-head,.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.drawer-body{padding:20px 22px;overflow:auto;flex:1}.drawer-foot,.modal-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}.x{border:0;background:none;font-size:23px;color:#7d8793;cursor:pointer}.section{margin-bottom:24px}.section h3{font-size:15px;margin:0 0 13px;padding-left:9px;border-left:3px solid var(--red)}.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.kv{background:#f7f8fa;border-radius:6px;padding:11px}.kv label{display:block;color:#8b94a0;font-size:12px;margin-bottom:3px}.timeline{border-left:2px solid #e5e9ef;margin-left:8px;padding-left:19px}.time-item{position:relative;margin-bottom:18px}.time-item:before{content:"";position:absolute;width:9px;height:9px;background:#fff;border:2px solid var(--blue);border-radius:50%;left:-25px;top:4px}.time-item small{color:#929ba7}
+    .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:780px;max-height:88vh;background:#fff;border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column}.modal-body{padding:20px 24px;overflow:auto}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 18px}.field label{display:block;margin-bottom:6px;color:#4f5967}.field label i{color:var(--red);font-style:normal}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:#3d4652;background:#fff}.field textarea{min-height:68px;resize:vertical}.field.full{grid-column:1/-1}.radio-row{display:flex;align-items:center;gap:12px;padding-top:7px}.rule-builder{border:1px solid var(--line);border-radius:7px;padding:13px;background:#fafbfd}.condition{display:grid;grid-template-columns:1.2fr .8fr 1fr 36px;gap:8px;margin-bottom:8px}.mapping-demo{display:grid;grid-template-columns:1fr 50px 1fr;gap:10px;align-items:center}.mapping-box{border:1px solid var(--line);border-radius:8px;padding:14px}.mapping-box h4{margin:0 0 10px}.mapping-row{display:flex;justify-content:space-between;border-top:1px solid #eef0f3;padding:8px 0}.mapping-arrow{text-align:center;color:var(--red);font-size:22px}.toast{position:fixed;left:50%;top:78px;transform:translateX(-50%);background:#26313e;color:#fff;padding:10px 18px;border-radius:7px;z-index:60;box-shadow:var(--shadow);display:none}.toast.show{display:block}
+  
+    /* ===== 侧边栏导航（监控中心样式） ===== */
+  .app-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+  .main-wrapper { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+  .main-wrapper > main { flex: 1; min-width: 0; margin: 0; padding: 24px; min-height: 0; overflow-y: auto; }
+  .navbar { height: 50px; background: #fff; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+  .navbar-left { display: flex; align-items: center; gap: 8px; }
+  .navbar .logo { font-size: 20px; font-weight: 700; color: #E60012; letter-spacing: -0.5px; display: inline-block; }
+  .navbar-right { display: flex; align-items: center; gap: 20px; font-size: 14px; color: #666; }
+  .navbar-item { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s; }
+  .navbar-item:hover { color: #E60012; }
+  .navbar-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0; overflow: hidden; }
+
+  .sidebar {
+    width: 216px; background: #fff; border-right: 1px solid #ebeef2;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    overflow-y: auto; padding: 0 0 18px 0; position: relative;
+  }
+  .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+  .sidebar-item { position: relative; }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; font-size: 15px; color: #4a5462;
+    text-decoration: none; transition: background .16s, color .16s; cursor: pointer;
+    position: relative; line-height: 1.3;
+  }
+  .sidebar-link:hover { color: #E60012; background: #fdf5f5; }
+  .sidebar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sidebar-arrow { margin-left: auto; display: flex; align-items: center; color: #9aa3af; flex-shrink: 0; }
+
+  .sidebar-item.active > .sidebar-link { background: #fdeeee; color: #E60012; font-weight: 600; }
+  .sidebar-item.active > .sidebar-link::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #E60012;
+  }
+  .sidebar-link.danger { color: #E60012; }
+  .sidebar-link.danger:hover { background: #fdf5f5; }
+
+  .sidebar-submenu { list-style: none; padding: 0; margin: 0; background: #f8f9fb; }
+  .sidebar-submenu .sidebar-link { padding: 13px 20px 13px 52px; font-size: 15px; color: #4a5462; font-weight: 400; }
+  .sidebar-submenu .sidebar-link:hover { color: #E60012; background: #fdf5f5; }
+  .sidebar-submenu .sidebar-item.active > .sidebar-link { background: #fdeeee; color: #E60012; font-weight: 600; }
+  .sidebar-submenu .sidebar-item.active > .sidebar-link::before { display: none; }
+
+  .sidebar-collapse-btn {
+    position: fixed; left: 216px; top: 50%; transform: translateY(-50%);
+    width: 13px; height: 46px; background: #2f343c; border-radius: 0 4px 4px 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 6;
+  }
+  .ev-row .ev-name{color:#1f2329}
+  .ev-row .dev-col{color:#657080}
+  .ev-row
+  .cell-ell{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .th-high{color:#1899a8 !important}
+  .th-mid{color:#ed7b0b !important}
+  .th-low{color:#b58a1a !important}
+  .lv-high-col,.lv-mid-col,.lv-low-col{color:#4a5462;max-width:240px}
+  .cell-empty{color:#c3c9d2}
+
+  .ev-row
+  .cat-p{display:block;font-size:12px;color:#9aa3af;line-height:18px}
+  .cat-c{display:block;font-size:13px;color:#1f2329;font-weight:500;line-height:20px}
+  .ev-cfg-head{display:grid;grid-template-columns:1fr 150px 120px;gap:12px;padding:8px 12px;background:#f7f8fa;border-radius:6px;font-size:12px;color:#9aa3af;font-weight:500;margin-bottom:6px}
+  .ev-cfg-list{max-height:340px;overflow-y:auto}
+  .ev-cfg-row{display:grid;grid-template-columns:1fr 150px 120px;gap:12px;align-items:center;padding:8px 12px;border-bottom:1px solid #f2f4f7}
+  .ev-cfg-row:last-child{border-bottom:none}
+  .ev-cfg-row:hover{background:#fafbfc}
+  .ev-cfg-name{display:flex;align-items:center;gap:9px;font-size:13px;color:#1f2329}
+  .ev-cfg-row select{height:30px;border:1px solid var(--line);border-radius:6px;padding:0 6px;font-size:12px;font-family:inherit;color:#4a5462;background:#fff;outline:none;cursor:pointer}
+  .ev-cfg-row select:focus{border-color:var(--red)}
+  .cfg-col{color:#505b69;font-size:12.5px}
+
+  .st-col{white-space:nowrap}
+  .st-txt{margin-left:8px;font-size:12px;color:#657080;vertical-align:middle}
+
+  .cfg-rows{margin-bottom:8px}
+  .cfg-row{display:grid;grid-template-columns:1fr 130px 28px;gap:8px;align-items:center;margin-bottom:7px}
+  .cfg-row select{height:32px;border:1px solid var(--line);border-radius:6px;padding:0 6px;font-size:12.5px;font-family:inherit;color:#4a5462;background:#fff;outline:none;cursor:pointer}
+  .cfg-row select:focus{border-color:var(--red)}
+  .cfg-del{border:none;background:none;color:#b6bcc4;font-size:16px;line-height:1;cursor:pointer;padding:0}
+  .cfg-del:hover{color:var(--red)}
+  .cfg-add{margin-top:2px}
+  .desc-col{color:#7a8290;font-size:12.5px}
+
+  .cat-group td{background:#f5f7fa;font-weight:600;color:#202936;padding:10px 12px;border-bottom:1px solid #eef1f5}
+  .cat-group em{font-style:normal;font-size:12px;font-weight:500;color:#8b94a0;margin-left:8px}
+  .cat-caret{display:inline-block;width:0;height:0;border-left:6px solid #8b94a0;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
+  .cat-caret.closed{transform:rotate(0)}
+
+  .dev-pick{display:flex;align-items:center;gap:14px}
+  .dev-pick-btn{flex-shrink:0}
+  .dev-summary{font-size:12.5px;color:#7a8290;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dev-summary.has{color:#1899a8;font-weight:500}
+
+  #evDevModal{z-index:260}
+  #evDevModal .modal{box-shadow:0 24px 64px rgba(20,30,45,.32)}
+  .evdev-tools{display:flex;align-items:center;gap:12px;padding-bottom:10px}
+  .evdev-all{display:flex;align-items:center;gap:6px;font-size:13px;color:#4a5462;cursor:pointer;white-space:nowrap}
+  .evdev-all input{width:15px;height:15px;accent-color:#29BECE;cursor:pointer}
+  .evdev-head{display:grid;grid-template-columns:1fr 120px;gap:12px;padding:8px 14px;background:#fafbfc;border-radius:6px;font-size:12px;color:#9aa3af;font-weight:500;margin-bottom:4px}
+  .evdev-list{max-height:340px;overflow-y:auto;border:1px solid #eef1f5;border-radius:8px}
+  .evdev-row{display:grid;grid-template-columns:1fr 120px;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid #f6f8fa}
+  .evdev-row:last-child{border-bottom:none}
+  .evdev-row:hover{background:#f7fcfd}
+  .evdev-row label{display:flex;align-items:center;gap:9px;font-size:13px;color:#3f4956;cursor:pointer;min-width:0}
+  .evdev-row label input{width:15px;height:15px;accent-color:#29BECE;cursor:pointer;flex-shrink:0}
+  .evdev-row select{width:100%;height:28px;border:1px solid #dfe4ea;border-radius:5px;padding:0 6px;font-size:12px;font-family:inherit;color:#3f4956;background:#fff;outline:none;cursor:pointer}
+  .evdev-row select:disabled{background:#f4f6f8;color:#b6bcc4;cursor:not-allowed}
+  .evdev-row.off{opacity:.55}
+  .evdev-count{margin-right:auto;font-size:13px;color:#4a5462}
+  .evdev-count b{color:#1899a8;font-size:14px}
+  .evdev-group{padding:7px 14px;background:#f7f9fb;font-size:12px;color:#8b94a0;font-weight:500}
+
+  .evdev-split{display:flex;border:1px solid #eef1f5;border-radius:10px;overflow:hidden;background:#fff}
+  .evdev-types{width:148px;flex-shrink:0;background:#f7f9fb;border-right:1px solid #eef1f5;padding:8px;max-height:380px;overflow-y:auto}
+  .evdev-type{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;margin-bottom:3px;border-radius:7px;font-size:13px;color:#4a5462;cursor:pointer;position:relative;transition:all .14s}
+  .evdev-type:hover{background:#eaf7f9}
+  .evdev-type.active{background:#fff;color:#1899a8;font-weight:600;box-shadow:0 1px 4px rgba(20,40,60,.08)}
+  .evdev-type.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:16px;border-radius:0 3px 3px 0;background:#29BECE}
+  .evdev-type em{font-style:normal;font-size:10.5px;color:#9aa3af;background:#fff;border-radius:9px;padding:0 6px;line-height:16px}
+  .evdev-type.active em{background:#e9f9fb;color:#1899a8}
+  .evdev-panel{flex:1;min-width:0;display:flex;flex-direction:column}
+  .evdev-tools{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #f0f3f7;background:#fbfcfd}
+  .evdev-head{display:grid;grid-template-columns:1fr 120px;gap:12px;padding:8px 14px;background:#fafbfc;font-size:12px;color:#9aa3af;font-weight:500;border-bottom:1px solid #eef1f5}
+  .evdev-list{max-height:320px;overflow-y:auto}
+  .evdev-row{display:grid;grid-template-columns:1fr 120px;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid #f6f8fa}
+  .evdev-row:last-child{border-bottom:none}
+  .evdev-row:hover{background:#f7fcfd}
+  .evdev-row.off{opacity:.55}
+  .evdev-grouprow{background:#f2fbfc}
+  .evdev-grouprow:hover{background:#e9f8fa}
+  .evdev-grouprow .dev-name,.evdev-grouprow label span{color:#1899a8;font-weight:500}
+  .radio-row #evOnTxt{font-size:13px;color:#4a5462}
+  .cat-row{display:flex;align-items:center;justify-content:space-between}
+  .cat-left{display:flex;align-items:center}
+  .cat-add{font-size:12.5px;opacity:.75}
+  .cat-add:hover{opacity:1}
+  .st-toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+  .st-toggle:hover .st-txt{color:#1899a8}
+  .st-txt{font-size:12.5px;color:#657080;transition:color .15s}
+
+  .switch{display:inline-block;position:relative;width:38px;height:20px;background:#c8cfd8;border-radius:10px;cursor:pointer;transition:background .2s;flex-shrink:0;vertical-align:middle}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.22)}
+  .switch.on{background:#20b26b}
+  .switch.on::after{left:20px}
+
+  .ptype-col{color:#4a5462;vertical-align:top;padding-top:12px}
+  .pt-caret{display:inline-block;width:0;height:0;border-left:5px solid #9aa3af;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:6px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
+  .pt-caret.closed{transform:rotate(0)}
+  .ptype-col.closed{color:#9aa3af}
+</style>
+</head>
+<body>
+  <div class="app-wrapper">
+  <nav class="navbar">
+    <div class="navbar-left"><span class="logo">MySANY</span></div>
+    <div class="navbar-right">
+      <div class="navbar-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        简体中文
+      </div>
+      <a class="navbar-item" href="javascript:;" style="text-decoration:none;color:inherit;">
+        <span>Schuck</span>
+        <div class="navbar-avatar"></div>
+      </a>
+    </div>
+  </nav>
+  <div class="main-wrapper">
+  
+    <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span>
+          工作台
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>
+          设备管理
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><polyline points="8 12.5 11 15.5 16 9.5"></polyline></svg></span>
+          审核
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><line x1="7" y1="9" x2="7" y2="15"></line><line x1="12" y1="9" x2="12" y2="15"></line><line x1="17" y1="9" x2="17" y2="15"></line></svg></span>
+          数据大屏
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 16v-4"></path><path d="M12 16V8"></path><path d="M17 16v-6"></path></svg></span>
+          机群报表
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="16.5" x2="13" y2="16.5"></line></svg></span>
+          项目管理
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item open">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1.2" fill="currentColor"></circle></svg></span>
+          监控中心
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
+        </a>
+        <ul class="sidebar-submenu">
+          <li class="sidebar-item"><a class="sidebar-link" href="预警列表.html">预警列表</a></li>
+          <li class="sidebar-item active"><a class="sidebar-link" href="预警设置.html">预警设置</a></li>
+          <li class="sidebar-item"><a class="sidebar-link" href="审核列表.html">审核列表</a></li>
+        </ul>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"></rect><line x1="8" y1="2" x2="8" y2="6"></line><line x1="16" y1="2" x2="16" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+          设备保养
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link danger" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"></path><path d="M8 10V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"></path><path d="M3 14h18"></path></svg></span>
+          服务工单
+          
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><polyline points="8 4 8 10 16 10 16 4"></polyline></svg></span>
+          配件
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2.5 20 7 20 17 12 21.5 4 17 4 7 12 2.5"></polygon></svg></span>
+          企业服务
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="javascript:;" onclick="toggleMenu(this)">
+          <span class="sidebar-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><line x1="3" y1="12" x2="21" y2="12"></line><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"></path></svg></span>
+          发电机组运营
+          <span class="sidebar-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </a>
+      </li>
+    </ul>
+    <div class="sidebar-collapse-btn" title="收起">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </div>
+  </aside>
+  <main>
+    <section class="page active" id="strategies">
+      
+      <div class="card"><div class="filters"><select class="control" id="catFilter" onchange="filterByCat(this.value)"><option value="">全部预警分类</option><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select><select class="control" id="lvlFilter" onchange="doQuery(this)"><option value="">全部预警等级</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option></select><input class="control search" id="kwName" placeholder="事件名称" onkeydown="if(event.key==='Enter')doQuery(this)"/><span class="spacer"></span><button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="resetQuery()">重置</button></div><div class="table-wrap"><table class="table"><thead><tr><th>预警类型</th><th>预警事件</th><th>风险等级</th><th>预警值</th><th>预警说明</th><th>状态</th><th>操作</th></tr></thead><tbody>
+        <tr class="cat-group" data-cat="设备异常"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>设备异常</b><em>4</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
+        <tr class="ev-row" data-desc="冷却液温度持续超过设定阈值" data-cfgs='[["挖掘机", "70 ℃"], ["装载机", "75 ℃"]]' data-cat="设备异常" data-type="冷却水温高" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="冷却水温高"><span class="pt-caret" onclick="toggleType(this)"></span>冷却水温高</td><td class="ev-name" title="冷却水温高">冷却水温高</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 70 ℃；装载机 75 ℃"><span class="cell-ell" style="max-width:190px">挖掘机 70 ℃；装载机 75 ℃</span></td><td class="desc-col" title="冷却液温度持续超过设定阈值"><span class="cell-ell" style="max-width:180px">冷却液温度持续超过设定阈值</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="液压系统油温异常升高" data-cfgs='[["挖掘机", "80 ℃"]]' data-cat="设备异常" data-type="冷却水温高" data-on="1"><td class="ev-name" title="液压油温度高">液压油温度高</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 80 ℃"><span class="cell-ell" style="max-width:190px">挖掘机 80 ℃</span></td><td class="desc-col" title="液压系统油温异常升高"><span class="cell-ell" style="max-width:180px">液压系统油温异常升高</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="设备长时间未上报数据" data-cfgs='[["全部设备", "24 小时"]]' data-cat="设备异常" data-type="离线" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="离线"><span class="pt-caret" onclick="toggleType(this)"></span>离线</td><td class="ev-name" title="设备离线">设备离线</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="全部设备 24 小时"><span class="cell-ell" style="max-width:190px">全部设备 24 小时</span></td><td class="desc-col" title="设备长时间未上报数据"><span class="cell-ell" style="max-width:180px">设备长时间未上报数据</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="数据上报间隔超过设定时长" data-cfgs='[["全部设备", "12 小时"]]' data-cat="设备异常" data-type="离线" data-on="0"><td class="ev-name" title="数据上报超时">数据上报超时</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="全部设备 12 小时"><span class="cell-ell" style="max-width:190px">全部设备 12 小时</span></td><td class="desc-col" title="数据上报间隔超过设定时长"><span class="cell-ell" style="max-width:180px">数据上报间隔超过设定时长</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="cat-group" data-cat="作业安全"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>作业安全</b><em>6</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
+        <tr class="ev-row" data-desc="离车时未完成安全确认动作" data-cfgs='[["挖掘机", "中"], ["搅拌车", "高"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="1"><td class="ptype-col" rowspan="3" data-span="3" title="危险驾驶报警"><span class="pt-caret" onclick="toggleType(this)"></span>危险驾驶报警</td><td class="ev-name" title="下车危险驾驶报警">下车危险驾驶报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 中；搅拌车 高"><span class="cell-ell" style="max-width:190px">挖掘机 中；搅拌车 高</span></td><td class="desc-col" title="离车时未完成安全确认动作"><span class="cell-ell" style="max-width:180px">离车时未完成安全确认动作</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="瞬时加速度超过安全范围" data-cfgs='[["挖掘机", "中"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="1"><td class="ev-name" title="急加速报警">急加速报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 中"><span class="cell-ell" style="max-width:190px">挖掘机 中</span></td><td class="desc-col" title="瞬时加速度超过安全范围"><span class="cell-ell" style="max-width:180px">瞬时加速度超过安全范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="瞬时减速度超过安全范围" data-cfgs='[["挖掘机", "高"]]' data-cat="作业安全" data-type="危险驾驶报警" data-on="0"><td class="ev-name" title="急刹车报警">急刹车报警</td><td class="lv-col"><span class="tag high">高危</span></td><td class="cfg-col" title="挖掘机 高"><span class="cell-ell" style="max-width:190px">挖掘机 高</span></td><td class="desc-col" title="瞬时减速度超过安全范围"><span class="cell-ell" style="max-width:180px">瞬时减速度超过安全范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="AI 识别到现场安全隐患" data-cfgs='[["挖掘机", "低"]]' data-cat="作业安全" data-type="主动安全报警" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="主动安全报警"><span class="pt-caret" onclick="toggleType(this)"></span>主动安全报警</td><td class="ev-name" title="主动安全报警">主动安全报警</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 低"><span class="cell-ell" style="max-width:190px">挖掘机 低</span></td><td class="desc-col" title="AI 识别到现场安全隐患"><span class="cell-ell" style="max-width:180px">AI 识别到现场安全隐患</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="连续驾驶时长超过安全上限" data-cfgs='[["搅拌车", "3 小时"]]' data-cat="作业安全" data-type="主动安全报警" data-on="1"><td class="ev-name" title="疲劳驾驶报警">疲劳驾驶报警</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="搅拌车 3 小时"><span class="cell-ell" style="max-width:190px">搅拌车 3 小时</span></td><td class="desc-col" title="连续驾驶时长超过安全上限"><span class="cell-ell" style="max-width:180px">连续驾驶时长超过安全上限</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="设备未按计划完成作业报备" data-cfgs='[["挖掘机", "3 次"]]' data-cat="作业安全" data-type="设备未报备工作" data-on="1"><td class="ptype-col" rowspan="1" data-span="1" title="设备未报备工作">设备未报备工作</td><td class="ev-name" title="设备未报备工作">设备未报备工作</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="挖掘机 3 次"><span class="cell-ell" style="max-width:190px">挖掘机 3 次</span></td><td class="desc-col" title="设备未按计划完成作业报备"><span class="cell-ell" style="max-width:180px">设备未按计划完成作业报备</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="cat-group" data-cat="位置"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>位置</b><em>2</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
+        <tr class="ev-row" data-desc="设备驶出预设作业范围" data-cfgs='[["全部设备", "100 m"]]' data-cat="位置" data-type="电子围栏报警" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="电子围栏报警"><span class="pt-caret" onclick="toggleType(this)"></span>电子围栏报警</td><td class="ev-name" title="电子围栏报警">电子围栏报警</td><td class="lv-col"><span class="tag mid">中危</span></td><td class="cfg-col" title="全部设备 100 m"><span class="cell-ell" style="max-width:190px">全部设备 100 m</span></td><td class="desc-col" title="设备驶出预设作业范围"><span class="cell-ell" style="max-width:180px">设备驶出预设作业范围</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="设备进入禁止作业区域" data-cfgs='[["全部设备", "立即"]]' data-cat="位置" data-type="电子围栏报警" data-on="1"><td class="ev-name" title="驶入禁行区">驶入禁行区</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="全部设备 立即"><span class="cell-ell" style="max-width:190px">全部设备 立即</span></td><td class="desc-col" title="设备进入禁止作业区域"><span class="cell-ell" style="max-width:180px">设备进入禁止作业区域</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="cat-group" data-cat="燃油"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>燃油</b><em>2</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
+        <tr class="ev-row" data-desc="燃油消耗速率偏离正常区间" data-cfgs='[["挖掘机", "35 L/h"], ["装载机", "40 L/h"]]' data-cat="燃油" data-type="油耗异常" data-on="1"><td class="ptype-col" rowspan="2" data-span="2" title="油耗异常"><span class="pt-caret" onclick="toggleType(this)"></span>油耗异常</td><td class="ev-name" title="油耗异常">油耗异常</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="挖掘机 35 L/h；装载机 40 L/h"><span class="cell-ell" style="max-width:190px">挖掘机 35 L/h；装载机 40 L/h</span></td><td class="desc-col" title="燃油消耗速率偏离正常区间"><span class="cell-ell" style="max-width:180px">燃油消耗速率偏离正常区间</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="ev-row" data-desc="油箱液位低于安全阈值" data-cfgs='[["全部设备", "15 %"]]' data-cat="燃油" data-type="油耗异常" data-on="0"><td class="ev-name" title="燃油液位偏低">燃油液位偏低</td><td class="lv-col"><span class="tag low">低危</span></td><td class="cfg-col" title="全部设备 15 %"><span class="cell-ell" style="max-width:190px">全部设备 15 %</span></td><td class="desc-col" title="油箱液位低于安全阈值"><span class="cell-ell" style="max-width:180px">油箱液位低于安全阈值</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch"></span><span class="st-txt">关闭</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        <tr class="cat-group" data-cat="提示"><td colspan="7"><div class="cat-row"><span class="cat-left"><span class="cat-caret" onclick="toggleCat(this)"></span><b>提示</b><em>1</em></span><button class="btn link cat-add" onclick="addEvInCat(this)">＋ 新增预警</button></div></td></tr>
+        <tr class="ev-row" data-desc="设备长时间停放未作业" data-cfgs='[["全部设备", "1 小时"]]' data-cat="提示" data-type="停车提示" data-on="1"><td class="ptype-col" rowspan="1" data-span="1" title="停车提示">停车提示</td><td class="ev-name" title="停车提示">停车提示</td><td class="lv-col"><span class="tag gray">提示</span></td><td class="cfg-col" title="全部设备 1 小时"><span class="cell-ell" style="max-width:190px">全部设备 1 小时</span></td><td class="desc-col" title="设备长时间停放未作业"><span class="cell-ell" style="max-width:180px">设备长时间停放未作业</span></td><td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td><td><button class="btn link" onclick="openEvCfg(this)">配置</button><button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td></tr>
+        </tbody></table></div><div class="footer"><span id="totalCount">共 15 条</span><div class="pages"><span class="on" onclick="gotoPage(this)">1</span><span onclick="gotoPage(this)">2</span><span onclick="gotoPage(this)">3</span></div></div></div>
+    </section>
+  </main>
+  </div>
+</div>
+
+  <div class="drawer-mask" id="detailDrawer" onclick="maskClose(event,'detailDrawer')"><div class="drawer"><div class="drawer-head"><div><b style="font-size:18px" id="detailName">预警详情</b><span class="sub">事件编号 EVT-20260826-00128</span></div><button class="x" onclick="closeLayer('detailDrawer')">×</button></div><div class="drawer-body"><div class="section"><h3>事件信息</h3><div class="detail-grid"><div class="kv"><label>事业部</label><span id="detailBU">重起</span></div><div class="kv"><label>风险等级</label><span class="tag high">高危</span></div><div class="kv"><label>设备</label><span>WJ0012 · 挖掘机</span></div><div class="kv"><label>发生时间</label><span>2026-08-26 10:32:16</span></div><div class="kv"><label>来源扩展 / 链路</label><span id="detailSource"></span></div><div class="kv"><label>触发值 / 条件</label><span id="detailValue"></span></div></div></div><div class="section"><h3>来源数据</h3><div class="mapping-demo"><div class="mapping-box"><h4>来源系统原始信息</h4><div class="mapping-row"><span>baseType</span><code>20</code></div><div class="mapping-row"><span>warnType</span><code>03</code></div><div class="mapping-row"><span>temperature</span><code>102</code></div></div><div class="mapping-arrow">→</div><div class="mapping-box"><h4>SanVIST统一事件</h4><div class="mapping-row"><span>标准编码</span><code>ENGINE_TEMP_HIGH</code></div><div class="mapping-row"><span>事件名称</span><span>水温过高</span></div><div class="mapping-row"><span>等级</span><span>高危</span></div></div></div></div><div class="section"><h3>处理记录</h3><div class="timeline"><div class="time-item"><b>系统生成预警记录</b><small class="sub">10:32 · 命中客户“标准档”阈值</small></div><div class="time-item"><b>已发送 App PUSH</b><small class="sub">10:33 · 通知设备管理员等 3 人</small></div></div></div><div class="section"><h3>处理事件</h3><div class="field"><label>处理说明</label><textarea placeholder="请输入原因、处理措施或备注"></textarea></div></div></div><div class="drawer-foot"><button class="btn" onclick="closeLayer('detailDrawer')">关闭</button><button class="btn" onclick="toast('已标记为忽略')">忽略</button><button class="btn primary" onclick="saveAndClose('detailDrawer','事件已处理')">完成处理</button></div></div></div>
+
+      <div class="modal-mask" id="evModal" onclick="maskClose(event,'evModal')">
+    <div class="modal" style="width:660px">
+      <div class="modal-head">
+        <div><b style="font-size:18px">配置预警事件</b><span class="sub" id="evModalName">—</span></div>
+        <button class="x" onclick="closeLayer('evModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field full"><label><i>*</i> 事件名称</label><select id="evName" onchange="onEvPicked(this)"></select></div>
+          <div class="field full"><label>启用状态</label>
+            <div class="radio-row"><span class="switch on" id="evOn" onclick="toggleEvOn(this)"></span><span id="evOnTxt">开启</span></div>
+          </div>
+          <div class="field full"><label id="devFieldLabel">预警值</label><div class="dev-pick"><button type="button" class="btn dev-pick-btn" onclick="openEvDevPicker()">选择设备与阈值</button><div class="dev-summary" id="evDevSummary">未配置设备</div></div></div>
+          
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeLayer('evModal')">取消</button>
+        <button class="btn primary" onclick="saveEvCfg()">保存</button>
+      </div>
+    </div>
+  </div>
+
+    <div class="modal-mask" id="evDevModal" onclick="maskClose(event,'evDevModal')">
+    <div class="modal" style="width:820px">
+      <div class="modal-head">
+        <b style="font-size:18px">设备与预警值</b>
+        <button class="x" onclick="closeLayer('evDevModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="evdev-split">
+          <div class="evdev-types" id="evDevTypes"></div>
+          <div class="evdev-panel">
+            <div class="evdev-tools">
+              <input class="control" style="flex:1" placeholder="搜索型号 / 设备编号" oninput="filterEvDev(this)"/>
+              <label class="evdev-all"><input type="checkbox" onchange="toggleAllEvDev(this)"/> 全选本类</label>
+            </div>
+            <div class="evdev-head"><span>设备（型号 · 编号）</span><span>预警值</span></div>
+            <div class="evdev-list" id="evDevList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <span class="evdev-count">已选 <b id="evDevCount">0</b> 台</span>
+        <button class="btn" onclick="closeLayer('evDevModal')">取消</button>
+        <button class="btn primary" onclick="confirmEvDev()">确定</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-mask" id="delEvModal" onclick="maskClose(event,'delEvModal')">
+    <div class="modal" style="width:420px">
+      <div class="modal-head">
+        <b style="font-size:18px">确认移除</b>
+        <button class="x" onclick="closeLayer('delEvModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="delEvTip" style="margin:0;font-size:14px;line-height:1.7;color:#4a5462">确定要移除该预警事件吗？移除后相关配置将一并清除。</p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeLayer('delEvModal')">取消</button>
+        <button class="btn primary" onclick="doDelEv()">确认移除</button>
+      </div>
+    </div>
+  </div>
+  
+
+
+  <div class="toast" id="toast"></div>
+  <script>
+    document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{t.parentElement.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active')});
+    function openModal(id){document.getElementById(id).classList.add('open')}
+    function closeLayer(id){document.getElementById(id).classList.remove('open')}
+    function maskClose(e,id){if(e.target.id===id)closeLayer(id)}
+    function saveAndClose(id,msg){closeLayer(id);toast(msg)}
+    function tableOf(el){return el.closest('.card')}
+    function toast(msg){const el=document.getElementById('toast');el.textContent='✓ '+msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+
+  function gotoPage(el){
+    const box = el.parentElement;
+    box.querySelectorAll('span').forEach(function(x){ x.classList.remove('on'); });
+    el.classList.add('on');
+  }
+
+
+  function toggleMenu(el){
+    const li = el.closest('.sidebar-item');
+    if (!li) return;
+    const sub = li.querySelector('.sidebar-submenu');
+    if (sub) {
+      const hidden = sub.style.display === 'none';
+      sub.style.display = hidden ? '' : 'none';
+      const arrow = el.querySelector('.sidebar-arrow svg');
+      if (arrow) arrow.style.transform = hidden ? '' : 'rotate(180deg)';
+    } else {
+      toast(el.textContent.trim() + ' 模块暂未开放');
+    }
+  }
+
+
+  function doQuery(btn){
+    var card = (btn && btn.closest && btn.closest('.card')) || document;
+    var input = card.querySelector('.control.search');
+    var kw = input ? (input.value || '').trim().toLowerCase() : '';
+    var lvlEl = document.getElementById('lvlFilter');
+    var lvl = lvlEl ? lvlEl.value : '';
+    var shown = 0;
+
+    card.querySelectorAll('tbody tr.ev-row').forEach(function (tr) {
+      var lv = tr.querySelector('.lv-col');
+      var lvTxt = lv ? lv.textContent.trim() : '';
+      var hit = (!lvl || lvTxt === lvl)
+        && (!kw || tr.textContent.toLowerCase().indexOf(kw) > -1);
+      tr.style.display = hit ? '' : 'none';
+      if (hit) shown++;
+    });
+
+    var total = card.querySelector('#totalCount') || document.getElementById('totalCount');
+    if (total) total.textContent = '共 ' + shown + ' 条';
+    if (kw || lvl) toast('已筛选出 ' + shown + ' 条');
+  }
+
+
+  function toggleCat(el){
+    el.classList.toggle('closed');
+    var hide = el.classList.contains('closed');
+    var cat = el.closest('tr').getAttribute('data-cat');
+    document.querySelectorAll('tbody tr.ev-row[data-cat="' + cat + '"]').forEach(function (tr) {
+      tr.style.display = hide ? 'none' : '';
+    });
+  }
+
+
+
+  function filterByCat(cat){
+    document.querySelectorAll('tbody tr.ev-row').forEach(function (tr) {
+      tr.style.display = (!cat || tr.getAttribute('data-cat') === cat) ? '' : 'none';
+    });
+    var el = document.getElementById('totalCount');
+    if (el) {
+      var n = cat ? document.querySelectorAll('tbody tr.ev-row[data-cat="' + cat + '"]').length
+                  : document.querySelectorAll('tbody tr.ev-row').length;
+      el.textContent = '共 ' + n + ' 条';
+    }
+  }
+
+
+  var EV_TH = {
+    '冷却水温高': ['70 °C', '75 °C', '80 °C', '85 °C', '90 °C'],
+    '液压油温度高': ['80 °C', '90 °C', '100 °C', '110 °C'],
+    '设备离线': ['6 小时', '12 小时', '24 小时', '48 小时'],
+    '数据上报超时': ['2 小时', '6 小时', '12 小时', '24 小时'],
+    '下车危险驾驶报警': ['低', '中', '高'],
+    '急加速报警': ['低', '中', '高'],
+    '急刹车报警': ['低', '中', '高'],
+    '主动安全报警': ['低', '中', '高'],
+    '疲劳驾驶报警': ['2 小时', '3 小时', '4 小时'],
+    '设备未报备工作': ['1 次', '3 次', '5 次'],
+    '电子围栏报警': ['50 m', '100 m', '200 m', '500 m'],
+    '驶入禁行区': ['立即', '5 分钟', '15 分钟'],
+    '油耗异常': ['30 L/h', '35 L/h', '40 L/h'],
+    '燃油液位偏低': ['10 %', '15 %', '20 %', '30 %'],
+    '停车提示': ['30 分钟', '1 小时', '2 小时']
+  };
+
+  var DEV_OPTS = [
+    '全部设备',
+    'SY215C · XG-1001', 'SY215C · XG-1002', 'SY215C · XG-1003', 'SY365H · XG-1004',
+    'ZL50GN · ZZ-2001', 'ZL50GN · ZZ-2002', 'ZL50G · ZZ-2003',
+    'SY306C · JB-4001', 'SY306C · JB-4002',
+    'SD16 · TT-3001', 'STC250 · QZ-6001'
+  ];
+
+  var evCfgCat = '';
+
+  var evCfgRow = null;
+
+
+
+  var evCfgRow = null;
+  var delEvRow = null;
+
+  function toggleEvOn(el){
+    el.classList.toggle('on');
+    var t = document.getElementById('evOnTxt');
+    if (t) t.textContent = el.classList.contains('on') ? '开启' : '关闭';
+  }
+
+  function toggleEvt(el){
+    var sw = el.classList.contains('switch') ? el : el.querySelector('.switch');
+    if (!sw) return;
+    sw.classList.toggle('on');
+    var tr = el.closest('tr');
+    var on = sw.classList.contains('on');
+    tr.setAttribute('data-on', on ? '1' : '0');
+    var txt = tr.querySelector('.st-txt');
+    if (txt) txt.textContent = on ? '开启' : '关闭';
+  }
+
+  function confirmDelEv(btn){
+    delEvRow = btn.closest('tr');
+    openModal('delEvModal');
+  }
+
+  function doDelEv(){
+    if (delEvRow) {
+      var box = delEvRow.parentNode;
+      delEvRow.remove();
+      delEvRow = null;
+      var n = box.querySelectorAll('tr.ev-row').length;
+      var total = document.getElementById('totalCount');
+      if (total) total.textContent = '共 ' + n + ' 条';
+      toast('已移除该预警事件');
+    }
+    closeLayer('delEvModal');
+  }
+
+
+  var EV_META = {"冷却水温高": {"cat": "设备异常", "type": "冷却水温高", "lv": "高危"}, "液压油温度高": {"cat": "设备异常", "type": "冷却水温高", "lv": "中危"}, "设备离线": {"cat": "设备异常", "type": "离线", "lv": "中危"}, "数据上报超时": {"cat": "设备异常", "type": "离线", "lv": "低危"}, "下车危险驾驶报警": {"cat": "作业安全", "type": "危险驾驶报警", "lv": "高危"}, "急加速报警": {"cat": "作业安全", "type": "危险驾驶报警", "lv": "高危"}, "急刹车报警": {"cat": "作业安全", "type": "危险驾驶报警", "lv": "高危"}, "主动安全报警": {"cat": "作业安全", "type": "主动安全报警", "lv": "中危"}, "疲劳驾驶报警": {"cat": "作业安全", "type": "主动安全报警", "lv": "中危"}, "设备未报备工作": {"cat": "作业安全", "type": "设备未报备工作", "lv": "中危"}, "电子围栏报警": {"cat": "位置", "type": "电子围栏报警", "lv": "中危"}, "驶入禁行区": {"cat": "位置", "type": "电子围栏报警", "lv": "低危"}, "油耗异常": {"cat": "燃油", "type": "油耗异常", "lv": "低危"}, "燃油液位偏低": {"cat": "燃油", "type": "油耗异常", "lv": "低危"}, "停车提示": {"cat": "提示", "type": "停车提示", "lv": "提示"}};
+
+  (function renderEvSelect(){
+    var sel = document.getElementById('evName');
+    if (!sel) return;
+    var cats = [];
+    Object.keys(EV_META).forEach(function (k) {
+      var c = EV_META[k].cat;
+      if (cats.indexOf(c) < 0) cats.push(c);
+    });
+    sel.innerHTML = '<option value="">请选择事件</option>' + cats.map(function (c) {
+      var opts = Object.keys(EV_META).filter(function (k) { return EV_META[k].cat === c; })
+        .map(function (k) { return '<option value="' + k + '">' + k + '</option>'; }).join('');
+      return '<optgroup label="' + c + '">' + opts + '</optgroup>';
+    }).join('');
+  })();
+
+  function onEvPicked(sel){
+    var mt = EV_META[sel.value];
+    var dl = document.getElementById('devFieldLabel');
+    if (dl) dl.textContent = (mt && mt.type) ? (mt.type + ' · 预警值') : '预警值';
+    var lv = EV_META[sel.value];
+    if (lv) {
+      var nm = document.getElementById('evModalName');
+      if (nm) nm.textContent = sel.value;
+    }
+  }
+
+
+  var evDevData = {};      // {设备: 阈值}
+  var evDevName = '';      // 当前事件名
+
+  var TH_FALLBACK = {
+    'temp': ['60 °C', '70 °C', '75 °C', '80 °C', '85 °C', '90 °C', '95 °C', '100 °C'],
+    'hour': ['2 小时', '6 小时', '12 小时', '24 小时', '48 小时', '72 小时'],
+    'pct' : ['10 %', '20 %', '30 %', '40 %', '50 %'],
+    'rate': ['20 L/h', '30 L/h', '35 L/h', '40 L/h', '50 L/h'],
+    'level': ['低', '中', '高'],
+    'count': ['1 次', '3 次', '5 次', '10 次'],
+    'dist': ['50 m', '100 m', '200 m', '500 m', '1000 m'],
+    'time': ['10 分钟', '30 分钟', '1 小时', '2 小时'],
+    'common': ['关闭', '提示', '一般', '重要', '紧急']
+  };
+
+  function guessThList(name){
+    if (!name) return TH_FALLBACK.common;
+    if (/温度|水温|油温|过热/.test(name)) return TH_FALLBACK.temp;
+    if (/离线|超时|时长|疲劳|驾驶|停机|待机/.test(name)) return TH_FALLBACK.hour;
+    if (/油耗|消耗|液位|占比|百分比/.test(name)) return TH_FALLBACK.rate;
+    if (/压力|电压|转速|电流/.test(name)) return TH_FALLBACK.common;
+    if (/距离|围栏|半径|范围/.test(name)) return TH_FALLBACK.dist;
+    if (/次数|动作|报备/.test(name)) return TH_FALLBACK.count;
+    if (/时间|分钟|停车/.test(name)) return TH_FALLBACK.time;
+    if (/报警|驾驶|安全|力矩|超速/.test(name)) return TH_FALLBACK.level;
+    return TH_FALLBACK.common;
+  }
+
+  function thOptsHtml(name, cur){
+    var list = EV_TH[name] || guessThList(name);
+    if (cur && list.indexOf(cur) < 0) list = [cur].concat(list);
+    return list.map(function (t) {
+      return '<option' + (t === cur ? ' selected' : '') + '>' + t + '</option>';
+    }).join('');
+  }
+
+  function openEvCfg(btn){
+    evCfgRow = btn.closest('tr');
+    var name = evCfgRow.querySelector('.ev-name').textContent.trim();
+    document.getElementById('evModalName').textContent = name;
+
+    var nameSel = document.getElementById('evName');
+    var exists = Array.prototype.some.call(nameSel.options, function (o) { return o.value === name; });
+    if (!exists) {
+      var op = document.createElement('option');
+      op.value = name; op.textContent = name;
+      nameSel.appendChild(op);
+    }
+    nameSel.value = name;
+
+    var on = evCfgRow.getAttribute('data-on') === '1';
+    var onEl = document.getElementById('evOn');
+    onEl.classList.toggle('on', on);
+    document.getElementById('evOnTxt').textContent = on ? '开启' : '关闭';
+
+    var ptype0 = evCfgRow.getAttribute('data-type') || '';
+    var dl = document.getElementById('devFieldLabel');
+    if (dl) dl.textContent = (ptype0 && ptype0 !== '新建类型') ? (ptype0 + ' · 预警值') : '预警值';
+
+    evDevData = {};
+    var cfgs = [];
+    try { cfgs = JSON.parse(evCfgRow.getAttribute('data-cfgs') || '[]'); } catch (e) { cfgs = []; }
+    cfgs.forEach(function (c) { if (c && c[0]) evDevData[c[0]] = c[1]; });
+
+    var sum = document.getElementById('evDevSummary');
+    var txt2 = evDevSummaryText();
+    sum.textContent = txt2;
+    sum.classList.toggle('has', Object.keys(evDevData).length > 0);
+
+    openModal('evModal');
+  }
+
+  function saveEvCfg(){
+    if (!evCfgRow) return;
+    var name = (document.getElementById('evName').value || '').trim();
+    if (!name) { toast('请选择事件名称'); return; }
+
+    var mt = EV_META[name] || {};
+    var cat = mt.cat || (evCfgRow.getAttribute('data-cat') || '');
+    var ptype = mt.type || (evCfgRow.getAttribute('data-type') || '');
+    var lv = mt.lv || '中危';
+    var on = document.getElementById('evOn').classList.contains('on');
+
+    var cfgs = Object.keys(evDevData).map(function (k) { return [k, evDevData[k]]; });
+
+    evCfgRow.setAttribute('data-cat', cat);
+    evCfgRow.setAttribute('data-type', ptype);
+    evCfgRow.setAttribute('data-on', on ? '1' : '0');
+    evCfgRow.setAttribute('data-cfgs', JSON.stringify(cfgs));
+
+    evCfgRow.querySelector('.ev-name').textContent = name;
+    evCfgRow.querySelector('.ev-name').setAttribute('title', name);
+
+    var lvCell = evCfgRow.querySelector('.lv-col');
+    if (lvCell) {
+      var cls = { '高危': 'high', '中危': 'mid', '低危': 'low', '提示': 'gray' }[lv] || 'gray';
+      lvCell.innerHTML = '<span class="tag ' + cls + '">' + lv + '</span>';
+    }
+
+    var txt = cfgs.map(function (c) { return c[0] + ' ' + c[1]; }).join('；') || '—';
+    var cell = evCfgRow.querySelector('.cfg-col');
+    if (cell) {
+      cell.setAttribute('title', txt);
+      var sp = cell.querySelector('.cell-ell');
+      if (sp) sp.textContent = txt;
+    }
+
+    closeLayer('evModal');
+    toast('已保存「' + name + '」的配置');
+    evCfgRow = null;
+  }
+
+
+  var evDevData = {};       // {设备: 阈值}
+  var evDevName = '';       // 当前事件名
+  var evDevType = '默认';    // 当前选中的机型 Tab
+
+  var EVDEV_DEV = {
+    '默认': ['全部设备'],
+    '挖掘机': ['SY215C · XG-1001', 'SY215C · XG-1002', 'SY215C · XG-1003', 'SY365H · XG-1004'],
+    '装载机': ['ZL50GN · ZZ-2001', 'ZL50GN · ZZ-2002', 'ZL50G · ZZ-2003'],
+    '搅拌车': ['SY306C · JB-4001', 'SY306C · JB-4002'],
+    '推土机': ['SD16 · TT-3001'],
+    '起重机': ['STC250 · QZ-6001']
+  };
+  var EVDEV_GROUPS = ['默认', '挖掘机', '装载机', '搅拌车', '推土机', '起重机'];
+
+  function evDevItemsOf(group){
+    return EVDEV_DEV[group] || [];
+  }
+
+  function renderEvDevTypes(){
+    var box = document.getElementById('evDevTypes');
+    box.innerHTML = EVDEV_GROUPS.map(function (g) {
+      var n = evDevItemsOf(g).length;
+      return '<div class="evdev-type' + (g === evDevType ? ' active' : '') + '" '
+        + 'onclick="switchEvDevType(\'' + g + '\')">'
+        + '<span>' + g + '</span><em>' + n + '</em></div>';
+    }).join('');
+  }
+
+  function switchEvDevType(g){
+    evDevType = g;
+    renderEvDevTypes();
+    renderEvDevRows(g);
+  }
+
+  function cfgRow(key, label, cls){
+    var th = evDevData[key];
+    var on = th !== undefined;
+    return '<div class="evdev-row ' + cls + (on ? '' : ' off') + '" data-dev="' + key + '">'
+      + '<label><input type="checkbox"' + (on ? ' checked' : '')
+      + ' onchange="onEvDevToggle(this)"/><span>' + label + '</span></label>'
+      + '<select' + (on ? '' : ' disabled') + ' onchange="onEvDevTh(this)">'
+      + thOptsHtml(evDevName, th) + '</select></div>';
+  }
+
+  function renderEvDevRows(group){
+    var items = group === '默认' ? [] : evDevItemsOf(group);
+    var html = '';
+
+    // 机型级：分组标题 + 统一预警值
+    var allKey = group === '默认' ? '__ALL__' : (group + ':ALL');
+    html += cfgRow(allKey, '统一预警值', 'evdev-grouprow');
+
+    html += items.map(function (d) {
+      var th = evDevData[d];
+      var on = th !== undefined;
+      var label = d === '全部设备' ? '全部设备 · 默认值' : d;
+      return '<div class="evdev-row' + (on ? '' : ' off') + '" data-dev="' + d + '">'
+        + '<label><input type="checkbox"' + (on ? ' checked' : '')
+        + ' onchange="onEvDevToggle(this)"/><span>' + label + '</span></label>'
+        + '<select' + (on ? '' : ' disabled') + ' onchange="onEvDevTh(this)">'
+        + thOptsHtml(evDevName, th) + '</select></div>';
+    }).join('');
+
+    document.getElementById('evDevList').innerHTML = html || '<div class="evdev-empty">该机型暂无设备</div>';
+    syncEvDevCount();
+  }
+
+  function onEvDevToggle(cb){
+    var row = cb.closest('.evdev-row');
+    var sel = row.querySelector('select');
+    var dev = row.getAttribute('data-dev');
+    if (cb.checked) {
+      row.classList.remove('off');
+      sel.disabled = false;
+      evDevData[dev] = sel.value;
+    } else {
+      row.classList.add('off');
+      sel.disabled = true;
+      delete evDevData[dev];
+    }
+    syncEvDevCount();
+  }
+
+  function onEvDevTh(sel){
+    var row = sel.closest('.evdev-row');
+    var dev = row.getAttribute('data-dev');
+    if (row.querySelector('input[type=checkbox]').checked) evDevData[dev] = sel.value;
+  }
+
+  function syncEvDevCount(){
+    var n = Object.keys(evDevData).length;
+    var el = document.getElementById('evDevCount');
+    if (el) el.textContent = n;
+  }
+
+  function toggleAllEvDev(cb){
+    document.querySelectorAll('#evDevList .evdev-row').forEach(function (row) {
+      if (row.style.display === 'none') return;
+      var box = row.querySelector('input[type=checkbox]');
+      if (box.checked !== cb.checked) {
+        box.checked = cb.checked;
+        onEvDevToggle(box);
+      }
+    });
+  }
+
+  function filterEvDev(input){
+    var kw = (input.value || '').trim().toLowerCase();
+    document.querySelectorAll('#evDevList .evdev-row').forEach(function (row) {
+      var d = row.getAttribute('data-dev') || '';
+      row.style.display = (!kw || d.toLowerCase().indexOf(kw) > -1) ? '' : 'none';
+    });
+  }
+
+  function openEvDevPicker(){
+    evDevName = document.getElementById('evName').value || '';
+    if (!evDevName) { toast('请先选择事件名称'); return; }
+
+    evDevData = {};
+    if (evCfgRow) {
+      var cfgs = [];
+      try { cfgs = JSON.parse(evCfgRow.getAttribute('data-cfgs') || '[]'); } catch (e) { cfgs = []; }
+      cfgs.forEach(function (c) { if (c && c[0]) evDevData[c[0]] = c[1]; });
+    }
+
+    // 清洗历史占位值
+    var thList = EV_TH[evDevName] || guessThList(evDevName);
+    Object.keys(evDevData).forEach(function (k) {
+      if (!evDevData[k] || evDevData[k] === '默认') evDevData[k] = thList[0];
+    });
+
+    evDevType = '默认';
+    renderEvDevTypes();
+    renderEvDevRows('默认');
+    openModal('evDevModal');
+  }
+
+  function evDevSummaryText(){
+    var sets = {};
+    Object.keys(evDevData).forEach(function (k) {
+      var g = null;
+      if (k === '__ALL__') g = '全部设备';
+      else if (k.indexOf(':') > -1) g = k.split(':')[0];
+      else {
+        Object.keys(EVDEV_DEV).forEach(function (gg) {
+          if (EVDEV_DEV[gg].indexOf(k) > -1) g = gg;
+        });
+      }
+      if (g) sets[g] = 1;
+    });
+    var list = Object.keys(sets);
+    return list.length ? ('已配置：' + list.join('、')) : '未配置设备';
+  }
+
+  function confirmEvDev(){
+    var sum = document.getElementById('evDevSummary');
+    if (sum) {
+      var txt = evDevSummaryText();
+      sum.textContent = txt;
+      sum.classList.toggle('has', Object.keys(evDevData).length > 0);
+    }
+    closeLayer('evDevModal');
+  }
+
+
+  function resetQuery(){
+    var cat = document.getElementById('catFilter');
+    if (cat) cat.selectedIndex = 0;
+    var lvl = document.getElementById('lvlFilter');
+    if (lvl) lvl.selectedIndex = 0;
+    var kw = document.getElementById('kwName');
+    if (kw) kw.value = '';
+
+    document.querySelectorAll('tbody tr').forEach(function (tr) {
+      tr.style.display = '';
+    });
+
+    document.querySelectorAll('tbody tr.cat-group').forEach(function (g) {
+      var c = g.getAttribute('data-cat');
+      var em = g.querySelector('em');
+      if (em) em.textContent = document.querySelectorAll('tbody tr.ev-row[data-cat="' + c + '"]').length;
+    });
+
+    var total = document.getElementById('totalCount');
+    if (total) total.textContent = '共 ' + document.querySelectorAll('tbody tr.ev-row').length + ' 条';
+    toast('已重置查询条件');
+  }
+
+
+  function addEvInCat(btn){
+    var groupRow = btn.closest('tr.cat-group');
+    var cat = groupRow.getAttribute('data-cat');
+
+    var tr = document.createElement('tr');
+    tr.className = 'ev-row';
+    tr.setAttribute('data-cat', cat);
+    tr.setAttribute('data-type', '新建类型');
+    tr.setAttribute('data-on', '1');
+    tr.setAttribute('data-cfgs', '[]');
+    tr.setAttribute('data-desc', '');
+    tr.innerHTML = '<td class="ptype-col">新建类型</td>'
+      + '<td class="ev-name">新预警事件</td>'
+      + '<td class="lv-col"><span class="tag mid">中危</span></td>'
+      + '<td class="cfg-col"><span class="cell-ell" style="max-width:190px">—</span></td>'
+      + '<td class="desc-col"><span class="cell-ell" style="max-width:180px">-</span></td>'
+      + '<td class="st-col"><span class="st-toggle" onclick="toggleEvt(this)"><span class="switch on"></span><span class="st-txt">开启</span></span></td>'
+      + '<td><button class="btn link" onclick="openEvCfg(this)">配置</button>'
+      + '<button class="btn link" style="color:#e60012" onclick="confirmDelEv(this)">移除</button></td>';
+
+    // 插到该分组最后一个事件行之后
+    var last = groupRow;
+    var nxt = groupRow.nextElementSibling;
+    while (nxt && nxt.classList && nxt.classList.contains('ev-row')) {
+      last = nxt;
+      nxt = nxt.nextElementSibling;
+    }
+    last.after(tr);
+
+    var em = groupRow.querySelector('em');
+    if (em) em.textContent = document.querySelectorAll('tbody tr.ev-row[data-cat="' + cat + '"]').length;
+
+    openEvCfg(tr.querySelector('.btn.link'));
+  }
+
+
+  function toggleType(el){
+    var cell = el.closest('.ptype-col');
+    var tr = el.closest('tr');
+    var cat = tr.getAttribute('data-cat');
+    var type = tr.getAttribute('data-type');
+
+    var closed = cell.classList.toggle('closed');
+    el.classList.toggle('closed', closed);
+
+    var rows = document.querySelectorAll('tr.ev-row[data-cat="' + cat + '"][data-type="' + type + '"]');
+    rows.forEach(function (r, i) {
+      if (i === 0) { r.style.display = ''; return; }
+      r.style.display = closed ? 'none' : '';
+    });
+
+    var span = parseInt(cell.getAttribute('data-span') || '1', 10);
+    cell.setAttribute('rowspan', closed ? 1 : span);
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>审核事件</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: #dfe2e6;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333333;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-container {
+    width: 100%;
+    max-width: 414px;
+    margin: 0 auto;
+    background: #f2f3f5;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ===== 状态栏 ===== */
+  .status-bar {
+    height: 34px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    flex-shrink: 0;
+  }
+
+  .sb-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111111;
+    letter-spacing: 0.3px;
+  }
+
+  .sb-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .sb-battery {
+    width: 22px;
+    height: 11px;
+    border: 1px solid #111111;
+    border-radius: 3px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 1.5px;
+  }
+
+  .sb-battery::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 4px;
+    background: #111111;
+    border-radius: 0 1px 1px 0;
+  }
+
+  .sb-battery i {
+    display: block;
+    width: 72%;
+    height: 100%;
+    background: #111111;
+    border-radius: 1px;
+  }
+
+  /* ===== 导航栏 ===== */
+  .nav-bar {
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px 12px 6px;
+    flex-shrink: 0;
+  }
+
+  .nav-back {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .nav-back:active { opacity: 0.5; }
+
+  .nav-titles {
+    min-width: 0;
+    padding-top: 2px;
+  }
+
+  .nav-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: #111111;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+  }
+
+  .nav-sub {
+    font-size: 13px;
+    color: #8c8c8c;
+    margin-top: 2px;
+  }
+
+  /* ===== 内容区 ===== */
+  .content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 12px 20px 12px;
+  }
+
+  /* ===== 审核卡片 ===== */
+  .review-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 14px 14px 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .review-card:last-child { margin-bottom: 0; }
+
+  .review-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+
+  .review-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #111111;
+    line-height: 1.3;
+  }
+
+  /* 风险等级标签 */
+  .lv-tag {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 5px;
+    line-height: 1.3;
+    flex-shrink: 0;
+  }
+
+  /* 等级配色（停车提示-灰、提示-蓝、低风险-黄、中风险-橙、高风险-红） */
+  .lv-hint { background: #f4f5f7; color: #8c8c8c; }
+  .lv-info { background: #e6f7ff; color: #1890ff; }
+  .lv-low { background: #fff8e0; color: #d48806; }
+  .lv-medium { background: #fff7e6; color: #fa8c16; }
+  .lv-high { background: #ffecec; color: #e60012; }
+
+  .review-new {
+    margin-left: auto;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #e60012;
+    background: #fdeaea;
+    padding: 3px 11px;
+    border-radius: 11px;
+    flex-shrink: 0;
+  }
+
+  .review-desc {
+    font-size: 14px;
+    color: #1a1a1a;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    word-break: break-word;
+  }
+
+  .review-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #8c8c8c;
+  }
+
+  .review-divider {
+    height: 0.5px;
+    background: #f0f0f0;
+    margin: 14px 0 13px 0;
+  }
+
+  .review-actions {
+    display: flex;
+    gap: 9px;
+  }
+
+  .review-act {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 2px 12px 2px;
+    border-radius: 10px;
+    border: 0.5px solid #eceef1;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 12px;
+    color: #1a1a1a;
+    font-family: inherit;
+    transition: opacity 0.15s ease;
+  }
+
+  .review-act:active { opacity: 0.7; }
+
+  .review-act.primary {
+    background: #fff3e6;
+    border-color: #ffe0c2;
+    color: #fa8c16;
+    font-weight: 500;
+  }
+
+  .review-act.dots {
+    flex: 0 0 54px;
+    color: #666666;
+  }
+
+  /* ===== 底部 Tab 栏 ===== */
+  .tab-bar {
+    height: 58px;
+    background: #ffffff;
+    border-top: 0.5px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding-bottom: 2px;
+  }
+
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    color: #8c8c8c;
+    font-size: 11px;
+    position: relative;
+  }
+
+  .tab-item svg { display: block; }
+
+  .tab-item.active {
+    color: #e60012;
+    font-weight: 600;
+  }
+
+  .tab-dot {
+    position: absolute;
+    top: 0;
+    right: 50%;
+    margin-right: -20px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e60012;
+  }
+
+  /* ===== 可拖动悬浮球 ===== */
+  .fab {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 120;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .fab.dragging {
+    cursor: grabbing;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+    transform: scale(1.06);
+  }
+
+  /* ===== 轻提示 ===== */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 90px;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(0, 0, 0, 0.78);
+    color: #ffffff;
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: 18px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 999;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span class="sb-time">14:16</span>
+    <span class="sb-right">
+      <svg width="15" height="11" viewBox="0 0 15 11" fill="#111111">
+        <rect x="0" y="7" width="2.6" height="4" rx="0.6"></rect>
+        <rect x="4" y="5" width="2.6" height="6" rx="0.6"></rect>
+        <rect x="8" y="2.5" width="2.6" height="8.5" rx="0.6"></rect>
+        <rect x="12" y="0" width="2.6" height="11" rx="0.6"></rect>
+      </svg>
+      <span style="font-size:11px;font-weight:600;color:#111111;">4G</span>
+      <span class="sb-battery"><i></i></span>
+    </span>
+  </div>
+
+  <!-- 导航栏 -->
+  <div class="nav-bar">
+    <div class="nav-back" onclick="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </div>
+    <div class="nav-titles">
+      <div class="nav-title">TI-E 3029</div>
+      <div class="nav-sub">设备异常</div>
+    </div>
+  </div>
+
+  <!-- 审核事件列表 -->
+  <div class="content">
+
+    <div class="review-card">
+      <div class="review-head">
+        <span class="review-title">故障码</span>
+        <span class="lv-tag lv-high">高风险</span>
+        <span class="review-new">新</span>
+      </div>
+      <div class="review-desc">油水分离器故障(P197)</div>
+      <div class="review-time">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2026-11-10 09:39:56 (UTC+8)
+      </div>
+      <div class="review-divider"></div>
+      <div class="review-actions">
+        <button class="review-act primary" onclick="showToast('已确认处理，审核完成')">
+          <svg width="23" height="23" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#fa8c16"></circle>
+            <polyline points="7.5 12 10.5 15 16.5 9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          </svg>
+          确认处理
+        </button>
+        <button class="review-act" onclick="showToast('发起服务召请')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          服务召请
+        </button>
+        <button class="review-act" onclick="showToast('关联任务')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+            <line x1="8" y1="9" x2="10" y2="9"></line>
+            <line x1="8" y1="13" x2="10" y2="13"></line>
+            <line x1="8" y1="17" x2="10" y2="17"></line>
+            <line x1="13" y1="9" x2="16" y2="9"></line>
+            <line x1="13" y1="13" x2="16" y2="13"></line>
+            <line x1="13" y1="17" x2="16" y2="17"></line>
+          </svg>
+          关联任务
+        </button>
+        <button class="review-act dots" onclick="showToast('更多操作')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666666">
+            <circle cx="5" cy="12" r="1.8"></circle>
+            <circle cx="12" cy="12" r="1.8"></circle>
+            <circle cx="19" cy="12" r="1.8"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-head">
+        <span class="review-title">故障码</span>
+        <span class="lv-tag lv-high">高风险</span>
+        <span class="review-new">新</span>
+      </div>
+      <div class="review-desc">油水分离器故障(P197)</div>
+      <div class="review-time">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2026-11-09 09:34:51 (UTC+8)
+      </div>
+      <div class="review-divider"></div>
+      <div class="review-actions">
+        <button class="review-act primary" onclick="showToast('已确认处理，审核完成')">
+          <svg width="23" height="23" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#fa8c16"></circle>
+            <polyline points="7.5 12 10.5 15 16.5 9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          </svg>
+          确认处理
+        </button>
+        <button class="review-act" onclick="showToast('发起服务召请')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          服务召请
+        </button>
+        <button class="review-act" onclick="showToast('关联任务')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+            <line x1="8" y1="9" x2="10" y2="9"></line>
+            <line x1="8" y1="13" x2="10" y2="13"></line>
+            <line x1="8" y1="17" x2="10" y2="17"></line>
+            <line x1="13" y1="9" x2="16" y2="9"></line>
+            <line x1="13" y1="13" x2="16" y2="13"></line>
+            <line x1="13" y1="17" x2="16" y2="17"></line>
+          </svg>
+          关联任务
+        </button>
+        <button class="review-act dots" onclick="showToast('更多操作')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666666">
+            <circle cx="5" cy="12" r="1.8"></circle>
+            <circle cx="12" cy="12" r="1.8"></circle>
+            <circle cx="19" cy="12" r="1.8"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-head">
+        <span class="review-title">故障码</span>
+        <span class="lv-tag lv-high">高风险</span>
+        <span class="review-new">新</span>
+      </div>
+      <div class="review-desc">油水分离器故障(P197)</div>
+      <div class="review-time">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2026-11-08 09:34:56 (UTC+8)
+      </div>
+      <div class="review-divider"></div>
+      <div class="review-actions">
+        <button class="review-act primary" onclick="showToast('已确认处理，审核完成')">
+          <svg width="23" height="23" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#fa8c16"></circle>
+            <polyline points="7.5 12 10.5 15 16.5 9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          </svg>
+          确认处理
+        </button>
+        <button class="review-act" onclick="showToast('发起服务召请')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          服务召请
+        </button>
+        <button class="review-act" onclick="showToast('关联任务')">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+            <line x1="8" y1="9" x2="10" y2="9"></line>
+            <line x1="8" y1="13" x2="10" y2="13"></line>
+            <line x1="8" y1="17" x2="10" y2="17"></line>
+            <line x1="13" y1="9" x2="16" y2="9"></line>
+            <line x1="13" y1="13" x2="16" y2="13"></line>
+            <line x1="13" y1="17" x2="16" y2="17"></line>
+          </svg>
+          关联任务
+        </button>
+        <button class="review-act dots" onclick="showToast('更多操作')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666666">
+            <circle cx="5" cy="12" r="1.8"></circle>
+            <circle cx="12" cy="12" r="1.8"></circle>
+            <circle cx="19" cy="12" r="1.8"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 底部 Tab 栏 -->
+  <div class="tab-bar">
+    <div class="tab-item" onclick="showToast('首页')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path>
+      </svg>
+      首页
+    </div>
+    <div class="tab-item" onclick="showToast('资产')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.3 7 12 12 20.7 7"></polyline>
+        <line x1="12" y1="22" x2="12" y2="12"></line>
+      </svg>
+      资产
+    </div>
+    <div class="tab-item active" onclick="showToast('审核')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <polyline points="16 11 18 13 22 9"></polyline>
+      </svg>
+      审核
+    </div>
+    <div class="tab-item" onclick="showToast('我的')">
+      <span class="tab-dot"></span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      我
+    </div>
+  </div>
+
+</div>
+
+<!-- 可拖动悬浮球 -->
+<div class="fab" id="fab">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8c8c8c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v5"></path>
+    <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v6"></path>
+    <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"></path>
+    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2a8 8 0 0 1-8-8v-3a2 2 0 1 1 4 0"></path>
+  </svg>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let toastTimer = null;
+
+  function showToast(text) {
+    const el = document.getElementById('toast');
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      el.classList.remove('show');
+    }, 1600);
+  }
+
+  function goBack() {
+    if (history.length > 1) {
+      history.back();
+    } else {
+      showToast('返回上一页');
+    }
+  }
+
+  /* ===== 悬浮球拖动 ===== */
+  (function () {
+    const fab = document.getElementById('fab');
+    const container = document.querySelector('.page-container');
+    const SIZE = 46;
+    const EDGE = 10;
+    const MIN_TOP = 46;
+    const CLICK_THRESHOLD = 6;
+
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startY = 0;
+    let originLeft = 0;
+    let originTop = 0;
+
+    function clamp(v, min, max) {
+      if (max < min) return min;
+      return Math.max(min, Math.min(v, max));
+    }
+
+    function bounds() {
+      const r = container.getBoundingClientRect();
+      return {
+        minLeft: r.left + EDGE,
+        maxLeft: r.right - SIZE - EDGE,
+        minTop: MIN_TOP,
+        maxTop: window.innerHeight - SIZE - EDGE
+      };
+    }
+
+    function setPos(left, top) {
+      const b = bounds();
+      fab.style.left = clamp(left, b.minLeft, b.maxLeft) + 'px';
+      fab.style.top = clamp(top, b.minTop, b.maxTop) + 'px';
+    }
+
+    function initPos() {
+      const r = container.getBoundingClientRect();
+      setPos(r.right - SIZE - 10, window.innerHeight * 0.62);
+    }
+
+    function pointer(e) {
+      return e.touches && e.touches.length ? e.touches[0] : e;
+    }
+
+    function onDown(e) {
+      const p = pointer(e);
+      dragging = true;
+      moved = false;
+      startX = p.clientX;
+      startY = p.clientY;
+      originLeft = parseFloat(fab.style.left) || 0;
+      originTop = parseFloat(fab.style.top) || 0;
+      fab.classList.add('dragging');
+      if (e.cancelable) e.preventDefault();
+    }
+
+    function onMove(e) {
+      if (!dragging) return;
+      const p = pointer(e);
+      const dx = p.clientX - startX;
+      const dy = p.clientY - startY;
+      if (Math.abs(dx) > CLICK_THRESHOLD || Math.abs(dy) > CLICK_THRESHOLD) moved = true;
+      setPos(originLeft + dx, originTop + dy);
+      if (e.cancelable) e.preventDefault();
+    }
+
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      fab.classList.remove('dragging');
+    }
+
+    fab.addEventListener('mousedown', onDown);
+    fab.addEventListener('touchstart', onDown, { passive: false });
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchend', onUp);
+    document.addEventListener('touchcancel', onUp);
+
+    fab.addEventListener('click', function (e) {
+      if (moved) {
+        e.stopPropagation();
+        e.preventDefault();
+        return;
+      }
+      showToast('快捷操作');
+    });
+
+    window.addEventListener('resize', function () {
+      setPos(parseFloat(fab.style.left) || 0, parseFloat(fab.style.top) || 0);
+    });
+
+    initPos();
+  })();
+</script>
+
+</body>
+</html>

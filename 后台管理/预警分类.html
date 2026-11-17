@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>预警分类 - SanVIST 通用预警事件中心</title>
+  <style>
+:root{--red:#29BECE;--red2:#e9f9fb;--blue:#1899a8;--green:#20b26b;--orange:#fa8c16;--ink:#202936;--muted:#657080;--line:#e5e9ef;--bg:#f4f6f8;--white:#fff;--shadow:0 6px 24px rgba(26,39,60,.09)}
+    *{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",Arial,sans-serif;color:var(--ink);background:var(--bg)}button,input,select,textarea{font:inherit}.logo{font-size:23px;font-weight:900;font-style:italic;color:var(--red);letter-spacing:-1px}
+    main{margin-left:218px;padding:88px 24px 30px;min-width:1050px}.page{display:none}.page.active{display:block}
+    .btn{height:36px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:0 15px;cursor:pointer;color:#384353}.btn:hover{border-color:#aeb7c3}.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}.btn.link{border:0;color:var(--blue);padding:0 5px;background:none;height:auto}
+    .card{background:#fff;border:1px solid #edf0f3;border-radius:10px;box-shadow:0 1px 3px rgba(20,35,55,.03);margin-bottom:16px}.filters{padding:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.control{height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#4e5968;padding:0 11px;min-width:128px}.search{min-width:220px}.spacer{flex:1}
+    .table-wrap{overflow:auto;padding:0 16px}.table{width:100%;border-collapse:collapse;white-space:nowrap}.table th{background:#f7f8fa;color:#505b69;font-weight:600;text-align:left;border:1px solid var(--line);padding:11px 12px}.table td{padding:12px;border-bottom:1px solid var(--line);color:#3f4956}.table tr:hover td{background:#fafbfd}.footer{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}.pages{display:flex;gap:7px;align-items:center}.pages span{width:31px;height:31px;border:1px solid var(--line);display:grid;place-items:center;border-radius:5px}.pages .on{background:var(--red);color:#fff;border-color:var(--red)}
+    .modal-mask{display:none;position:fixed;inset:0;background:rgba(22,30,40,.42);z-index:30}.modal-mask.open{display:block}.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.modal-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}.x{border:0;background:none;font-size:23px;color:#7d8793;cursor:pointer}
+    .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:780px;max-height:88vh;background:#fff;border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column}.modal-body{padding:20px 24px;overflow:auto}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 18px}.field label{display:block;margin-bottom:6px;color:#4f5967}.field label i{color:var(--red);font-style:normal}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:#3d4652;background:#fff}.field textarea{min-height:68px;resize:vertical}.field.full{grid-column:1/-1}.toast{position:fixed;left:50%;top:78px;transform:translateX(-50%);background:#26313e;color:#fff;padding:10px 18px;border-radius:7px;z-index:60;box-shadow:var(--shadow);display:none}.toast.show{display:block}
+  .app-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+  .main-wrapper { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+  .main-wrapper > main { flex: 1; min-width: 0; margin: 0; padding: 24px; min-height: 0; overflow-y: auto; }
+  .navbar {
+    height: 50px; background: #172742; border-bottom: 1px solid rgba(255,255,255,.06);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; flex-shrink: 0;
+  }
+  .navbar-left { display: flex; align-items: center; gap: 8px; }
+  .navbar .logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .navbar-right { display: flex; align-items: center; gap: 20px; font-size: 14px; color: rgba(255,255,255,.72); }
+  .navbar-item { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color .2s; }
+  .navbar-item:hover { color: #fff; }
+  .sidebar {
+    width: 210px; background: #1E3255; border-right: 1px solid rgba(255,255,255,.06);
+    display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
+  }
+  .sidebar-menu { list-style: none; padding: 8px 0; margin: 0; }
+  .sidebar-item { position: relative; }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    font-size: 14px; color: rgba(255,255,255,.75); text-decoration: none;
+    transition: all .2s; cursor: pointer;
+  }
+  .sidebar-link:hover { color: #fff; background: rgba(255,255,255,.07); }
+  .sidebar-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sidebar-submenu { list-style: none; padding: 0; margin: 0; }
+  .sidebar-submenu .sidebar-link { padding-left: 42px; font-size: 13px; }
+  .sidebar-item.active > .sidebar-link,
+  .sidebar-link.active {
+    background: linear-gradient(90deg, rgba(41,190,206,0) 0%, #29BECE 100%);
+    color: #fff; font-weight: 600; box-shadow: inset 3px 0 0 #29BECE;
+  }
+  .cat-group td{background:#f7f9fb;font-weight:600}
+  .cat-caret{display:inline-block;width:0;height:0;border-left:6px solid #8b94a0;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
+  .cat-caret.closed{transform:rotate(0)}
+  .cat-group em{font-style:normal;font-size:12px;font-weight:500;color:#8b94a0;margin-left:8px}
+  .cat-child .child-name{padding-left:38px}
+  .cat-child .child-desc{color:#7a8290;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lang-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .lang-head label em{font-style:normal;font-weight:400;color:#a6adb8;font-size:12px}
+  .lang-toggle{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#1899a8;background:none;border:none;cursor:pointer;font-family:inherit;padding:2px 0}
+  .lang-toggle:hover{color:#29BECE}
+  .lang-toggle svg{transition:transform .2s}
+  .lang-list{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;max-height:206px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:14px;background:#fcfdfe}
+  .lang-item{display:flex;align-items:center;gap:8px;min-width:0}
+  .lang-item span{width:62px;flex-shrink:0;font-size:13px;color:#4e5968;white-space:nowrap}
+  .lang-item input{flex:1;min-width:0;height:30px;border:1px solid var(--line);border-radius:5px;padding:0 9px;font-size:13px;font-family:inherit;outline:none;background:#fff}
+  .lang-item input:focus{border-color:#29BECE}
+
+  /* 关联预警事件多选 */
+  .ms-box{position:relative}
+  .ms-head{min-height:34px;border:1px solid var(--line);border-radius:6px;padding:4px 30px 4px 8px;display:flex;align-items:center;gap:5px;cursor:pointer;background:#fff;position:relative}
+  .ms-head:hover{border-color:#29BECE}
+  .ms-tags{display:flex;flex-wrap:wrap;gap:5px;flex:1;min-width:0}
+  .ms-tag{display:inline-flex;align-items:center;gap:4px;background:#e9f9fb;color:#1899a8;font-size:12px;padding:2px 4px 2px 7px;border-radius:4px;line-height:1.6}
+  .ms-tag b{cursor:pointer;font-weight:400;opacity:.65;padding:0 2px}
+  .ms-tag b:hover{opacity:1}
+  .ms-ph{font-style:normal;color:#b6bcc4;font-size:13px}
+  .ms-arrow{position:absolute;right:9px;top:50%;transform:translateY(-50%);transition:transform .2s;color:#9aa3af}
+  .ms-box.open .ms-arrow{transform:translateY(-50%) rotate(180deg)}
+  .ms-list{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid #e5e9ef;border-radius:8px;box-shadow:0 8px 26px rgba(22,30,40,.16);z-index:40;overflow:hidden}
+.ms-search{display:flex;align-items:center;gap:7px;padding:9px 11px;border-bottom:1px solid #f0f3f7;background:#fbfcfd}
+.ms-search svg{color:#9aa3af;flex-shrink:0}
+.ms-search input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:13px;font-family:inherit;color:#202936}
+.ms-search input::placeholder{color:#b6bcc4}
+.ms-options{max-height:182px;overflow-y:auto;padding:5px}
+.ms-options::-webkit-scrollbar{width:6px}
+.ms-options::-webkit-scrollbar-thumb{background:#d8dee6;border-radius:3px}
+.ms-options::-webkit-scrollbar-thumb:hover{background:#c2cad4}
+.ms-empty{padding:20px 0;text-align:center;font-size:13px;color:#b6bcc4}
+  .ms-item{display:flex;align-items:center;gap:9px;padding:8px 9px;font-size:13px;color:#3f4956;cursor:pointer;border-radius:5px;transition:background .12s,color .12s}
+  .ms-item:hover{background:#f2fbfc}
+  .ms-item.checked{background:#eafafc;color:#1899a8;font-weight:500}
+  .ms-item input{accent-color:#29BECE}
+  .child-events{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ev-chip{display:inline-block;background:#f2f5f8;color:#5a6472;font-size:12px;padding:1px 7px;border-radius:4px;margin:1px 4px 1px 0}
+  .cell-empty{color:#b6bcc4}
+
+  .ms-tools{display:flex;gap:6px;padding:8px 11px 0;background:#fbfcfd}
+  .ms-btnall{border:1px solid #e2e7ee;background:#fff;border-radius:5px;padding:3px 10px;font-size:12px;color:#5a6472;cursor:pointer;transition:all .14s;font-family:inherit}
+  .ms-btnall:hover{border-color:#29BECE;color:#1899a8;background:#f2fbfc}
+  .ms-list{min-width:540px}
+  .ms-search{border-bottom:none;padding-bottom:8px}
+  .ms-options{max-height:302px;padding:0 8px 8px}
+  .ms-group{margin-bottom:6px}
+  .ms-group-title{display:flex;align-items:center;gap:6px;padding:8px 6px 5px;font-size:12px;font-weight:600;color:#9aa3af;position:sticky;top:0;background:#fff;z-index:1}
+  .ms-group-title::before{content:'';width:3px;height:11px;border-radius:2px;background:#29BECE}
+  .ms-group-title em{font-style:normal;font-weight:400;font-size:11px;color:#b6bcc4}
+  .ms-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 6px}
+  .ms-item{padding:7px 8px;font-size:13px;border-radius:5px}
+  .ms-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ms-item input{width:14px;height:14px;accent-color:#29BECE;flex-shrink:0}
+</style>
+</head>
+<body>
+  <div class="app-wrapper">
+  <nav class="navbar">
+    <div class="navbar-left">
+      <span class="logo">MySANY</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.6);margin-left:4px;">管理后台</span>
+    </div>
+    <div class="navbar-right">
+      <span class="navbar-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        中文
+      </span>
+      <span class="navbar-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        admin@sany.com.cn
+      </span>
+    </div>
+  </nav>
+  <div class="main-wrapper">
+      <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active">
+          <a class="sidebar-link">
+            <span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+            预警中心
+          </a>
+          <ul class="sidebar-submenu">
+            <li class="sidebar-item"><a class="sidebar-link" href="预警等级.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h4V10H3z"/><path d="M10 20h4V4h-4z"/><path d="M17 20h4v-7h-4z"/></svg> 预警等级</a></li>
+            <li class="sidebar-item active"><a class="sidebar-link" href="预警分类.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V5a2 2 0 0 1 2-2h7a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg> 预警分类</a></li>
+            <li class="sidebar-item"><a class="sidebar-link" href="预警事件.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4"/><path d="m3 8 4-4 4 4"/><path d="M17 8v12"/><path d="m21 16-4 4-4-4"/></svg> 预警事件</a></li><li class="sidebar-item"><a class="sidebar-link" href="租户设置.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:-2px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>租户设置</a></li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+  <main>
+    <section class="page active" id="types">
+      <div class="card">
+      <div class="filters">
+        <select class="control" id="catFilter" onchange="filterByCategory(this.value)"><option value="">全部一级分类</option><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select>
+        <input class="control search" placeholder="类型名称" onkeydown="if(event.key==='Enter')doQuery(this)"/>
+        <span class="spacer"></span>
+        <button class="btn" onclick="newCategory()">＋ 新增一级分类</button><button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="resetQuery(this)">重置</button>
+      </div>
+      <div class="table-wrap"><table class="table" id="typeTable"><thead><tr><th>类型名称</th><th>一级分类</th><th>关联预警事件</th><th>备注</th><th>操作</th></tr></thead><tbody>
+        <tr class="cat-group" data-cat="设备异常" data-code="1"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>设备异常</b><em>3</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('设备异常')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-desc="设备冷却液温度超过安全阈值时触发" data-events="冷却水温高"><td class="child-name">冷却水温高</td><td>设备异常</td><td class="child-events" title="冷却水温高"><span class="ev-chip">冷却水温高</span></td><td class="child-desc">设备冷却液温度超过安全阈值时触发</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-desc="设备上报故障码时自动生成预警事件" data-events="油水分离器故障,液压油温度高"><td class="child-name">故障码</td><td>设备异常</td><td class="child-events" title="油水分离器故障、液压油温度高"><span class="ev-chip">油水分离器故障</span><span class="ev-chip">液压油温度高</span></td><td class="child-desc">设备上报故障码时自动生成预警事件</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-desc="设备连续未上报数据超过设定时长" data-events="设备离线"><td class="child-name">离线</td><td>设备异常</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备连续未上报数据超过设定时长</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="作业安全" data-code="2"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>作业安全</b><em>3</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('作业安全')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-desc="设备怠速停车时长超过配置阈值" data-events="设备离线"><td class="child-name">停车时间过长</td><td>作业安全</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备怠速停车时长超过配置阈值</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-desc="AI 识别到异常驾驶等不安全行为" data-events="危险力矩,超速"><td class="child-name">主动安全报警</td><td>作业安全</td><td class="child-events" title="危险力矩、超速"><span class="ev-chip">危险力矩</span><span class="ev-chip">超速</span></td><td class="child-desc">AI 识别到异常驾驶等不安全行为</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-desc="设备在未报备区域或时段施工作业" data-events="设备离线"><td class="child-name">设备未报备工作</td><td>作业安全</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备在未报备区域或时段施工作业</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="位置" data-code="3"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>位置</b><em>2</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('位置')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="位置" data-desc="设备驶出预设电子围栏范围" data-events="围栏预警"><td class="child-name">电子围栏报警</td><td>位置</td><td class="child-events" title="围栏预警"><span class="ev-chip">围栏预警</span></td><td class="child-desc">设备驶出预设电子围栏范围</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="位置" data-desc="设备进出围栏区域时的位置提醒" data-events="围栏预警"><td class="child-name">围栏</td><td>位置</td><td class="child-events" title="围栏预警"><span class="ev-chip">围栏预警</span></td><td class="child-desc">设备进出围栏区域时的位置提醒</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="燃油" data-code="4"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>燃油</b><em>1</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('燃油')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="燃油" data-desc="燃油消耗速率异常波动" data-events="燃油液位偏低"><td class="child-name">油耗异常</td><td>燃油</td><td class="child-events" title="燃油液位偏低"><span class="ev-chip">燃油液位偏低</span></td><td class="child-desc">燃油消耗速率异常波动</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="保养" data-code="5"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>保养</b><em>0</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('保养')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="提示" data-code="6"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>提示</b><em>1</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('提示')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="提示" data-desc="停车状态提示，不属于危险等级" data-events=""><td class="child-name">停车提示</td><td>提示</td><td class="child-events"><span class="cell-empty">-</span></td><td class="child-desc">停车状态提示，不属于危险等级</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+      </tbody></table></div>
+      <div class="footer"><span id="totalCount">共 10 条</span><div class="pages"><span class="on" onclick="gotoPage(this)">1</span><span onclick="gotoPage(this)">2</span><span onclick="gotoPage(this)">3</span></div></div>
+    </div>
+    </section>
+  </main>
+  </div>
+</div>
+<div class="modal-mask" id="catModal" onclick="maskClose(event,'catModal')">
+    <div class="modal" style="width:640px">
+      <div class="modal-head">
+        <b style="font-size:18px" id="catModalTitle">新增一级分类</b>
+        <button class="x" onclick="closeLayer('catModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field full"><label><i>*</i> 分类名称（简体中文）</label><input id="catName" placeholder="如 设备异常"/></div><div class="field full">
+              <div class="lang-head">
+                <label style="margin:0">多语言名称 <em>选填</em></label>
+                <button type="button" class="lang-toggle" onclick="toggleLang(this)">
+                  <span class="lang-count">已配置 0 种</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+              </div>
+              <div class="lang-list" style="display:none"></div>
+            </div>
+            <div class="field full"><label>备注</label><textarea id="catDesc" placeholder="选填"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeLayer('catModal')">取消</button>
+        <button class="btn primary" onclick="saveCategory()">保存</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-mask" id="typeModal" onclick="maskClose(event,'typeModal')"><div class="modal" style="width:640px"><div class="modal-head"><b style="font-size:18px" id="typeModalTitle">预警分类配置</b><button class="x" onclick="closeLayer('typeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label><i>*</i> 类型名称</label><input id="typeName" value="温度异常"/></div><div class="field"><label><i>*</i> 一级分类</label><select id="typeCat"><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select></div><div class="field full"><div class="lang-head"><label style="margin:0">多语言名称 <em>选填</em></label><button type="button" class="lang-toggle" onclick="toggleLang(this)"><span class="lang-count">已配置 0 种</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div><div class="lang-list" style="display:none"></div></div><div class="field full">
+              <label>关联预警事件</label>
+              <div class="ms-box" id="evtBox">
+                <div class="ms-head" onclick="toggleEvtList(this)">
+                  <span class="ms-tags"><em class="ms-ph">请选择预警事件</em></span>
+                  <svg class="ms-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="ms-list" style="display:none"><div class="ms-tools"><button type="button" class="ms-btnall" onclick="evtSelectAll(this,true)">全选</button><button type="button" class="ms-btnall" onclick="evtSelectAll(this,false)">清空</button></div><div class="ms-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.6" y2="16.6"></line></svg><input type="text" placeholder="搜索预警事件" oninput="filterEvt(this)"/></div><div class="ms-options"></div></div></div></div></div>
+            <div class="field full"><label>备注</label><textarea id="typeDesc" placeholder="选填">设备温度指标超过安全范围产生的预警。</textarea></div></div><div class="modal-foot"><button class="btn" onclick="closeLayer('typeModal')">取消</button><button class="btn primary" onclick="saveType()">保存</button></div></div></div>
+  <div class="modal-mask" id="confirmModal" onclick="maskClose(event,'confirmModal')">
+    <div class="modal" style="width:400px">
+      <div class="modal-head">
+        <b style="font-size:17px">确认删除</b>
+        <button class="x" onclick="closeLayer('confirmModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmTip" style="margin:0;font-size:14px;color:#4e5968;line-height:1.7">确定要删除该预警分类吗？删除后不可恢复。</p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeLayer('confirmModal')">取消</button>
+        <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red)" onclick="doDelete()">确认删除</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    var LANGS=[['en','英文'],['de','德语'],['id','印尼语'],['es','西班牙语'],['pt','葡萄牙语'],['fr','法语'],['th','泰语'],['ru','俄语'],['ar','阿拉伯语'],['km','高棉语'],['ko','韩语'],['it','意大利语'],['ms','马来语'],['vi','越南语']];
+    document.querySelectorAll('.lang-list').forEach(function(b){b.innerHTML=LANGS.map(function(l){return '<div class="lang-item"><span>'+l[1]+'</span><input data-lang="'+l[0]+'" placeholder="选填" oninput="updateLangCount(this)"/></div>'}).join('')});
+
+    function openModal(id){document.getElementById(id).classList.add('open')}
+    function closeLayer(id){document.getElementById(id).classList.remove('open')}
+    function maskClose(e,id){if(e.target.id===id)closeLayer(id)}
+    function toast(msg){const el=document.getElementById('toast');el.textContent='✓ '+msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+  function gotoPage(el){
+    const box = el.parentElement;
+    box.querySelectorAll('span').forEach(function(x){ x.classList.remove('on'); });
+    el.classList.add('on');
+  }
+  (function () {
+    const tb = document.querySelector('tbody');
+    const el = document.getElementById('totalCount');
+    if (tb && el) el.textContent = '共 ' + tb.querySelectorAll('tr').length + ' 条';
+  })();
+  let deleteTarget = null;
+  function confirmDelete(btn){
+    deleteTarget = btn.closest('tr');
+    var tip = document.getElementById('confirmTip');
+    if (tip) tip.textContent = '确定要删除该预警分类吗？删除后不可恢复。';
+    openModal('confirmModal');
+  }
+  var editingCatRow = null;
+  var pendingCatItem = null;
+  function toggleCat(el){
+    el.classList.toggle('closed');
+    var cat = el.closest('tr').getAttribute('data-cat');
+    var hide = el.classList.contains('closed');
+    document.querySelectorAll('#typeTable tbody tr.cat-child').forEach(function (tr) {
+      if (tr.getAttribute('data-cat') === cat) tr.style.display = hide ? 'none' : '';
+    });
+  }
+  function childrenOf(cat){
+    return document.querySelectorAll('#typeTable tbody tr.cat-child[data-cat="' + cat + '"]');
+  }
+  function refreshCounts(){
+    var map = {};
+    var total = 0;
+    document.querySelectorAll('#typeTable tbody tr.cat-child').forEach(function (tr) {
+      var c = tr.getAttribute('data-cat') || '';
+      map[c] = (map[c] || 0) + 1;
+      total++;
+    });
+    document.querySelectorAll('#typeTable tbody tr.cat-group').forEach(function (tr) {
+      var c = tr.getAttribute('data-cat') || '';
+      var em = tr.querySelector('em');
+      if (em) em.textContent = map[c] || 0;
+    });
+    var cat = (document.getElementById('catFilter') || {}).value || '';
+    var visible = cat ? (map[cat] || 0) : total;
+    var el = document.getElementById('totalCount');
+    if (el) el.textContent = '共 ' + visible + ' 条';
+  }
+  function filterByCategory(cat){
+    document.querySelectorAll('#typeTable tbody tr').forEach(function (tr) {
+      var hit = !cat || tr.getAttribute('data-cat') === cat;
+      tr.style.display = hit ? '' : 'none';
+    });
+    if (cat) {
+      document.querySelectorAll('.cat-caret.closed').forEach(function (c) { c.classList.remove('closed'); });
+    }
+    refreshCounts();
+  }
+  function editCatRow(btn){
+    editingCatRow = btn.closest('tr');
+    document.getElementById('catModalTitle').textContent = '编辑一级分类';
+    document.getElementById('catName').value = editingCatRow.getAttribute('data-cat') || '';
+    fillLangs('catModal', editingCatRow.getAttribute('data-langs') || '');
+    autoExpandLang();
+    document.getElementById('catDesc').value = editingCatRow.getAttribute('data-desc') || '';
+    openModal('catModal');
+  }
+  function deleteCatRow(btn){
+    var tr = btn.closest('tr');
+    var cat = tr.getAttribute('data-cat') || '';
+    var cnt = childrenOf(cat).length;
+    if (cnt > 0) { toast('该分类下还有 ' + cnt + ' 个二级类型，请先移除'); return; }
+    pendingCatItem = tr;
+    var t = document.getElementById('confirmTip');
+    if (t) t.textContent = '确定要删除一级分类「' + cat + '」吗？删除后不可恢复。';
+    openModal('confirmModal');
+  }
+  function newCategory(){
+    editingCatRow = null;
+    document.getElementById('catModalTitle').textContent = '新增一级分类';
+    document.getElementById('catName').value = '';
+    document.getElementById('catDesc').value = '';
+    fillLangs('catModal', '');
+    autoExpandLang();
+    openModal('catModal');
+  }
+  function syncCatOptions(){
+    var sel = document.getElementById('catFilter');
+    if (!sel) return;
+    var names = [];
+    document.querySelectorAll('#typeTable tbody tr.cat-group').forEach(function (tr) {
+      names.push(tr.getAttribute('data-cat'));
+    });
+    var cur = sel.value;
+    sel.innerHTML = '<option value="">全部一级分类</option>';
+    names.forEach(function (n) {
+      var o = document.createElement('option');
+      o.value = n;
+      o.textContent = n;
+      sel.appendChild(o);
+    });
+    sel.value = names.indexOf(cur) > -1 ? cur : '';
+  }
+  function saveCategory(){
+    var name = (document.getElementById('catName').value || '').trim();
+    var desc = (document.getElementById('catDesc').value || '').trim();
+    if (!name) { toast('请填写分类名称'); return; }
+    if (editingCatRow) {
+      var oldName = editingCatRow.getAttribute('data-cat');
+      editingCatRow.setAttribute('data-cat', name);
+      editingCatRow.setAttribute('data-desc', desc);
+      editingCatRow.setAttribute('data-langs', collectLangs('catModal'));
+      var b = editingCatRow.querySelector('b');
+      if (b) b.textContent = name;
+      var btns = editingCatRow.querySelectorAll('button');
+      btns.forEach(function (x) {
+        if (x.getAttribute('onclick') && x.getAttribute('onclick').indexOf('addTypeTo') > -1) {
+          x.setAttribute('onclick', "addTypeTo('" + name + "')");
+        }
+      });
+      childrenOf(oldName).forEach(function (tr) {
+        tr.setAttribute('data-cat', name);
+        if (tr.children[1]) tr.children[1].textContent = name;
+      });
+      editingCatRow = null;
+      closeLayer('catModal');
+      syncCatOptions();
+      refreshCounts();
+      toast('一级分类已更新');
+      return;
+    }
+    var tbody = document.querySelector('#typeTable tbody');
+    var tr = document.createElement('tr');
+    tr.className = 'cat-group';
+    tr.setAttribute('data-cat', name);
+    tr.setAttribute('data-desc', desc);
+    tr.setAttribute('data-langs', collectLangs('catModal'));
+    tr.innerHTML = '<td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span>'
+      + '<b>' + name + '</b><em>0</em></td>'
+      + '<td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo(\'' + name + '\')">新增</button>'
+      + '<button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button>'
+      + '<button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td>';
+    tbody.appendChild(tr);
+    closeLayer('catModal');
+    syncCatOptions();
+    refreshCounts();
+    toast('一级分类已新增');
+  }
+  function doDelete(){
+    if (pendingCatItem) {
+      pendingCatItem.remove();
+      pendingCatItem = null;
+      closeLayer('confirmModal');
+      syncCatOptions();
+      refreshCounts();
+      toast('已删除该一级分类');
+      return;
+    }
+    if (deleteTarget) {
+      deleteTarget.remove();
+      deleteTarget = null;
+    }
+    refreshCounts();
+    closeLayer('confirmModal');
+    toast('已删除该预警分类');
+  }
+  var editingTypeRow = null;
+  function editType(btn){
+    editingTypeRow = btn.closest('tr');
+    var name = editingTypeRow.querySelector('.child-name').textContent.trim();
+    var cat = editingTypeRow.getAttribute('data-cat') || '';
+    var desc = editingTypeRow.getAttribute('data-desc') || '';
+    document.getElementById('typeModalTitle').textContent = '编辑预警分类';
+    document.getElementById('typeName').value = name;
+    document.getElementById('typeCat').value = cat;
+    document.getElementById('typeDesc').value = desc;
+    fillLangs('typeModal', editingTypeRow.getAttribute('data-langs') || '');
+    setEvtValues((editingTypeRow.getAttribute('data-events') || '').split(',').filter(Boolean));
+    openModal('typeModal');
+  }
+  function saveType(){
+    var name = (document.getElementById('typeName').value || '').trim();
+    var cat = document.getElementById('typeCat').value;
+    var desc = (document.getElementById('typeDesc').value || '').trim();
+    if (!name) { toast('请填写类型名称'); return; }
+    if (!cat) { toast('请选择一级分类'); return; }
+    var row = editingTypeRow;
+    if (!row) {
+      row = document.createElement('tr');
+      row.className = 'cat-child';
+      document.querySelector('#typeTable tbody').appendChild(row);
+    }
+    var evts = getEvtValues();
+    var evHtml = evts.length
+      ? evts.map(function (e) { return '<span class="ev-chip">' + e + '</span>'; }).join('')
+      : '<span class="cell-empty">-</span>';
+    var oldCat = row.getAttribute('data-cat');
+    row.setAttribute('data-cat', cat);
+    row.setAttribute('data-desc', desc);
+    row.setAttribute('data-events', evts.join(','));
+    row.setAttribute('data-langs', collectLangs('typeModal'));
+    row.innerHTML = '<td class="child-name">' + name + '</td>'
+      + '<td>' + cat + '</td>'
+      + '<td class="child-events" title="' + evts.join('、') + '">' + evHtml + '</td>'
+      + '<td class="child-desc">' + desc + '</td>'
+      + '<td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button>'
+      + '<button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td>';
+    if (oldCat !== cat) {
+      var group = document.querySelector('#typeTable tbody tr.cat-group[data-cat="' + cat + '"]');
+      if (group) {
+        var last = group;
+        var next = group.nextElementSibling;
+        while (next && next.classList.contains('cat-child') && next.getAttribute('data-cat') === cat) {
+          last = next;
+          next = next.nextElementSibling;
+        }
+        last.parentNode.insertBefore(row, last.nextElementSibling);
+      }
+    }
+    editingTypeRow = null;
+    closeLayer('typeModal');
+    refreshCounts();
+    toast('预警分类已保存');
+  }
+  function addTypeTo(cat){
+    editingTypeRow = null;
+    document.getElementById('typeModalTitle').textContent = '新增预警分类';
+    document.getElementById('typeName').value = '';
+    document.getElementById('typeDesc').value = '';
+    fillLangs('typeModal', '');
+    setEvtValues([]);
+    var sel = document.getElementById('typeCat');
+    if (sel) sel.value = cat;
+    openModal('typeModal');
+  }
+  function langScope(modalId){
+    return document.querySelectorAll('#' + modalId + ' .lang-list input[data-lang]');
+  }
+  function toggleLang(btn){
+    var field = btn.closest('.field');
+    var list = field.querySelector('.lang-list');
+    var caret = btn.querySelector('svg');
+    var open = list.style.display !== 'none';
+    list.style.display = open ? 'none' : 'grid';
+    if (caret) caret.style.transform = open ? '' : 'rotate(180deg)';
+  }
+  function updateLangCount(input){
+    var field = input.closest('.field');
+    var filled = 0;
+    field.querySelectorAll('.lang-list input[data-lang]').forEach(function (i) {
+      if ((i.value || '').trim()) filled++;
+    });
+    var el = field.querySelector('.lang-count');
+    if (el) el.textContent = '已配置 ' + filled + ' 种';
+  }
+  function refreshLangCount(modalId){
+    var inputs = langScope(modalId);
+    var filled = 0;
+    inputs.forEach(function (i) { if ((i.value || '').trim()) filled++; });
+    var el = document.querySelector('#' + modalId + ' .lang-count');
+    if (el) el.textContent = '已配置 ' + filled + ' 种';
+  }
+  function autoExpandLang(modalId){
+    var inputs = langScope(modalId);
+    var filled = 0;
+    inputs.forEach(function (i) { if ((i.value || '').trim()) filled++; });
+    var list = document.querySelector('#' + modalId + ' .lang-list');
+    var caret = document.querySelector('#' + modalId + ' .lang-toggle svg');
+    if (!list) return;
+    if (filled > 0) {
+      list.style.display = 'grid';
+      if (caret) caret.style.transform = 'rotate(180deg)';
+    } else {
+      list.style.display = 'none';
+      if (caret) caret.style.transform = '';
+    }
+  }
+  function collectLangs(modalId){
+    var obj = {};
+    langScope(modalId).forEach(function (i) {
+      var v = (i.value || '').trim();
+      if (v) obj[i.getAttribute('data-lang')] = v;
+    });
+    return JSON.stringify(obj);
+  }
+  function fillLangs(modalId, json){
+    var obj = {};
+    try { obj = JSON.parse(json || '{}'); } catch (e) { obj = {}; }
+    langScope(modalId).forEach(function (i) {
+      i.value = obj[i.getAttribute('data-lang')] || '';
+    });
+    refreshLangCount(modalId);
+    autoExpandLang(modalId);
+  }
+
+  function toggleEvtList(head){
+    var box = head.closest('.ms-box');
+    var open = box.classList.toggle('open');
+    var list = box.querySelector('.ms-list');
+    list.style.display = open ? '' : 'none';
+    if (open) {
+      var inp = list.querySelector('.ms-search input');
+      if (inp) { inp.value = ''; filterEvt(inp); inp.focus(); }
+    }
+  }
+
+  function filterEvt(input){
+    var list = input.closest('.ms-list');
+    if (!list) return;
+    var kw = (input.value || '').trim().toLowerCase();
+    var box = list.querySelector('.ms-options');
+    var empty = box.querySelector('.ms-empty');
+    var shown = 0;
+    box.querySelectorAll('.ms-group').forEach(function (grp) {
+      var cnt = 0;
+      grp.querySelectorAll('.ms-item').forEach(function (it) {
+        var hit = !kw || it.textContent.toLowerCase().indexOf(kw) > -1;
+        it.style.display = hit ? '' : 'none';
+        if (hit) cnt++;
+      });
+      grp.style.display = cnt ? '' : 'none';
+      shown += cnt;
+    });
+    if (!shown) {
+      if (!empty) {
+        empty = document.createElement('div');
+        empty.className = 'ms-empty';
+        empty.textContent = '未找到相关事件';
+        box.appendChild(empty);
+      }
+      empty.style.display = '';
+    } else if (empty) {
+      empty.style.display = 'none';
+    }
+  }
+
+  function syncEvtTags(input){
+    var box = input.closest('.ms-box');
+    var tags = box.querySelector('.ms-tags');
+    var checked = box.querySelectorAll('input[type=checkbox]:checked');
+    box.querySelectorAll('.ms-item').forEach(function (lb) {
+      var cb = lb.querySelector('input');
+      lb.classList.toggle('checked', !!(cb && cb.checked));
+    });
+    if (!checked.length) {
+      tags.innerHTML = '<em class="ms-ph">请选择预警事件</em>';
+      return;
+    }
+    tags.innerHTML = Array.prototype.map.call(checked, function (i) {
+      return '<span class="ms-tag">' + i.value + '<b onclick="removeEvt(event,this)">×</b></span>';
+    }).join('');
+    box.querySelectorAll('.ms-item').forEach(function (lb) {
+      var cb = lb.querySelector('input');
+      lb.classList.toggle('checked', !!(cb && cb.checked));
+    });
+  }
+
+  function removeEvt(e, el){
+    e.stopPropagation();
+    var box = el.closest('.ms-box');
+    var name = el.parentElement.textContent.replace('×', '').trim();
+    box.querySelectorAll('input[type=checkbox]').forEach(function (i) {
+      if (i.value === name) i.checked = false;
+    });
+    syncEvtTags(box.querySelector('input[type=checkbox]'));
+  }
+
+  function getEvtValues(){
+    var out = [];
+    document.querySelectorAll('#evtBox input[type=checkbox]:checked').forEach(function (i) {
+      out.push(i.value);
+    });
+    return out;
+  }
+
+  function setEvtValues(list){
+    document.querySelectorAll('#evtBox input[type=checkbox]').forEach(function (i) {
+      i.checked = (list || []).indexOf(i.value) > -1;
+    });
+    syncEvtTags(document.querySelector('#evtBox input[type=checkbox]'));
+  }
+
+
+  function doQuery(btn){
+    var card = btn.closest('.card') || document;
+    var input = card.querySelector('.control.search');
+    var kw = input ? (input.value || '').trim().toLowerCase() : '';
+    var catEl = document.getElementById('catFilter');
+    var cat = catEl ? catEl.value : '';
+    var rows = Array.prototype.slice.call(card.querySelectorAll('tbody tr'));
+    var shown = 0;
+
+    rows.forEach(function (tr) {
+      if (tr.classList.contains('cat-group')) return;
+      var hit = (!cat || tr.getAttribute('data-cat') === cat) && (!kw || tr.textContent.toLowerCase().indexOf(kw) > -1);
+      tr.style.display = hit ? '' : 'none';
+      if (hit) shown++;
+    });
+
+    card.querySelectorAll('tbody tr.cat-group').forEach(function (g) {
+      var cat = g.getAttribute('data-cat');
+      var kids = card.querySelectorAll('tbody tr.cat-child[data-cat="' + cat + '"]');
+      var vis = 0;
+      Array.prototype.forEach.call(kids, function (k) { if (k.style.display !== 'none') vis++; });
+      g.style.display = vis ? '' : 'none';
+      var em = g.querySelector('em');
+      if (em) em.textContent = vis;
+    });
+
+    var el = card.querySelector('#totalCount');
+    if (el) el.textContent = '共 ' + shown + ' 条';
+
+    if (kw) toast('已筛选出 ' + shown + ' 条');
+  }
+
+
+  var EVENT_GROUPS = [
+    { g: '设备异常', list: ['冷却水温高','液压油温度高','设备离线','故障码','发动机转速异常','机油压力低','燃油液位偏低','蓄电池电压低','SOC 过低','油水分离器故障','空滤堵塞','液压油位低','发动机过热','变速箱温度高','制动系统故障','转向系统故障','胎压异常','充电系统故障','启动失败','排放超标'] },
+    { g: '作业安全', list: ['危险力矩','超速','疲劳驾驶','主动安全报警','急加速','急刹车','急转弯','未系安全带','违规操作','超载','违规载人','夜间违规作业','抽烟报警','打电话报警','分心驾驶','倒车雷达报警','盲区报警','碰撞预警','行人检测','车道偏离'] },
+    { g: '位置', list: ['电子围栏报警','围栏','驶入禁行区','驶出作业区','偏离路线','未按规定路线','超范围作业','进入危险区','定位异常','GPS 信号弱','轨迹中断','越界报警','区域滞留','夜间禁行','限高区域','限重区域','限速区域','禁区闯入','路径偏离','打卡异常'] },
+    { g: '燃油', list: ['油耗异常','燃油液位偏低','油耗突增','加油异常','偷油报警','油量传感器故障','怠速油耗高','油耗超阈值','加油未记录','油品异常','油箱泄漏','油耗排名异常','单班油耗超标','油耗对比异常','油表故障','加油量异常','油温过高','燃油压力低','喷油异常','回油温度高'] },
+    { g: '提示', list: ['保养临期','保养超期','停车提示','待机过长','工作时间异常','设备闲置','年检到期','保险到期','证书到期','维修提醒','耗材更换','轮胎更换','滤芯更换','润滑提醒','检查提醒','软件升级','固件升级','参数变更','远程锁机','租赁到期'] }
+  ];
+
+  (function renderEventOptions(){
+    document.querySelectorAll('.ms-options').forEach(function (box) {
+      box.innerHTML = EVENT_GROUPS.map(function (grp) {
+        var items = grp.list.map(function (e) {
+          return '<label class="ms-item"><input type="checkbox" value="' + e + '" onchange="syncEvtTags(this)"/>'
+            + '<span>' + e + '</span></label>';
+        }).join('');
+        return '<div class="ms-group" data-g="' + grp.g + '">'
+          + '<div class="ms-group-title">' + grp.g + '<em>' + grp.list.length + '</em></div>'
+          + '<div class="ms-grid">' + items + '</div></div>';
+      }).join('');
+    });
+  })();
+
+  function evtSelectAll(btn, on){
+    var list = btn.closest('.ms-list');
+    if (!list) return;
+    list.querySelectorAll('.ms-options .ms-item').forEach(function (it) {
+      if (it.style.display === 'none') return;
+      var cb = it.querySelector('input');
+      if (cb) cb.checked = on;
+    });
+    var first = list.querySelector('.ms-options input');
+    if (first) syncEvtTags(first);
+  }
+
+
+  function resetQuery(btn){
+    var card = (btn && btn.closest('.card')) || document;
+    card.querySelectorAll('.filters input').forEach(function (i) { i.value = ''; });
+    card.querySelectorAll('.filters select').forEach(function (s) { s.selectedIndex = 0; });
+
+    var shown = 0;
+    card.querySelectorAll('tbody tr.cat-child').forEach(function (tr) {
+      tr.style.display = '';
+      shown++;
+    });
+    card.querySelectorAll('tbody tr.cat-group').forEach(function (g) {
+      g.style.display = '';
+      var cat = g.getAttribute('data-cat');
+      var em = g.querySelector('em');
+      if (em) em.textContent = card.querySelectorAll('tbody tr.cat-child[data-cat="' + cat + '"]').length;
+    });
+    card.querySelectorAll('tbody tr:not(.cat-group):not(.cat-child)').forEach(function (tr) {
+      tr.style.display = '';
+      shown++;
+    });
+
+    var el = card.querySelector('#totalCount') || document.getElementById('totalCount');
+    if (el) el.textContent = '共 ' + shown + ' 条';
+    toast('已重置查询条件');
+  }
+
+</script>
+</body>
+</html>
