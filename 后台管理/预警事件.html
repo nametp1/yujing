@@ -52,13 +52,8 @@
   .pages span{width:31px;height:31px;border:1px solid var(--line);display:grid;place-items:center;border-radius:5px;font-size:13px;color:#4a5462;cursor:pointer;transition:all .14s}
   .pages span:hover{border-color:#29BECE;color:#1899a8}
   .pages .on{background:var(--red);color:#fff;border-color:var(--red)}
-
-  .cat-group td{background:#f5f7fa;font-weight:600;color:#202936;padding:10px 12px}
-  .cat-group em{font-style:normal;font-size:12px;font-weight:500;color:#8b94a0;margin-left:8px}
-  .cat-caret{display:inline-block;width:0;height:0;border-left:6px solid #8b94a0;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
-  .cat-caret.closed{transform:rotate(0)}
-  .cat-ops{text-align:right}
   .cat-child .sub-col{color:#657080;font-size:13px}
+  .cat-child .cat-col{color:#4a5462;font-size:13px}
 
   .cat-child .sub-col{color:#657080;font-size:13px}
   .cat-child .desc-col{color:#7a8290;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -110,39 +105,34 @@
       <div class="card">
         <div class="filters">
           <select class="control" id="lvlFilter" onchange="doQuery(this)">
-            <option value="">全部风险等级</option>
+            <option value="">全部预警等级</option>
             <option>高危</option>
             <option>中危</option>
             <option>低危</option>
             <option>提示</option>
           </select>
           <input class="control search" id="kwName" placeholder="事件名称" onkeydown="if(event.key==='Enter')doQuery(this)"/>
-          <input class="control" id="kwSub" style="width:170px" placeholder="二级分类名称" onkeydown="if(event.key==='Enter')doQuery(this)"/>
+          <select class="control" id="kwSub" onchange="doQuery(this)"></select>
           <span class="spacer"></span>
           <button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="resetQuery(this)">重置</button>
           <button class="btn primary" onclick="openEventModal(null)">＋ 新建事件</button>
         </div>
         <div class="table-wrap"><table class="table" id="eventTable">
-          <thead><tr><th>事件</th><th>二级分类</th><th>风险等级</th><th>状态</th>
-            <th>是否审核</th><th>是否预警处理</th><th>物模型 ID</th><th>预警说明</th><th>操作</th></tr></thead>
+          <thead><tr><th>事件</th><th>一级分类</th><th>二级分类</th><th>预警等级</th><th>状态</th>
+            <th>是否审核</th><th>是否预警处理</th><th>是否支持阈值配置</th><th>物模型 ID</th><th>预警说明</th><th>操作</th></tr></thead>
           <tbody>
-        <tr class="cat-group" data-cat="设备异常"><td colspan="7"><span class="cat-caret" onclick="toggleCat(this)"></span><b>设备异常</b><em>4</em></td><td colspan="2" class="cat-ops"><button class="btn link" title="在该分类下新增事件" onclick="openEventModal(null,'设备异常')">新增</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-thing="WL-CoolantTemp;WL-EngineTemp" data-desc="设备冷却液温度超过安全阈值"><td><b>冷却水温高</b></td><td class="sub-col">冷却水温高</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-CoolantTemp;WL-EngineTemp">WL-CoolantTemp;WL-EngineTemp</td><td class="desc-col" title="设备冷却液温度超过安全阈值">设备冷却液温度超过安全阈值</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-thing="WL-HydOilTemp" data-desc="液压系统油温异常升高"><td><b>液压油温度高</b></td><td class="sub-col">冷却水温高</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-HydOilTemp">WL-HydOilTemp</td><td class="desc-col" title="液压系统油温异常升高">液压系统油温异常升高</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-thing="WL-Offline" data-desc="设备连续未上报数据"><td><b>设备离线</b></td><td class="sub-col">离线</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag gray">否</span></td><td class="thing-col" title="WL-Offline">WL-Offline</td><td class="desc-col" title="设备连续未上报数据">设备连续未上报数据</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-thing="WL-FaultCode;WL-ErrorCode" data-desc="设备上报故障码"><td><b>故障码</b></td><td class="sub-col">离线</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag gray">否</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FaultCode;WL-ErrorCode">WL-FaultCode;WL-ErrorCode</td><td class="desc-col" title="设备上报故障码">设备上报故障码</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="作业安全"><td colspan="7"><span class="cat-caret" onclick="toggleCat(this)"></span><b>作业安全</b><em>4</em></td><td colspan="2" class="cat-ops"><button class="btn link" title="在该分类下新增事件" onclick="openEventModal(null,'作业安全')">新增</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-thing="WL-TorqueLimit" data-desc="作业力矩超限"><td><b>危险力矩</b></td><td class="sub-col">危险驾驶</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-TorqueLimit">WL-TorqueLimit</td><td class="desc-col" title="作业力矩超限">作业力矩超限</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-thing="WL-OverSpeed" data-desc="行驶速度超过限值"><td><b>超速</b></td><td class="sub-col">危险驾驶</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-OverSpeed">WL-OverSpeed</td><td class="desc-col" title="行驶速度超过限值">行驶速度超过限值</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-thing="WL-FatigueDrive" data-desc="连续驾驶时长超限"><td><b>疲劳驾驶</b></td><td class="sub-col">主动安全</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag gray">否</span></td><td class="thing-col" title="WL-FatigueDrive">WL-FatigueDrive</td><td class="desc-col" title="连续驾驶时长超限">连续驾驶时长超限</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-thing="WL-ActiveSafety" data-desc="AI 识别的安全隐患"><td><b>主动安全报警</b></td><td class="sub-col">主动安全</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag gray">关闭</span></td><td><span class="tag gray">否</span></td><td><span class="tag gray">否</span></td><td class="thing-col" title="WL-ActiveSafety">WL-ActiveSafety</td><td class="desc-col" title="AI 识别的安全隐患">AI 识别的安全隐患</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="位置"><td colspan="7"><span class="cat-caret" onclick="toggleCat(this)"></span><b>位置</b><em>1</em></td><td colspan="2" class="cat-ops"><button class="btn link" title="在该分类下新增事件" onclick="openEventModal(null,'位置')">新增</button></td></tr>
-        <tr class="cat-child" data-cat="位置" data-thing="WL-GeoFence;WL-FenceOut" data-desc="设备驶出预设围栏"><td><b>电子围栏报警</b></td><td class="sub-col">围栏告警</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-GeoFence;WL-FenceOut">WL-GeoFence;WL-FenceOut</td><td class="desc-col" title="设备驶出预设围栏">设备驶出预设围栏</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="燃油"><td colspan="7"><span class="cat-caret" onclick="toggleCat(this)"></span><b>燃油</b><em>2</em></td><td colspan="2" class="cat-ops"><button class="btn link" title="在该分类下新增事件" onclick="openEventModal(null,'燃油')">新增</button></td></tr>
-        <tr class="cat-child" data-cat="燃油" data-thing="WL-FuelRate" data-desc="燃油消耗速率异常"><td><b>油耗异常</b></td><td class="sub-col">油耗异常</td><td><span class="tag low">低危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag gray">否</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FuelRate">WL-FuelRate</td><td class="desc-col" title="燃油消耗速率异常">燃油消耗速率异常</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="燃油" data-thing="WL-FuelLevel" data-desc="油箱液位低于阈值"><td><b>燃油液位偏低</b></td><td class="sub-col">油耗异常</td><td><span class="tag low">低危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FuelLevel">WL-FuelLevel</td><td class="desc-col" title="油箱液位低于阈值">油箱液位低于阈值</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="提示"><td colspan="7"><span class="cat-caret" onclick="toggleCat(this)"></span><b>提示</b><em>1</em></td><td colspan="2" class="cat-ops"><button class="btn link" title="在该分类下新增事件" onclick="openEventModal(null,'提示')">新增</button></td></tr>
-        <tr class="cat-child" data-cat="提示" data-thing="WL-MaintDue" data-desc="保养周期临近"><td><b>保养临期</b></td><td class="sub-col">保养提示</td><td><span class="tag gray">提示</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag gray">否</span></td><td><span class="tag gray">否</span></td><td class="thing-col" title="WL-MaintDue">WL-MaintDue</td><td class="desc-col" title="保养周期临近">保养周期临近</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-thing="WL-CoolantTemp;WL-EngineTemp" data-desc="设备冷却液温度超过安全阈值"><td><b>冷却水温高</b></td><td class="cat-col">设备异常</td><td class="sub-col">冷却水温高</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-CoolantTemp;WL-EngineTemp">WL-CoolantTemp;WL-EngineTemp</td><td class="desc-col" title="设备冷却液温度超过安全阈值">设备冷却液温度超过安全阈值</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-thing="WL-HydOilTemp" data-desc="液压系统油温异常升高"><td><b>液压油温度高</b></td><td class="cat-col">设备异常</td><td class="sub-col">冷却水温高</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-HydOilTemp">WL-HydOilTemp</td><td class="desc-col" title="液压系统油温异常升高">液压系统油温异常升高</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-thing="WL-Offline" data-desc="设备连续未上报数据"><td><b>设备离线</b></td><td class="cat-col">设备异常</td><td class="sub-col">离线</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag gray">否</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-Offline">WL-Offline</td><td class="desc-col" title="设备连续未上报数据">设备连续未上报数据</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="设备异常" data-thing="WL-FaultCode;WL-ErrorCode" data-desc="设备上报故障码"><td><b>故障码</b></td><td class="cat-col">设备异常</td><td class="sub-col">离线</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag gray">否</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FaultCode;WL-ErrorCode">WL-FaultCode;WL-ErrorCode</td><td class="desc-col" title="设备上报故障码">设备上报故障码</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-thing="WL-TorqueLimit" data-desc="作业力矩超限"><td><b>危险力矩</b></td><td class="cat-col">作业安全</td><td class="sub-col">危险驾驶</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-TorqueLimit">WL-TorqueLimit</td><td class="desc-col" title="作业力矩超限">作业力矩超限</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-thing="WL-OverSpeed" data-desc="行驶速度超过限值"><td><b>超速</b></td><td class="cat-col">作业安全</td><td class="sub-col">危险驾驶</td><td><span class="tag high">高危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-OverSpeed">WL-OverSpeed</td><td class="desc-col" title="行驶速度超过限值">行驶速度超过限值</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-thing="WL-FatigueDrive" data-desc="连续驾驶时长超限"><td><b>疲劳驾驶</b></td><td class="cat-col">作业安全</td><td class="sub-col">主动安全</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag gray">否</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FatigueDrive">WL-FatigueDrive</td><td class="desc-col" title="连续驾驶时长超限">连续驾驶时长超限</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="作业安全" data-thing="WL-ActiveSafety" data-desc="AI 识别的安全隐患"><td><b>主动安全报警</b></td><td class="cat-col">作业安全</td><td class="sub-col">主动安全</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag gray">关闭</span></td><td><span class="tag gray">否</span></td><td><span class="tag gray">否</span></td><td><span class="tag gray">否</span></td><td class="thing-col" title="WL-ActiveSafety">WL-ActiveSafety</td><td class="desc-col" title="AI 识别的安全隐患">AI 识别的安全隐患</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="位置" data-thing="WL-GeoFence;WL-FenceOut" data-desc="设备驶出预设围栏"><td><b>电子围栏报警</b></td><td class="cat-col">位置</td><td class="sub-col">围栏告警</td><td><span class="tag mid">中危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-GeoFence;WL-FenceOut">WL-GeoFence;WL-FenceOut</td><td class="desc-col" title="设备驶出预设围栏">设备驶出预设围栏</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="燃油" data-thing="WL-FuelRate" data-desc="燃油消耗速率异常"><td><b>油耗异常</b></td><td class="cat-col">燃油</td><td class="sub-col">油耗异常</td><td><span class="tag low">低危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag gray">否</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FuelRate">WL-FuelRate</td><td class="desc-col" title="燃油消耗速率异常">燃油消耗速率异常</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="燃油" data-thing="WL-FuelLevel" data-desc="油箱液位低于阈值"><td><b>燃油液位偏低</b></td><td class="cat-col">燃油</td><td class="sub-col">油耗异常</td><td><span class="tag low">低危</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td><span class="tag info">是</span></td><td class="thing-col" title="WL-FuelLevel">WL-FuelLevel</td><td class="desc-col" title="油箱液位低于阈值">油箱液位低于阈值</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
+        <tr class="cat-child" data-cat="提示" data-thing="WL-MaintDue" data-desc="保养周期临近"><td><b>保养临期</b></td><td class="cat-col">提示</td><td class="sub-col">保养提示</td><td><span class="tag gray">提示</span></td><td class="st-cell"><span class="tag info">开启</span></td><td><span class="tag gray">否</span></td><td><span class="tag gray">否</span></td><td><span class="tag gray">否</span></td><td class="thing-col" title="WL-MaintDue">WL-MaintDue</td><td class="desc-col" title="保养周期临近">保养周期临近</td><td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button><button class="btn link" title="删除事件" onclick="confirmDelEvent(this)">删除</button></td></tr>
           </tbody>
         </table></div>
         <div class="footer"><span id="totalCount">共 12 条</span>
@@ -180,18 +170,14 @@
       </div>
       <div class="modal-body">
         <div class="form-grid">
-          <div class="field"><label><i>*</i> 事件名称</label><select id="evName" onchange="pickEvent(this.value)"></select></div><div class="field"><label>风险等级</label><select id="evLevel"><option>高危</option>
+          <div class="field"><label><i>*</i> 事件名称</label><select id="evName" onchange="pickEvent(this.value)"></select></div><div class="field"><label>预警等级</label><select id="evLevel"><option>高危</option>
 <option>中危</option>
 <option>低危</option>
-<option>提示</option></select></div><div class="field"><label><i>*</i> 一级分类</label><select id="evCat" onchange="syncSubOptions(this.value)"><option>设备异常</option>
-<option>作业安全</option>
-<option>位置</option>
-<option>燃油</option>
-<option>保养</option>
-<option>提示</option></select></div><div class="field"><label><i>*</i> 二级分类</label><select id="evSub" onchange="syncSubHint(this)"></select></div>
+<option>提示</option></select></div><div class="field full"><label><i>*</i> 分类</label><select id="evCatSub" onchange="syncSubHint(this)"></select></div>
           <div class="field"><label>状态</label><div class="radio-row"><label><input type="radio" name="evStatus" value="1" checked/> 开启</label><label><input type="radio" name="evStatus" value="0"/> 关闭</label></div></div>
           <div class="field"><label>是否审核</label><div class="radio-row"><label><input type="radio" name="evAudit" value="1" checked/> 开启</label><label><input type="radio" name="evAudit" value="0"/> 关闭</label></div></div>
           <div class="field"><label>是否预警处理</label><div class="radio-row"><label><input type="radio" name="evProc" value="1" checked/> 开启</label><label><input type="radio" name="evProc" value="0"/> 关闭</label></div></div>
+          <div class="field"><label>是否支持阈值配置</label><div class="radio-row"><label><input type="radio" name="evThCfg" value="1" checked/> 开启</label><label><input type="radio" name="evThCfg" value="0"/> 关闭</label></div></div>
           <div class="field full"><label>物模型 ID</label><textarea id="evThing" placeholder="多个 ID 用英文分号 ; 分隔，如 WL-CoolantTemp;WL-EngineTemp" style="min-height:64px"></textarea></div><div class="field full"><label>预警说明</label><textarea id="evDesc" placeholder="选填" style="min-height:56px"></textarea></div>
         </div>
       </div>
@@ -230,16 +216,7 @@
   var editingCat = '';
   var LV_CLS = { '高危': 'high', '中危': 'mid', '低危': 'low', '提示': 'gray' };
 
-  function childrenOf(cat){
-    return document.querySelectorAll('#eventTable tbody tr.cat-child[data-cat="' + cat + '"]');
-  }
 
-  function toggleCat(el){
-    el.classList.toggle('closed');
-    var hide = el.classList.contains('closed');
-    var cat = el.closest('tr').getAttribute('data-cat');
-    childrenOf(cat).forEach(function (tr) { tr.style.display = hide ? 'none' : ''; });
-  }
 
   function confirmDelEvent(btn){
     pendingDelRow = btn.closest('tr');
@@ -253,8 +230,6 @@
       pendingDelRow.remove();
       pendingDelRow = null;
       refreshCount();
-      var gtr = document.querySelector('#eventTable tbody tr.cat-group[data-cat="' + cat + '"] em');
-      if (gtr) gtr.textContent = childrenOf(cat).length;
       toast('已删除该告警事件');
     }
     closeLayer('confirmModal');
@@ -277,23 +252,17 @@
     var lvlEl = document.getElementById('lvlFilter');
     var lvl = lvlEl ? lvlEl.value : '';
     var shown = 0;
-    document.querySelectorAll('#eventTable tbody tr.cat-group').forEach(function (g) {
-      var cat = g.getAttribute('data-cat');
-      var vis = 0;
-      childrenOf(cat).forEach(function (tr) {
-        var tds = tr.querySelectorAll('td');
-        var nameHit = !kwName || (tds[0] && tds[0].textContent.toLowerCase().indexOf(kwName) > -1);
-        var subHit = !kwSub || (tds[1] && tds[1].textContent.toLowerCase().indexOf(kwSub) > -1);
-        var lvlHit = !lvl || (tds[2] && tds[2].textContent.trim() === lvl);
-        var hit = nameHit && subHit && lvlHit;
-        tr.style.display = hit ? '' : 'none';
-        if (hit) vis++;
-      });
-      g.style.display = vis ? '' : 'none';
-      var em = g.querySelector('em');
-      if (em) em.textContent = vis;
-      shown += vis;
+
+    document.querySelectorAll('#eventTable tbody tr.cat-child').forEach(function (tr) {
+      var tds = tr.querySelectorAll('td');
+      var nameHit = !kwName || (tds[0] && tds[0].textContent.toLowerCase().indexOf(kwName) > -1);
+      var subHit = !kwSub || (tds[2] && tds[2].textContent.toLowerCase().indexOf(kwSub) > -1);
+      var lvlHit = !lvl || (tds[3] && tds[3].textContent.trim() === lvl);
+      var hit = nameHit && subHit && lvlHit;
+      tr.style.display = hit ? '' : ' none'.trim();
+      if (hit) shown++;
     });
+
     var el = document.getElementById('totalCount');
     if (el) el.textContent = '共 ' + shown + ' 条';
     if (kwName || kwSub) toast('已筛选出 ' + shown + ' 条');
@@ -316,25 +285,30 @@
       var evName = tds[0].textContent.trim();
       ensureEventOption(evName);
       document.getElementById('evName').value = evName;
-      document.getElementById('evCat').value = editingEventRow.getAttribute('data-cat');
-      syncSubOptions(editingEventRow.getAttribute('data-cat'), tds[1].textContent.trim());
-      document.getElementById('evLevel').value = tds[2].textContent.trim();
-      var stOn = tds[3].textContent.indexOf('开启') > -1 || tds[3].textContent.indexOf('开启') > -1;
+      var cat0 = editingEventRow.getAttribute('data-cat') || '';
+      var sub0 = tds[2].textContent.trim();
+      renderCatSubOptions(cat0 + '|' + sub0);
+      document.getElementById('evLevel').value = tds[3].textContent.trim();
+      var stOn = tds[4].textContent.indexOf('开启') > -1;
       document.querySelector('input[name="evStatus"][value="' + (stOn ? '1' : '0') + '"]').checked = true;
-      var audOn = tds[4].textContent.trim() === '是';
-      var procOn = tds[5].textContent.trim() === '是';
+      var audOn = tds[5].textContent.trim() === '是';
+      var procOn = tds[6].textContent.trim() === '是';
+      var thOn = tds[7].textContent.trim() === '是';
       document.querySelector('input[name="evAudit"][value="' + (audOn ? '1' : '0') + '"]').checked = true;
       document.querySelector('input[name="evProc"][value="' + (procOn ? '1' : '0') + '"]').checked = true;
+      document.querySelector('input[name="evThCfg"][value="' + (thOn ? '1' : '0') + '"]').checked = true;
       document.getElementById('evThing').value = editingEventRow.getAttribute('data-thing') || '';
       document.getElementById('evDesc').value = editingEventRow.getAttribute('data-desc') || '';
     } else {
       document.getElementById('evName').value = '';
-      document.getElementById('evCat').value = presetCat || '设备异常';
-      syncSubOptions(presetCat || '设备异常');
+      var pc = presetCat || '设备异常';
+      var firstSub = (SUB_MAP[pc] && SUB_MAP[pc][0]) || '';
+      renderCatSubOptions(pc + '|' + firstSub);
       document.getElementById('evLevel').selectedIndex = 0;
       document.querySelector('input[name="evStatus"][value="1"]').checked = true;
       document.querySelector('input[name="evAudit"][value="1"]').checked = true;
       document.querySelector('input[name="evProc"][value="1"]').checked = true;
+      document.querySelector('input[name="evThCfg"][value="1"]').checked = true;
       document.getElementById('evThing').value = '';
       document.getElementById('evDesc').value = '';
     }
@@ -343,8 +317,9 @@
 
   function saveEvent(){
     var name = (document.getElementById('evName').value || '').trim();
-    var sub = (document.getElementById('evSub').value || '').trim() || '-';
-    var cat = document.getElementById('evCat').value;
+    var cs = (document.getElementById('evCatSub').value || '').split('|');
+    var sub = (cs[1] || '').trim() || '-';
+    var cat = cs[0] || '';
     var lvl = document.getElementById('evLevel').value;
     var desc = (document.getElementById('evDesc').value || '').trim();
     var thing = (document.getElementById('evThing').value || '').trim()
@@ -355,6 +330,7 @@
     var on = document.querySelector('input[name="evStatus"]:checked').value === '1';
     var aud = document.querySelector('input[name="evAudit"]:checked').value === '1';
     var proc = document.querySelector('input[name="evProc"]:checked').value === '1';
+    var thCfg = document.querySelector('input[name="evThCfg"]:checked').value === '1';
     if (!name) { toast('请选择事件名称'); return; }
 
     var tag = function (v) {
@@ -364,22 +340,17 @@
     if (!row) {
       row = document.createElement('tr');
       row.className = 'cat-child';
-      var gtr = document.querySelector('#eventTable tbody tr.cat-group[data-cat="' + cat + '"]');
-      if (gtr) {
-        var kids = childrenOf(cat);
-        if (kids.length) kids[kids.length - 1].after(row);
-        else gtr.after(row);
-      } else {
-        document.querySelector('#eventTable tbody').appendChild(row);
-      }
+      document.querySelector('#eventTable tbody').appendChild(row);
     }
     row.setAttribute('data-cat', cat);
     row.setAttribute('data-thing', thing);
     row.setAttribute('data-desc', desc);
-    row.innerHTML = '<td><b>' + name + '</b></td><td class="sub-col">' + sub + '</td>'
+    row.innerHTML = '<td><b>' + name + '</b></td>'
+      + '<td class="cat-col">' + cat + '</td>'
+      + '<td class="sub-col">' + sub + '</td>'
       + '<td><span class="tag ' + (LV_CLS[lvl] || 'gray') + '">' + lvl + '</span></td>'
       + '<td class="st-cell">' + (on ? '<span class="tag info">开启</span>' : '<span class="tag gray">关闭</span>') + '</td>'
-      + '<td>' + tag(aud) + '</td><td>' + tag(proc) + '</td>'
+      + '<td>' + tag(aud) + '</td><td>' + tag(proc) + '</td><td>' + tag(thCfg) + '</td>'
       + '<td class="thing-col" title="' + thing + '">' + (thing || '-') + '</td>'
       + '<td class="desc-col" title="' + desc + '">' + desc + '</td>'
       + '<td><button class="btn link" title="编辑事件" onclick="openEventModal(this)">编辑</button>'
@@ -401,19 +372,30 @@
     '提示': ['保养提示', '停车提示']
   };
 
-  function syncSubOptions(cat, selected){
-    var sel = document.getElementById('evSub');
+  function renderCatSubOptions(selected){
+    var sel = document.getElementById('evCatSub');
     if (!sel) return;
-    var list = SUB_MAP[cat] || [];
-    sel.innerHTML = list.length
-      ? list.map(function (x) {
-          return '<option' + (x === selected ? ' selected' : '') + '>' + x + '</option>';
-        }).join('')
-      : '<option value="">该分类下暂无二级分类</option>';
+    var opts = [];
+    Object.keys(SUB_MAP).forEach(function (cat) {
+      SUB_MAP[cat].forEach(function (sub) {
+        var val = cat + '|' + sub;
+        opts.push('<option value="' + val + '"' + (val === selected ? ' selected' : '') + '>'
+          + cat + ' · ' + sub + '</option>');
+      });
+    });
+    if (selected && opts.join('').indexOf('value="' + selected + '"') < 0) {
+      var pp = selected.split('|');
+      opts.unshift('<option value="' + selected + '" selected>' + pp[0] + ' · ' + (pp[1] || '') + '</option>');
+    }
+    sel.innerHTML = opts.length ? opts.join('') : '<option value="">暂无分类</option>';
+  }
+
+  function syncSubOptions(){
+    /* 已合并为单个下拉，保留空实现兼容旧调用 */
   }
 
   function syncSubHint(el){
-    // 保留扩展位：二级分类变更时的联动处理
+    // 保留扩展位：分类变更时的联动处理
   }
 
 
@@ -478,21 +460,25 @@
       tr.style.display = '';
       shown++;
     });
-    card.querySelectorAll('tbody tr.cat-group').forEach(function (g) {
-      g.style.display = '';
-      var cat = g.getAttribute('data-cat');
-      var em = g.querySelector('em');
-      if (em) em.textContent = card.querySelectorAll('tbody tr.cat-child[data-cat="' + cat + '"]').length;
-    });
-    card.querySelectorAll('tbody tr:not(.cat-group):not(.cat-child)').forEach(function (tr) {
-      tr.style.display = '';
-      shown++;
-    });
 
     var el = card.querySelector('#totalCount') || document.getElementById('totalCount');
     if (el) el.textContent = '共 ' + shown + ' 条';
     toast('已重置查询条件');
   }
+
+
+  (function renderSubFilter(){
+    var sel = document.getElementById('kwSub');
+    if (!sel) return;
+    var vals = [];
+    document.querySelectorAll('#eventTable tbody tr.cat-child td.sub-col').forEach(function (td) {
+      var v = td.textContent.trim();
+      if (v && vals.indexOf(v) < 0) vals.push(v);
+    });
+    sel.innerHTML = '<option value="">全部二级分类</option>' + vals.map(function (v) {
+      return '<option>' + v + '</option>';
+    }).join('');
+  })();
 
 </script>
 </body>

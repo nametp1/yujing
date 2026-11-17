@@ -50,7 +50,7 @@
   .cat-caret{display:inline-block;width:0;height:0;border-left:6px solid #8b94a0;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transform:rotate(90deg);transition:transform .18s;cursor:pointer;vertical-align:middle}
   .cat-caret.closed{transform:rotate(0)}
   .cat-group em{font-style:normal;font-size:12px;font-weight:500;color:#8b94a0;margin-left:8px}
-  .cat-child .child-name{padding-left:38px}
+  .cat-child
   .cat-child .child-desc{color:#7a8290;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .lang-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
   .lang-head label em{font-style:normal;font-weight:400;color:#a6adb8;font-size:12px}
@@ -98,10 +98,6 @@
   .ms-list{min-width:540px}
   .ms-search{border-bottom:none;padding-bottom:8px}
   .ms-options{max-height:302px;padding:0 8px 8px}
-  .ms-group{margin-bottom:6px}
-  .ms-group-title{display:flex;align-items:center;gap:6px;padding:8px 6px 5px;font-size:12px;font-weight:600;color:#9aa3af;position:sticky;top:0;background:#fff;z-index:1}
-  .ms-group-title::before{content:'';width:3px;height:11px;border-radius:2px;background:#29BECE}
-  .ms-group-title em{font-style:normal;font-weight:400;font-size:11px;color:#b6bcc4}
   .ms-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 6px}
   .ms-item{padding:7px 8px;font-size:13px;border-radius:5px}
   .ms-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -146,28 +142,28 @@
     <section class="page active" id="types">
       <div class="card">
       <div class="filters">
-        <select class="control" id="catFilter" onchange="filterByCategory(this.value)"><option value="">全部一级分类</option><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select>
+        <select class="control" id="catFilter" onchange="filterByCategory(this.value)"><option value="">全部分类</option><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select>
         <input class="control search" placeholder="类型名称" onkeydown="if(event.key==='Enter')doQuery(this)"/>
         <span class="spacer"></span>
         <button class="btn" onclick="newCategory()">＋ 新增一级分类</button><button class="btn primary" onclick="doQuery(this)">查询</button><button class="btn" onclick="resetQuery(this)">重置</button>
       </div>
-      <div class="table-wrap"><table class="table" id="typeTable"><thead><tr><th>类型名称</th><th>一级分类</th><th>关联预警事件</th><th>备注</th><th>操作</th></tr></thead><tbody>
-        <tr class="cat-group" data-cat="设备异常" data-code="1"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>设备异常</b><em>3</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('设备异常')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-desc="设备冷却液温度超过安全阈值时触发" data-events="冷却水温高"><td class="child-name">冷却水温高</td><td>设备异常</td><td class="child-events" title="冷却水温高"><span class="ev-chip">冷却水温高</span></td><td class="child-desc">设备冷却液温度超过安全阈值时触发</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-desc="设备上报故障码时自动生成预警事件" data-events="油水分离器故障,液压油温度高"><td class="child-name">故障码</td><td>设备异常</td><td class="child-events" title="油水分离器故障、液压油温度高"><span class="ev-chip">油水分离器故障</span><span class="ev-chip">液压油温度高</span></td><td class="child-desc">设备上报故障码时自动生成预警事件</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="设备异常" data-desc="设备连续未上报数据超过设定时长" data-events="设备离线"><td class="child-name">离线</td><td>设备异常</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备连续未上报数据超过设定时长</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="作业安全" data-code="2"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>作业安全</b><em>3</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('作业安全')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-desc="设备怠速停车时长超过配置阈值" data-events="设备离线"><td class="child-name">停车时间过长</td><td>作业安全</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备怠速停车时长超过配置阈值</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-desc="AI 识别到异常驾驶等不安全行为" data-events="危险力矩,超速"><td class="child-name">主动安全报警</td><td>作业安全</td><td class="child-events" title="危险力矩、超速"><span class="ev-chip">危险力矩</span><span class="ev-chip">超速</span></td><td class="child-desc">AI 识别到异常驾驶等不安全行为</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="作业安全" data-desc="设备在未报备区域或时段施工作业" data-events="设备离线"><td class="child-name">设备未报备工作</td><td>作业安全</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备在未报备区域或时段施工作业</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="位置" data-code="3"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>位置</b><em>2</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('位置')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="位置" data-desc="设备驶出预设电子围栏范围" data-events="围栏预警"><td class="child-name">电子围栏报警</td><td>位置</td><td class="child-events" title="围栏预警"><span class="ev-chip">围栏预警</span></td><td class="child-desc">设备驶出预设电子围栏范围</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="位置" data-desc="设备进出围栏区域时的位置提醒" data-events="围栏预警"><td class="child-name">围栏</td><td>位置</td><td class="child-events" title="围栏预警"><span class="ev-chip">围栏预警</span></td><td class="child-desc">设备进出围栏区域时的位置提醒</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="燃油" data-code="4"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>燃油</b><em>1</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('燃油')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="燃油" data-desc="燃油消耗速率异常波动" data-events="燃油液位偏低"><td class="child-name">油耗异常</td><td>燃油</td><td class="child-events" title="燃油液位偏低"><span class="ev-chip">燃油液位偏低</span></td><td class="child-desc">燃油消耗速率异常波动</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="保养" data-code="5"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>保养</b><em>0</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('保养')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
-        <tr class="cat-group" data-cat="提示" data-code="6"><td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span><b>提示</b><em>1</em></td><td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo('提示')">新增</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
-        <tr class="cat-child" data-cat="提示" data-desc="停车状态提示，不属于危险等级" data-events=""><td class="child-name">停车提示</td><td>提示</td><td class="child-events"><span class="cell-empty">-</span></td><td class="child-desc">停车状态提示，不属于危险等级</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+      <div class="table-wrap"><table class="table" id="typeTable"><thead><tr><th>一级/二级分类名称</th><th>关联预警事件</th><th>备注</th><th>操作</th></tr></thead><tbody>
+        <tr class="cat-group" data-cat="设备异常" data-code="1"><td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span><b>设备异常</b><em>3</em></td><td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo('设备异常')">新增二级分类</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="温度异常" data-cat="设备异常" data-desc="设备冷却液温度超过安全阈值时触发" data-events="冷却水温高"><td>设备异常/温度异常</td><td class="child-events" title="冷却水温高"><span class="ev-chip">冷却水温高</span></td><td class="child-desc">设备冷却液温度超过安全阈值时触发</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="故障告警" data-cat="设备异常" data-desc="设备上报故障码时自动生成预警事件" data-events="油水分离器故障,液压油温度高"><td>设备异常/故障告警</td><td class="child-events" title="油水分离器故障、液压油温度高"><span class="ev-chip">油水分离器故障</span><span class="ev-chip">液压油温度高</span></td><td class="child-desc">设备上报故障码时自动生成预警事件</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="离线异常" data-cat="设备异常" data-desc="设备连续未上报数据超过设定时长" data-events="设备离线"><td>设备异常/离线异常</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备连续未上报数据超过设定时长</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="作业安全" data-code="2"><td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span><b>作业安全</b><em>3</em></td><td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo('作业安全')">新增二级分类</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="停放超时" data-cat="作业安全" data-desc="设备怠速停车时长超过配置阈值" data-events="设备离线"><td>作业安全/停放超时</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备怠速停车时长超过配置阈值</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="危险驾驶" data-cat="作业安全" data-desc="AI 识别到异常驾驶等不安全行为" data-events="危险力矩,超速"><td>作业安全/危险驾驶</td><td class="child-events" title="危险力矩、超速"><span class="ev-chip">危险力矩</span><span class="ev-chip">超速</span></td><td class="child-desc">AI 识别到异常驾驶等不安全行为</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="未报备作业" data-cat="作业安全" data-desc="设备在未报备区域或时段施工作业" data-events="设备离线"><td>作业安全/未报备作业</td><td class="child-events" title="设备离线"><span class="ev-chip">设备离线</span></td><td class="child-desc">设备在未报备区域或时段施工作业</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="位置" data-code="3"><td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span><b>位置</b><em>2</em></td><td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo('位置')">新增二级分类</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="围栏越界" data-cat="位置" data-desc="设备驶出预设电子围栏范围" data-events="围栏预警"><td>位置/围栏越界</td><td class="child-events" title="围栏预警"><span class="ev-chip">围栏预警</span></td><td class="child-desc">设备驶出预设电子围栏范围</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="区域进出" data-cat="位置" data-desc="设备进出围栏区域时的位置提醒" data-events="围栏预警"><td>位置/区域进出</td><td class="child-events" title="围栏预警"><span class="ev-chip">围栏预警</span></td><td class="child-desc">设备进出围栏区域时的位置提醒</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="燃油" data-code="4"><td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span><b>燃油</b><em>1</em></td><td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo('燃油')">新增二级分类</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="油耗波动" data-cat="燃油" data-desc="燃油消耗速率异常波动" data-events="燃油液位偏低"><td>燃油/油耗波动</td><td class="child-events" title="燃油液位偏低"><span class="ev-chip">燃油液位偏低</span></td><td class="child-desc">燃油消耗速率异常波动</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="保养" data-code="5"><td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span><b>保养</b><em>0</em></td><td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo('保养')">新增二级分类</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-group" data-cat="提示" data-code="6"><td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span><b>提示</b><em>1</em></td><td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo('提示')">新增二级分类</button><button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button><button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td></tr>
+        <tr class="cat-child" data-name="停放提醒" data-cat="提示" data-desc="停车状态提示，不属于危险等级" data-events=""><td>提示/停放提醒</td><td class="child-events"><span class="cell-empty">-</span></td><td class="child-desc">停车状态提示，不属于危险等级</td><td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button><button class="btn link" title="删除该预警分类" style="color:var(--red)" onclick="confirmDelete(this)">删除</button></td></tr>
       </tbody></table></div>
       <div class="footer"><span id="totalCount">共 10 条</span><div class="pages"><span class="on" onclick="gotoPage(this)">1</span><span onclick="gotoPage(this)">2</span><span onclick="gotoPage(this)">3</span></div></div>
     </div>
@@ -202,7 +198,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-mask" id="typeModal" onclick="maskClose(event,'typeModal')"><div class="modal" style="width:640px"><div class="modal-head"><b style="font-size:18px" id="typeModalTitle">预警分类配置</b><button class="x" onclick="closeLayer('typeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label><i>*</i> 类型名称</label><input id="typeName" value="温度异常"/></div><div class="field"><label><i>*</i> 一级分类</label><select id="typeCat"><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select></div><div class="field full"><div class="lang-head"><label style="margin:0">多语言名称 <em>选填</em></label><button type="button" class="lang-toggle" onclick="toggleLang(this)"><span class="lang-count">已配置 0 种</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div><div class="lang-list" style="display:none"></div></div><div class="field full">
+  <div class="modal-mask" id="typeModal" onclick="maskClose(event,'typeModal')"><div class="modal" style="width:640px"><div class="modal-head"><b style="font-size:18px" id="typeModalTitle">预警分类配置</b><button class="x" onclick="closeLayer('typeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label><i>*</i> 类型名称</label><input id="typeName" value="温度异常"/></div><div class="field"><label><i>*</i> 分类名称</label><select id="typeCat"><option value="设备异常">设备异常</option><option value="作业安全">作业安全</option><option value="位置">位置</option><option value="燃油">燃油</option><option value="保养">保养</option><option value="提示">提示</option></select></div><div class="field full"><div class="lang-head"><label style="margin:0">多语言名称 <em>选填</em></label><button type="button" class="lang-toggle" onclick="toggleLang(this)"><span class="lang-count">已配置 0 种</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div><div class="lang-list" style="display:none"></div></div><div class="field full">
               <label>关联预警事件</label>
               <div class="ms-box" id="evtBox">
                 <div class="ms-head" onclick="toggleEvtList(this)">
@@ -329,7 +325,7 @@
       names.push(tr.getAttribute('data-cat'));
     });
     var cur = sel.value;
-    sel.innerHTML = '<option value="">全部一级分类</option>';
+    sel.innerHTML = '<option value="">全部分类</option>';
     names.forEach(function (n) {
       var o = document.createElement('option');
       o.value = n;
@@ -372,9 +368,9 @@
     tr.setAttribute('data-cat', name);
     tr.setAttribute('data-desc', desc);
     tr.setAttribute('data-langs', collectLangs('catModal'));
-    tr.innerHTML = '<td colspan="4"><span class="cat-caret" onclick="toggleCat(this)"></span>'
+    tr.innerHTML = '<td colspan="3"><span class="cat-caret" onclick="toggleCat(this)"></span>'
       + '<b>' + name + '</b><em>0</em></td>'
-      + '<td><button class="btn link" title="在该分类下新增预警分类" onclick="addTypeTo(\'' + name + '\')">新增</button>'
+      + '<td><button class="btn link" title="在该分类下新增二级分类" onclick="addTypeTo(\'' + name + '\')">新增二级分类</button>'
       + '<button class="btn link" title="编辑一级分类" onclick="editCatRow(this)">编辑</button>'
       + '<button class="btn link" title="删除一级分类" style="color:var(--red)" onclick="deleteCatRow(this)">删除</button></td>';
     tbody.appendChild(tr);
@@ -404,7 +400,7 @@
   var editingTypeRow = null;
   function editType(btn){
     editingTypeRow = btn.closest('tr');
-    var name = editingTypeRow.querySelector('.child-name').textContent.trim();
+    var name = editingTypeRow.getAttribute('data-name') || '';
     var cat = editingTypeRow.getAttribute('data-cat') || '';
     var desc = editingTypeRow.getAttribute('data-desc') || '';
     document.getElementById('typeModalTitle').textContent = '编辑预警分类';
@@ -420,7 +416,7 @@
     var cat = document.getElementById('typeCat').value;
     var desc = (document.getElementById('typeDesc').value || '').trim();
     if (!name) { toast('请填写类型名称'); return; }
-    if (!cat) { toast('请选择一级分类'); return; }
+    if (!cat) { toast('请选择分类名称'); return; }
     var row = editingTypeRow;
     if (!row) {
       row = document.createElement('tr');
@@ -436,8 +432,8 @@
     row.setAttribute('data-desc', desc);
     row.setAttribute('data-events', evts.join(','));
     row.setAttribute('data-langs', collectLangs('typeModal'));
-    row.innerHTML = '<td class="child-name">' + name + '</td>'
-      + '<td>' + cat + '</td>'
+    row.setAttribute('data-name', name);
+    row.innerHTML = '<td>' + cat + '/' + name + '</td>'
       + '<td class="child-events" title="' + evts.join('、') + '">' + evHtml + '</td>'
       + '<td class="child-desc">' + desc + '</td>'
       + '<td><button class="btn link" title="编辑该预警分类" onclick="editType(this)">编辑</button>'
@@ -540,24 +536,20 @@
       if (inp) { inp.value = ''; filterEvt(inp); inp.focus(); }
     }
   }
-
-  function filterEvt(input){
+function filterEvt(input){
     var list = input.closest('.ms-list');
     if (!list) return;
     var kw = (input.value || '').trim().toLowerCase();
     var box = list.querySelector('.ms-options');
     var empty = box.querySelector('.ms-empty');
     var shown = 0;
-    box.querySelectorAll('.ms-group').forEach(function (grp) {
-      var cnt = 0;
-      grp.querySelectorAll('.ms-item').forEach(function (it) {
-        var hit = !kw || it.textContent.toLowerCase().indexOf(kw) > -1;
-        it.style.display = hit ? '' : 'none';
-        if (hit) cnt++;
-      });
-      grp.style.display = cnt ? '' : 'none';
-      shown += cnt;
+
+    box.querySelectorAll('.ms-item').forEach(function (it) {
+      var hit = !kw || it.textContent.toLowerCase().indexOf(kw) > -1;
+      it.style.display = hit ? '' : 'none';
+      if (hit) shown++;
     });
+
     if (!shown) {
       if (!empty) {
         empty = document.createElement('div');
@@ -570,6 +562,7 @@
       empty.style.display = 'none';
     }
   }
+
 
   function syncEvtTags(input){
     var box = input.closest('.ms-box');
@@ -659,17 +652,14 @@
     { g: '提示', list: ['保养临期','保养超期','停车提示','待机过长','工作时间异常','设备闲置','年检到期','保险到期','证书到期','维修提醒','耗材更换','轮胎更换','滤芯更换','润滑提醒','检查提醒','软件升级','固件升级','参数变更','远程锁机','租赁到期'] }
   ];
 
-  (function renderEventOptions(){
+    (function renderEventOptions(){
+    var ALL = [];
+    EVENT_GROUPS.forEach(function (grp) { ALL = ALL.concat(grp.list); });
     document.querySelectorAll('.ms-options').forEach(function (box) {
-      box.innerHTML = EVENT_GROUPS.map(function (grp) {
-        var items = grp.list.map(function (e) {
-          return '<label class="ms-item"><input type="checkbox" value="' + e + '" onchange="syncEvtTags(this)"/>'
-            + '<span>' + e + '</span></label>';
-        }).join('');
-        return '<div class="ms-group" data-g="' + grp.g + '">'
-          + '<div class="ms-group-title">' + grp.g + '<em>' + grp.list.length + '</em></div>'
-          + '<div class="ms-grid">' + items + '</div></div>';
-      }).join('');
+      box.innerHTML = '<div class="ms-grid">' + ALL.map(function (e) {
+        return '<label class="ms-item"><input type="checkbox" value="' + e + '" onchange="syncEvtTags(this)"/>'
+          + '<span>' + e + '</span></label>';
+      }).join('') + '</div>';
     });
   })();
 
