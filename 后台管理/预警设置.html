@@ -302,12 +302,11 @@
           <select class="control" id="lvlFilter" onchange="renderEvents()">
             <option value="">全部预警等级</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option><option value="停车提示">停车提示</option>
           </select>
-          <select class="control" id="statusFilter" onchange="renderEvents()"><option value="">全部状态</option><option value="1">开启</option><option value="0">关闭</option></select>
           <button class="btn" onclick="resetQuery()">重置</button><button class="btn primary" onclick="renderEvents()">搜索</button><button class="btn primary" onclick="newEvent()">＋ 新增预警事件</button>
         </div>
         <div class="table-wrap">
           <table class="table" id="evTable">
-            <thead><tr><th>预警事件</th><th>事件键值</th><th>预警等级</th><th>状态</th><th>是否审核</th><th>阈值配置</th><th>物模型 ID</th><th>预警说明</th><th>操作</th></tr></thead>
+            <thead><tr><th>预警事件</th><th>事件键值</th><th>预警等级</th><th>是否审核</th><th>阈值配置</th><th>物模型 ID</th><th>预警说明</th><th>操作</th></tr></thead>
             <tbody id="evBody"></tbody>
           </table>
         </div>
@@ -357,9 +356,6 @@
           <div class="field"><label><i>*</i> 所属分类</label><select id="evCat"></select></div>
           <div class="field"><label>预警等级</label>
             <select id="evLevel"><option>高危</option><option>中危</option><option>低危</option><option>提示</option><option>停车提示</option></select>
-          </div>
-          <div class="field"><label>状态</label>
-            <select id="evOn"><option value="1">开启</option><option value="0">关闭</option></select>
           </div>
           <div class="field"><label>是否审核</label>
             <select id="evAudit"><option value="1">是</option><option value="0">否</option></select>
@@ -465,14 +461,11 @@
     var kwName=gv('kwName'), kwThing=gv('kwThing'), kwKey=gv('kwKey');
     var lvlEl=document.getElementById('lvlFilter');
     var lvl=lvlEl?lvlEl.value:'';
-    var stEl=document.getElementById('statusFilter');
-    var status=stEl?stEl.value:'';
 
     var all=EVENTS.map(function(e,i){return {e:e,i:i};}).filter(function(x){
       var e=x.e;
       if(cat && e.cat!==cat) return false;
       if(lvl && e.level!==lvl) return false;
-      if(status!=='' && String(e.on)!==status) return false;
       if(kwName && (e.name||'').toLowerCase().indexOf(kwName)<0) return false;
       if(kwThing && (e.thing||'').toLowerCase().indexOf(kwThing)<0) return false;
       if(kwKey && (e.key||'').toLowerCase().indexOf(kwKey)<0) return false;
@@ -489,7 +482,7 @@
     var body=document.getElementById('evBody');
     if(!body) return;
     if(!list.length){
-      body.innerHTML='<tr><td colspan="9" style="text-align:center;color:#9aa3af;padding:42px">'
+      body.innerHTML='<tr><td colspan="8" style="text-align:center;color:#9aa3af;padding:42px">'
         + (EVENTS.length ? '暂无匹配的预警事件' : '暂无预警事件，请点击“新增预警事件”创建') + '</td></tr>';
     } else {
       var tag=function(v){return v?'<span class="tag info">是</span>':'<span class="tag gray">否</span>';};
@@ -498,7 +491,6 @@
         return '<tr><td><b>'+esc(e.name)+'</b></td>'
           + '<td class="key-col">'+esc(e.key||'-')+'</td>'
           + '<td><span class="tag '+(LV_CLS[e.level]||'gray')+'">'+esc(e.level)+'</span></td>'
-          + '<td><span class="st-toggle" onclick="toggleOn('+i+')"><span class="switch'+(e.on?' on':'')+'"></span><span class="st-txt">'+(e.on?'开启':'关闭')+'</span></span></td>'
           + '<td>'+tag(e.audit)+'</td>'
           + '<td class="ths-col">'+ (e.th  ? '<span class="cell-ell" style="max-width:150px" title="'+esc(e.ths||'')+'">'+(esc(e.ths||'')||'—')+'</span>'  : '<span class="tag gray">否</span>')+ '</td>'
           + '<td class="thing-col" title="'+esc(e.thing)+'">'+esc(e.thing||'-')+'</td>'
@@ -519,23 +511,22 @@
 
   function refresh(){renderCats();renderEvents();}
   function resetQuery(){
-    curPage=1;['kwName','kwThing','kwKey'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('lvlFilter').value='';document.getElementById('statusFilter').value='';activeCategory='';refresh();}
-  function toggleOn(idx){if(!EVENTS[idx])return;EVENTS[idx].on=EVENTS[idx].on?0:1;persist();refresh();toast(EVENTS[idx].on?'已开启':'已关闭');}
+    curPage=1;['kwName','kwThing','kwKey'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('lvlFilter').value='';activeCategory='';refresh();}
   function newCategory(){curCatIdx=-1;document.getElementById('catTitle').textContent='新增分类';document.getElementById('catName').value='';document.getElementById('catKey').value='';document.getElementById('catDesc').value='';openLayer('catModal');setTimeout(function(){document.getElementById('catName').focus();},50);}
   function editCat(i){if(!CATS[i])return;curCatIdx=i;document.getElementById('catTitle').textContent='编辑分类';document.getElementById('catName').value=CATS[i].name;document.getElementById('catKey').value=CATS[i].key||'';document.getElementById('catDesc').value=CATS[i].desc||'';openLayer('catModal');}
   function saveCat(){var name=(document.getElementById('catName').value||'').trim(),key=(document.getElementById('catKey').value||'').trim(),desc=(document.getElementById('catDesc').value||'').trim();if(!name){toast('请填写分类名称');document.getElementById('catName').focus();return;}if(name.length>20){toast('分类名称不能超过20个字');return;}if(key.length>40){toast('分类键值不能超过40个字符');return;}if(CATS.some(function(c,i){return c.name.toLowerCase()===name.toLowerCase()&&i!==curCatIdx;})){toast('分类名称已存在');return;}if(curCatIdx>=0){var old=CATS[curCatIdx].name;CATS[curCatIdx]={name:name,key:key,desc:desc};EVENTS.forEach(function(e){if(e.cat===old)e.cat=name;});if(activeCategory===old)activeCategory=name;}else{CATS.push({name:name,key:key,desc:desc});}persist();closeLayer('catModal');refresh();toast('分类已保存');}
   function delCat(i){if(!CATS[i])return;delTarget={type:'cat',idx:i};var n=EVENTS.filter(function(e){return e.cat===CATS[i].name;}).length;document.getElementById('delTip').textContent=n?'确定删除该分类？其下的预警事件也将一并删除。':'确定删除该分类？';openLayer('delModal');}
-  function newEvent(){if(!CATS.length){toast('暂无可用分类');return;}curEvIdx=-1;document.getElementById('evTitle').textContent='新增预警事件';['evName','evKey','evThing','evDesc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('evLevel').value='高危';document.getElementById('evOn').value='1';document.getElementById('evAudit').value='1';document.getElementById('evTh').value='1';var thsEl2=document.getElementById('evThs');if(thsEl2)thsEl2.value='';toggleThsField();document.getElementById('evCat').value=activeCategory||CATS[0].name;renderEvNameOptions('');var nmEl2=document.getElementById('evName');if(nmEl2){nmEl2.disabled=false;}openLayer('evModal');}
+  function newEvent(){if(!CATS.length){toast('暂无可用分类');return;}curEvIdx=-1;document.getElementById('evTitle').textContent='新增预警事件';['evName','evKey','evThing','evDesc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('evLevel').value='高危';document.getElementById('evAudit').value='1';document.getElementById('evTh').value='1';var thsEl2=document.getElementById('evThs');if(thsEl2)thsEl2.value='';toggleThsField();document.getElementById('evCat').value=activeCategory||CATS[0].name;renderEvNameOptions('');var nmEl2=document.getElementById('evName');if(nmEl2){nmEl2.disabled=false;}openLayer('evModal');}
   function editEv(idx){var e=EVENTS[idx];if(!e)return;curEvIdx=idx;document.getElementById('evTitle').textContent='编辑预警事件';renderEvNameOptions(e.name);var nmEl=document.getElementById('evName');if(nmEl){nmEl.disabled=true;}
-    var k1=document.getElementById('evKey');if(k1)k1.value=e.key||'';document.getElementById('evThing').value=e.thing||'';var dHit=EVENT_DICT.filter(function(d){return d[0]===e.name;})[0];document.getElementById('evDesc').value=e.desc||(dHit?dHit[2]:'')||'';document.getElementById('evLevel').value=e.level;document.getElementById('evOn').value=e.on?'1':'0';document.getElementById('evAudit').value=e.audit?'1':'0';document.getElementById('evTh').value=e.th?'1':'0';var thsEl=document.getElementById('evThs');if(thsEl)thsEl.value=e.ths||defaultThs(e.name);toggleThsField();document.getElementById('evCat').value=e.cat;openLayer('evModal');}
-  function saveEv(){var name=(document.getElementById('evName').value||'').trim(),cat=document.getElementById('evCat').value,thing=(document.getElementById('evThing').value||'').trim();if(!name){toast('请选择事件名称');document.getElementById('evName').focus();return;}if(name.length>40){toast('事件名称不能超过40个字');return;}if(!cat||!CATS.some(function(c){return c.name===cat;})){toast('请选择有效的所属分类');return;}if(EVENTS.some(function(e,i){return e.cat===cat&&e.name.toLowerCase()===name.toLowerCase()&&i!==curEvIdx;})){toast('该分类下已存在同名事件');return;}var data={cat:cat,name:name,key:((document.getElementById('evKey')||{}).value||'').trim(),level:document.getElementById('evLevel').value,on:document.getElementById('evOn').value==='1'?1:0,audit:document.getElementById('evAudit').value==='1'?1:0,th:document.getElementById('evTh').value==='1'?1:0,thing:thing,ths:(function(){var el=document.getElementById('evThs');var v=el?(el.value||'').trim():'';return (document.getElementById('evTh').value==='1')?v:'';})(),desc:(document.getElementById('evDesc').value||'').trim()};if(curEvIdx>=0)EVENTS[curEvIdx]=data;else EVENTS.push(data);persist();closeLayer('evModal');activeCategory=cat;refresh();toast('预警事件已保存');}
+    var k1=document.getElementById('evKey');if(k1)k1.value=e.key||'';document.getElementById('evThing').value=e.thing||'';var dHit=EVENT_DICT.filter(function(d){return d[0]===e.name;})[0];document.getElementById('evDesc').value=e.desc||(dHit?dHit[2]:'')||'';document.getElementById('evLevel').value=e.level;document.getElementById('evAudit').value=e.audit?'1':'0';document.getElementById('evTh').value=e.th?'1':'0';var thsEl=document.getElementById('evThs');if(thsEl)thsEl.value=e.ths||defaultThs(e.name);toggleThsField();document.getElementById('evCat').value=e.cat;openLayer('evModal');}
+  function saveEv(){var name=(document.getElementById('evName').value||'').trim(),cat=document.getElementById('evCat').value,thing=(document.getElementById('evThing').value||'').trim();if(!name){toast('请选择事件名称');document.getElementById('evName').focus();return;}if(name.length>40){toast('事件名称不能超过40个字');return;}if(!cat||!CATS.some(function(c){return c.name===cat;})){toast('请选择有效的所属分类');return;}if(EVENTS.some(function(e,i){return e.cat===cat&&e.name.toLowerCase()===name.toLowerCase()&&i!==curEvIdx;})){toast('该分类下已存在同名事件');return;}var data={cat:cat,name:name,key:((document.getElementById('evKey')||{}).value||'').trim(),level:document.getElementById('evLevel').value,audit:document.getElementById('evAudit').value==='1'?1:0,th:document.getElementById('evTh').value==='1'?1:0,thing:thing,ths:(function(){var el=document.getElementById('evThs');var v=el?(el.value||'').trim():'';return (document.getElementById('evTh').value==='1')?v:'';})(),desc:(document.getElementById('evDesc').value||'').trim()};if(curEvIdx>=0)EVENTS[curEvIdx]=data;else EVENTS.push(data);persist();closeLayer('evModal');activeCategory=cat;refresh();toast('预警事件已保存');}
   function delEv(idx){if(!EVENTS[idx])return;delTarget={type:'ev',idx:idx};document.getElementById('delTip').textContent='确定删除该预警事件？删除后不可恢复。';openLayer('delModal');}
   function doDel(){if(!delTarget){closeLayer('delModal');return;}if(delTarget.type==='ev'){EVENTS.splice(delTarget.idx,1);}else{var name=CATS[delTarget.idx]&&CATS[delTarget.idx].name;if(name){CATS.splice(delTarget.idx,1);EVENTS=EVENTS.filter(function(e){return e.cat!==name;});if(activeCategory===name)activeCategory='';}}delTarget=null;persist();closeLayer('delModal');refresh();toast('已删除');}
   function closeCatEdit(i){closeLayer('catListModal');editCat(i);}
   function closeCatDelete(i){closeLayer('catListModal');delCat(i);}
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){['catModal','evModal','catListModal','delModal'].forEach(closeLayer);}if(e.key==='Enter'&&e.target&&e.target.id==='catName'){e.preventDefault();saveCat();}});
   loadData();
-  try{refresh();}catch(err){console.error(err);document.getElementById('evBody').innerHTML='<tr><td colspan="9" style="padding:24px;color:#e60012">页面初始化异常：'+esc(err.message)+'</td></tr>';}
+  try{refresh();}catch(err){console.error(err);document.getElementById('evBody').innerHTML='<tr><td colspan="8" style="padding:24px;color:#e60012">页面初始化异常：'+esc(err.message)+'</td></tr>';}
   
   function renderPager(total){
     var box=document.getElementById('pager');
