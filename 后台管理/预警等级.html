@@ -107,10 +107,7 @@
   </div>
 </div>
 
-
-
-
-  <div class="modal-mask" id="levelModal" onclick="maskClose(event,'levelModal')"><div class="modal" style="width:600px"><div class="modal-head"><b style="font-size:18px" id="lvTitle">新增预警等级</b><button class="x" onclick="closeLayer('levelModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label><i>*</i> 等级编码</label><input id="lvCode" value="" inputmode="numeric" maxlength="2" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="请输入数字"/></div><div class="field"><label><i>*</i> 等级名称</label><input id="lvName" value="" placeholder="如 高危"/></div><div class="field"><label>等级颜色</label><select id="lvColor"><option>红色</option><option>橙色</option><option>黄色</option><option>绿色</option><option>灰色</option></select></div><div class="field full"><label>备注</label><input id="lvDesc" value="" placeholder="选填"/></div></div></div><div class="modal-foot"><button class="btn" onclick="closeLayer('levelModal')">取消</button><button class="btn primary" onclick="saveLevel()">保存</button></div></div></div>
+  <div class="modal-mask" id="levelModal" onclick="maskClose(event,'levelModal')"><div class="modal" style="width:600px"><div class="modal-head"><b style="font-size:18px" id="lvTitle">新增预警等级</b><button class="x" onclick="closeLayer('levelModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field full"><label><i>*</i> 等级名称</label><select id="lvName"><option value="">请选择</option><option value="高危">高危</option><option value="中危">中危</option><option value="低危">低危</option><option value="提示">提示</option><option value="停车提示">停车提示</option></select></div><div class="field"><label>等级颜色</label><select id="lvColor"><option>红色</option><option>橙色</option><option>黄色</option><option>绿色</option><option>灰色</option></select></div><div class="field full"><label>备注</label><input id="lvDesc" value="" placeholder="选填"/></div></div></div><div class="modal-foot"><button class="btn" onclick="closeLayer('levelModal')">取消</button><button class="btn primary" onclick="saveLevel()">保存</button></div></div></div>
   <div class="modal-mask" id="confirmModal" onclick="maskClose(event,'confirmModal')">
     <div class="modal" style="width:400px">
       <div class="modal-head">
@@ -142,8 +139,6 @@
     if (tb && el) el.textContent = '共 ' + tb.querySelectorAll('tr').length + ' 条';
   })();
 
-
-
   let deleteTarget = null;
 
   function confirmDelete(btn){
@@ -162,7 +157,6 @@
     closeLayer('confirmModal');
     toast('已删除该预警等级');
   }
-
 
   let editRow = null;
 
@@ -185,13 +179,11 @@
     const title = document.getElementById('lvTitle');
     if (editRow) {
       const tds = editRow.querySelectorAll('td');
-      document.getElementById('lvCode').value = tds[0].innerText.trim();
       document.getElementById('lvName').value = tds[1].innerText.trim();
       document.getElementById('lvColor').value = colorOfTag(tds[1]);
       document.getElementById('lvDesc').value = tds[2].innerText.trim();
       title.textContent = '编辑预警等级';
     } else {
-      document.getElementById('lvCode').value = '';
       document.getElementById('lvName').value = '';
       document.getElementById('lvColor').value = '灰色';
       document.getElementById('lvDesc').value = '';
@@ -201,12 +193,25 @@
   }
 
   function saveLevel(){
-    const code = document.getElementById('lvCode').value.trim();
     const name = document.getElementById('lvName').value.trim();
+    if (!name) { toast('请选择等级名称'); return; }
+
+    // 同名等级已存在时禁止添加（编辑时排除自身）
+    const exists = Array.prototype.some.call(
+      document.querySelectorAll('tbody tr'),
+      function (tr) {
+        if (editRow && tr === editRow) return false;
+        var tds = tr.querySelectorAll('td');
+        return tds[1] && tds[1].innerText.trim() === name;
+      }
+    );
+    if (exists) { toast('该等级已存在，无法添加'); return; }
+
+    const LV_DICT = [['1','高危'],['2','中危'],['3','低危'],['4','提示'],['5','停车提示']];
+    const pair = LV_DICT.filter(function (d) { return d[1] === name; })[0];
+    const code = pair ? pair[0] : '';
     const color = document.getElementById('lvColor').value;
     const desc = document.getElementById('lvDesc').value.trim();
-    if (!code) { toast('请填写等级编码'); return; }
-    if (!name) { toast('请填写等级名称'); return; }
 
     const opHtml = '<td><button class="btn link" onclick="openLevelModal(this)">编辑</button>'
                  + '<button class="btn link" style="color:#e60012" onclick="confirmDelete(this)">删除</button></td>';
@@ -232,12 +237,14 @@
     editRow = null;
   }
 
-
   function gotoPage(el){
     const box = el.parentElement;
     box.querySelectorAll('span').forEach(function(x){ x.classList.remove('on'); });
     el.classList.add('on');
   }
+
+  // 等级编码 → 名称（数据值集）
+  var LV_DICT = [['1','高危'],['2','中危'],['3','低危'],['4','提示'],['5','停车提示']];
 
 </script>
 </body>

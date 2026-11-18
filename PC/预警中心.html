@@ -63,8 +63,6 @@
     cursor: pointer; z-index: 6;
   }
   .table th.th-red{color:var(--red);font-weight:600}
-  .trig-col{color:#505b69;font-variant-numeric:tabular-nums;min-width:150px}
-  .trig-col.text-red{color:var(--red)}
 
   /* ==== 筛选栏（分段 + 日期范围） ==== */
   .filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 16px}
@@ -81,6 +79,9 @@
   .filters .control{height:34px;border-radius:6px;font-size:13px}
   .filters .control.search{width:180px}
   .filters select.control{min-width:132px;color:#3a4452}
+  .table td.trig-col{color:#202936;font-variant-numeric:tabular-nums;min-width:150px}
+  .table td.trig-col b{font-weight:600;color:#202936}
+  .table td.trig-col em{font-style:normal;color:#657080}
 </style>
 </head>
 <body>
@@ -153,7 +154,7 @@
         <ul class="sidebar-submenu">
           <li class="sidebar-item active"><a class="sidebar-link" href="预警中心.html">预警中心</a></li>
           <li class="sidebar-item"><a class="sidebar-link" href="预警设置.html">预警设置</a></li>
-          <li class="sidebar-item"><a class="sidebar-link" href="审核列表.html">审核列表</a></li>
+          <li class="sidebar-item" style="display:none"><a class="sidebar-link" href="审核列表.html">审核列表</a></li>
         </ul>
       </li>
       <li class="sidebar-item">
@@ -221,12 +222,14 @@
           <button class="btn" onclick="toast('已导出当前筛选结果')">导出</button>
         </div>
         <div class="summary"><div class="metric chartbox"><small>近14天事件趋势</small><div class="chart"><i class="bar" style="height:34%"></i><i class="bar" style="height:55%"></i><i class="bar" style="height:44%"></i><i class="bar" style="height:76%"></i><i class="bar" style="height:63%"></i><i class="bar" style="height:42%"></i><i class="bar" style="height:85%"></i><i class="bar" style="height:58%"></i><i class="bar" style="height:69%"></i><i class="bar" style="height:47%"></i><i class="bar" style="height:74%"></i><i class="bar" style="height:53%"></i><i class="bar" style="height:38%"></i><i class="bar" style="height:61%"></i></div></div></div>
-        <div class="table-wrap"><table class="table"><thead><tr><th>预警时间</th><th>设备序列号</th><th>自编号</th><th>设备类型</th><th>所属项目</th><th class="th-red">预警类型</th><th>预警内容</th><th class="th-red">预警等级</th><th class="th-red">触发值 / 条件</th></tr></thead><tbody>
-          <tr><td>2026-08-26 10:32</td><td>WJ0012</td><td>ZB003</td><td>挖掘机</td><td>印尼矿山项目</td><td>设备异常</td><td><b>发动机水温过高</b></td><td><span class="tag high">高危</span></td><td class="trig-col text-red" title="当前水温 102℃，超过阈值 95℃ 触发预警">水温 102℃ / 阈值 95℃</td></tr>
-          <tr><td>2026-08-26 09:18</td><td>SY365H-087</td><td>EX-087</td><td>挖掘机</td><td>澳洲示范项目</td><td>设备异常</td><td><b>设备离线超时</b></td><td><span class="tag mid">中危</span></td><td class="trig-col text-red" title="当前已离线 26 小时，超过阈值 24 小时触发预警">离线 26h / 阈值 24h</td></tr>
-          <tr><td>2026-08-25 16:20</td><td>SAC1200E-19</td><td>QZ-019</td><td>汽车起重机</td><td>华东吊装项目</td><td>作业安全</td><td><b>未试吊动作</b></td><td><span class="tag high">高危</span></td><td class="trig-col text-red" title="当前试吊动作 0 次，低于要求 1 次触发预警">试吊 0 次 / 要求 ≥1 次</td></tr>
-          <tr><td>2026-08-25 08:00</td><td>SY215C-116</td><td>EX-116</td><td>挖掘机</td><td>泰国道路项目</td><td>设备异常</td><td><b>昨日怠速比过高</b></td><td><span class="tag low">低危</span></td><td class="trig-col text-red" title="昨日怠速占比 45%，超过阈值 40% 触发预警">怠速 45% / 阈值 40%</td></tr>
-          <tr><td>2026-08-24 20:41</td><td>SR285-043</td><td>XR-043</td><td>旋挖钻</td><td>粤港基础项目</td><td>设备异常</td><td><b>液压油位异常</b></td><td><span class="tag mid">中危</span></td><td class="trig-col text-red" title="当前液压油位低于下限值触发预警">油位低于下限</td></tr>
+        <div class="table-wrap"><table class="table"><thead><tr><th>预警时间</th><th>设备序列号</th><th>自编号</th><th>设备类型</th><th>所属项目</th><th class="th-red">预警类型</th><th class="th-red">预警等级</th><th class="th-red">触发值 / 预警值</th><th>预警内容</th></tr></thead><tbody>
+          <tr><td>2026-08-26 10:32</td><td>WJ0012</td><td>ZB003</td><td>挖掘机</td><td>印尼矿山项目</td><td>设备异常</td><td><span class="tag high">高危</span></td><td class="trig-col" title="当前水温 102℃，触发阈值 95℃，告警阈值 105℃"><b>102℃</b> / <em>95℃</em></td><td><b>发动机水温过高</b></td></tr>
+          <tr><td>2026-08-26 09:18</td><td>SY365H-087</td><td>EX-087</td><td>挖掘机</td><td>澳洲示范项目</td><td>设备异常</td><td><span class="tag mid">中危</span></td><td class="trig-col" title="当前已离线 26 小时，触发阈值 24 小时，告警阈值 48 小时"><b>26h</b> / <em>24h</em></td><td><b>设备离线超时</b></td></tr>
+          <tr><td>2026-08-25 16:20</td><td>SAC1200E-19</td><td>QZ-019</td><td>汽车起重机</td><td>华东吊装项目</td><td>作业安全</td><td><span class="tag high">高危</span></td><td class="trig-col" title="当前试吊动作 0 次，触发阈值 1 次，告警阈值 2 次"><b>0 次</b> / <em>1 次</em></td><td><b>未试吊动作</b></td></tr>
+          <tr><td>2026-08-25 08:00</td><td>SY215C-116</td><td>EX-116</td><td>挖掘机</td><td>泰国道路项目</td><td>设备异常</td><td><span class="tag low">低危</span></td><td class="trig-col" title="昨日怠速占比 45%，触发阈值 40%，告警阈值 50%"><b>45%</b> / <em>40%</em></td><td><b>昨日怠速比过高</b></td></tr>
+          <tr><td>2026-08-24 20:41</td><td>SR285-043</td><td>XR-043</td><td>旋挖钻</td><td>粤港基础项目</td><td>设备异常</td><td><span class="tag mid">中危</span></td><td class="trig-col" title="当前液压油位低于下限，触发阈值 下限，告警阈值 下限下 5%"><b>低于下限</b> / <em>下限</em></td><td><b>液压油位异常</b></td></tr>
+        
+          <tr><td>2026-08-24 15:06</td><td>SY215C-118</td><td>EX-118</td><td>挖掘机</td><td>印尼矿山项目</td><td>作业安全</td><td><span class="tag high">高危</span></td><td class="trig-col" title="该事件无数值型触发条件，命中即触发">—</td><td><b>主动安全报警</b></td></tr>
         </tbody></table></div><div class="footer"><span>共 156 条数据</span><div class="pages"><span onclick="gotoPage(this)">‹</span><span class="on" onclick="gotoPage(this)">1</span><span onclick="gotoPage(this)">2</span><span onclick="gotoPage(this)">3</span><span>…</span><span onclick="gotoPage(this)">16</span><span onclick="gotoPage(this)">›</span></div></div>
       </div>
     </section>
@@ -234,7 +237,7 @@
   </div>
 </div>
 
-  <div class="drawer-mask" id="detailDrawer" onclick="maskClose(event,'detailDrawer')"><div class="drawer"><div class="drawer-head"><div><b style="font-size:18px" id="detailName">预警详情</b><span class="sub">事件编号 EVT-20260826-00128</span></div><button class="x" onclick="closeLayer('detailDrawer')">×</button></div><div class="drawer-body"><div class="section"><h3>事件信息</h3><div class="detail-grid"><div class="kv"><label>事业部</label><span id="detailBU">重起</span></div><div class="kv"><label>风险等级</label><span class="tag high">高危</span></div><div class="kv"><label>设备</label><span>WJ0012 · 挖掘机</span></div><div class="kv"><label>发生时间</label><span>2026-08-26 10:32:16</span></div><div class="kv"><label>来源扩展 / 链路</label><span id="detailSource"></span></div><div class="kv"><label>触发值 / 条件</label><span id="detailValue"></span></div></div></div><div class="section"><h3>来源数据</h3><div class="mapping-demo"><div class="mapping-box"><h4>来源系统原始信息</h4><div class="mapping-row"><span>baseType</span><code>20</code></div><div class="mapping-row"><span>warnType</span><code>03</code></div><div class="mapping-row"><span>temperature</span><code>102</code></div></div><div class="mapping-arrow">→</div><div class="mapping-box"><h4>SanVIST统一事件</h4><div class="mapping-row"><span>标准编码</span><code>ENGINE_TEMP_HIGH</code></div><div class="mapping-row"><span>事件名称</span><span>水温过高</span></div><div class="mapping-row"><span>等级</span><span>高危</span></div></div></div></div><div class="section"><h3>处理记录</h3><div class="timeline"><div class="time-item"><b>系统生成预警记录</b><small class="sub">10:32 · 命中客户“标准档”阈值</small></div><div class="time-item"><b>已发送 App PUSH</b><small class="sub">10:33 · 通知设备管理员等 3 人</small></div><div class="time-item"><b>处理人已受理，进入处理中</b><small class="sub">10:45 · 张工 已接单</small></div></div></div><div class="section"><h3>处理事件</h3><div class="field"><label>处理说明</label><textarea placeholder="请输入原因、处理措施或备注"></textarea></div></div></div><div class="drawer-foot"><button class="btn" onclick="closeLayer('detailDrawer')">关闭</button>
+  <div class="drawer-mask" id="detailDrawer" onclick="maskClose(event,'detailDrawer')"><div class="drawer"><div class="drawer-head"><div><b style="font-size:18px" id="detailName">预警详情</b><span class="sub">事件编号 EVT-20260826-00128</span></div><button class="x" onclick="closeLayer('detailDrawer')">×</button></div><div class="drawer-body"><div class="section"><h3>事件信息</h3><div class="detail-grid"><div class="kv"><label>事业部</label><span id="detailBU">重起</span></div><div class="kv"><label>风险等级</label><span class="tag high">高危</span></div><div class="kv"><label>设备</label><span>WJ0012 · 挖掘机</span></div><div class="kv"><label>发生时间</label><span>2026-08-26 10:32:16</span></div><div class="kv"><label>来源扩展 / 链路</label><span id="detailSource"></span></div><div class="kv"><label>触发值 / 预警值</label><span id="detailValue"></span></div></div></div><div class="section"><h3>来源数据</h3><div class="mapping-demo"><div class="mapping-box"><h4>来源系统原始信息</h4><div class="mapping-row"><span>baseType</span><code>20</code></div><div class="mapping-row"><span>warnType</span><code>03</code></div><div class="mapping-row"><span>temperature</span><code>102</code></div></div><div class="mapping-arrow">→</div><div class="mapping-box"><h4>SanVIST统一事件</h4><div class="mapping-row"><span>标准编码</span><code>ENGINE_TEMP_HIGH</code></div><div class="mapping-row"><span>事件名称</span><span>水温过高</span></div><div class="mapping-row"><span>等级</span><span>高危</span></div></div></div></div><div class="section"><h3>处理记录</h3><div class="timeline"><div class="time-item"><b>系统生成预警记录</b><small class="sub">10:32 · 命中客户“标准档”阈值</small></div><div class="time-item"><b>已发送 App PUSH</b><small class="sub">10:33 · 通知设备管理员等 3 人</small></div><div class="time-item"><b>处理人已受理，进入处理中</b><small class="sub">10:45 · 张工 已接单</small></div></div></div><div class="section"><h3>处理事件</h3><div class="field"><label>处理说明</label><textarea placeholder="请输入原因、处理措施或备注"></textarea></div></div></div><div class="drawer-foot"><button class="btn" onclick="closeLayer('detailDrawer')">关闭</button>
       <button class="btn" onclick="markProcessing()">开始处理</button><button class="btn" onclick="toast('已标记为忽略')">忽略</button><button class="btn primary" onclick="saveAndClose('detailDrawer','事件已处理')">完成处理</button></div></div></div>
 
   <div class="toast" id="toast"></div>
@@ -312,7 +315,6 @@
     closeLayer('detailDrawer');
     toast('已开始处理');
   }
-
 
   function pickRange(btn, mode){
     var box = btn.closest('.seg');

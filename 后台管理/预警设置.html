@@ -228,7 +228,7 @@
   .category-rail-head{padding:16px;border-bottom:1px solid #edf0f3;display:flex;align-items:center;justify-content:space-between;gap:8px}
   .category-rail-title{font-size:15px;font-weight:650;color:#202936}
   .category-rail-list{display:flex;align-items:center;gap:8px;padding:10px 12px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin}
-  .category-nav-actions{display:flex;gap:1px;opacity:0;transition:opacity .15s}.category-nav-row:hover .category-nav-actions{opacity:1}.category-nav-action{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:0;background:transparent;color:#8b95a2;cursor:pointer;border-radius:4px;padding:0;transition:background .14s,color .14s}.category-nav-action:hover{background:#eef7f8;color:#168d9b}.category-nav-row{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;color:#4b5664;cursor:pointer;flex:0 0 auto;white-space:nowrap;transition:background .14s}
+  .category-nav-row:hover .category-nav-row{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;color:#4b5664;cursor:pointer;flex:0 0 auto;white-space:nowrap;transition:background .14s}
   .category-nav-row:hover{background:#f5f8fa}
   .category-nav-row.active{background:#e9f9fb;color:#168d9b}
   .category-nav-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -252,13 +252,14 @@
   .pager button:disabled{opacity:.4;cursor:not-allowed}
   .pager .pager-info{color:#8b95a2;margin:0 4px}
   .ths-col{padding:6px 10px !important}
-  .category-nav-action.danger:hover{background:#fdecee;color:#e60012}
+  
   .category-nav-row.active .category-nav-name{color:#168d9b;font-weight:650}
   .key-col{font-family:Menlo,Consolas,monospace;font-size:12px;color:#657080}
   .category-rail-list::-webkit-scrollbar{height:6px}
   .category-rail-list::-webkit-scrollbar-thumb{background:#dfe5ec;border-radius:3px}
   .category-rail-list::-webkit-scrollbar-track{background:transparent}
   .filters .search.kw{flex:1 1 140px;min-width:120px;max-width:200px}
+  #evName:disabled{background:#f7f8fa;color:#657080;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -293,7 +294,7 @@
   <main class="main">
     <div class="content-layout">
       <aside class="category-rail">
-        <div class="category-rail-head"><span class="category-rail-title">预警分类</span><button class="btn primary" style="height:30px;padding:0 9px;font-size:12px" onclick="newCategory()">＋ 新增</button></div>
+        <div class="category-rail-head"><span class="category-rail-title">预警分类</span></div>
         <div class="category-rail-list" id="categoryNav"></div>
       </aside><section class="card event-card">
         <div class="filters">
@@ -352,7 +353,7 @@
       </div>
       <div class="modal-body">
         <div class="form-grid">
-          <div class="field"><label><i>*</i> 事件名称</label><input id="evName" placeholder="如 冷却水温高"/></div><div class="field"><label><i>*</i> 事件键值</label><input id="evKey" placeholder="如 coolant_temp_high" autocomplete="off"/></div>
+          <div class="field"><label><i>*</i> 事件名称</label><select id="evName" onchange="onEvNamePick()"></select></div><div class="field"><label><i>*</i> 事件键值</label><input id="evKey" placeholder="选择事件名称后自动带出" readonly style="background:#f7f8fa;color:#657080"/></div>
           <div class="field"><label><i>*</i> 所属分类</label><select id="evCat"></select></div>
           <div class="field"><label>预警等级</label>
             <select id="evLevel"><option>高危</option><option>中危</option><option>低危</option><option>提示</option><option>停车提示</option></select>
@@ -368,7 +369,7 @@
           </div>
           <div class="field full" id="thsField" style="display:none"><label>阈值配置</label><input id="evThs" placeholder="多条用逗号分隔，如 70,75,80"/></div>
           <div class="field"><label>物模型 ID</label><input id="evThing" placeholder="如 WL-CoolantTemp"/></div>
-          <div class="field full"><label>预警说明</label><input id="evDesc" placeholder="选填"/></div>
+          <div class="field full"><label>预警说明</label><input id="evDesc" placeholder="选择事件名称后自动带出" readonly style="background:#f7f8fa;color:#657080"/></div>
         </div>
       </div>
       <div class="modal-foot">
@@ -456,7 +457,7 @@
   function renderCats(){
     var evSel=document.getElementById('evCat');
     if(evSel){var old=evSel.value;evSel.innerHTML=CATS.map(function(c){return '<option value="'+esc(c.name)+'">'+esc(c.name)+'</option>';}).join('');if(CATS.some(function(c){return c.name===old;}))evSel.value=old;}
-    var nav=document.getElementById('categoryNav');if(nav){var total=EVENTS.length;nav.innerHTML='<div class="category-nav-row '+(!activeCategory?'active':'')+'" onclick="setCategory(\'\')">'+'<span class="category-nav-name">全部分类</span>'+'<span class="category-nav-count">'+total+'</span></div>'+CATS.map(function(c,i){var n=EVENTS.filter(function(e){return e.cat===c.name;}).length;return '<div class="category-nav-row '+(activeCategory===c.name?'active':'')+'" onclick="setCategoryByIndex('+i+')">'+'<span class="category-nav-name" title="'+esc(c.desc)+'">'+esc(c.name)+'</span>'+'<span class="category-nav-actions" onclick="event.stopPropagation()">'+'<button class="category-nav-action" title="编辑分类" onclick="editCat('+i+')"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z\"/></svg></button>'+'<button class="category-nav-action danger" title="删除分类" onclick="delCat('+i+')"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18\"/><path d=\"M8 6V4h8v2\"/><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\"/><path d=\"M10 11v6\"/><path d=\"M14 11v6\"/></svg></button>'+'</span>'+'<span class="category-nav-count">'+n+'</span>'+'</div>';}).join('')+(CATS.length?'':'<div class="empty-category">暂无分类，请先新增</div>');}
+    var nav=document.getElementById('categoryNav');if(nav){var total=EVENTS.length;nav.innerHTML='<div class="category-nav-row '+(!activeCategory?'active':'')+'" onclick="setCategory(\'\')">'+'<span class="category-nav-name">全部分类</span>'+'<span class="category-nav-count">'+total+'</span></div>'+CATS.map(function(c,i){var n=EVENTS.filter(function(e){return e.cat===c.name;}).length;return '<div class="category-nav-row '+(activeCategory===c.name?'active':'')+'" onclick="setCategoryByIndex('+i+')">'+'<span class="category-nav-name" title="'+esc(c.desc)+'">'+esc(c.name)+'</span>'+'<span class="category-nav-count">'+n+'</span>'+'</div>';}).join('')+(CATS.length?'':'<div class="empty-category">暂无分类，请先新增</div>');}
   }
   function renderEvents(){
     var cat=(activeCategory || '');
@@ -524,10 +525,10 @@
   function editCat(i){if(!CATS[i])return;curCatIdx=i;document.getElementById('catTitle').textContent='编辑分类';document.getElementById('catName').value=CATS[i].name;document.getElementById('catKey').value=CATS[i].key||'';document.getElementById('catDesc').value=CATS[i].desc||'';openLayer('catModal');}
   function saveCat(){var name=(document.getElementById('catName').value||'').trim(),key=(document.getElementById('catKey').value||'').trim(),desc=(document.getElementById('catDesc').value||'').trim();if(!name){toast('请填写分类名称');document.getElementById('catName').focus();return;}if(name.length>20){toast('分类名称不能超过20个字');return;}if(key.length>40){toast('分类键值不能超过40个字符');return;}if(CATS.some(function(c,i){return c.name.toLowerCase()===name.toLowerCase()&&i!==curCatIdx;})){toast('分类名称已存在');return;}if(curCatIdx>=0){var old=CATS[curCatIdx].name;CATS[curCatIdx]={name:name,key:key,desc:desc};EVENTS.forEach(function(e){if(e.cat===old)e.cat=name;});if(activeCategory===old)activeCategory=name;}else{CATS.push({name:name,key:key,desc:desc});}persist();closeLayer('catModal');refresh();toast('分类已保存');}
   function delCat(i){if(!CATS[i])return;delTarget={type:'cat',idx:i};var n=EVENTS.filter(function(e){return e.cat===CATS[i].name;}).length;document.getElementById('delTip').textContent=n?'确定删除该分类？其下的预警事件也将一并删除。':'确定删除该分类？';openLayer('delModal');}
-  function newEvent(){if(!CATS.length){toast('请先新增预警分类');newCategory();return;}curEvIdx=-1;document.getElementById('evTitle').textContent='新增预警事件';['evName','evKey','evThing','evDesc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('evLevel').value='高危';document.getElementById('evOn').value='1';document.getElementById('evAudit').value='1';document.getElementById('evTh').value='1';var thsEl2=document.getElementById('evThs');if(thsEl2)thsEl2.value='';toggleThsField();document.getElementById('evCat').value=activeCategory||CATS[0].name;openLayer('evModal');}
-  function editEv(idx){var e=EVENTS[idx];if(!e)return;curEvIdx=idx;document.getElementById('evTitle').textContent='编辑预警事件';document.getElementById('evName').value=e.name;
-    var k1=document.getElementById('evKey');if(k1)k1.value=e.key||'';document.getElementById('evThing').value=e.thing||'';document.getElementById('evDesc').value=e.desc||'';document.getElementById('evLevel').value=e.level;document.getElementById('evOn').value=e.on?'1':'0';document.getElementById('evAudit').value=e.audit?'1':'0';document.getElementById('evTh').value=e.th?'1':'0';var thsEl=document.getElementById('evThs');if(thsEl)thsEl.value=e.ths||defaultThs(e.name);toggleThsField();document.getElementById('evCat').value=e.cat;openLayer('evModal');}
-  function saveEv(){var name=(document.getElementById('evName').value||'').trim(),cat=document.getElementById('evCat').value,thing=(document.getElementById('evThing').value||'').trim();if(!name){toast('请填写事件名称');document.getElementById('evName').focus();return;}if(name.length>40){toast('事件名称不能超过40个字');return;}if(!cat||!CATS.some(function(c){return c.name===cat;})){toast('请选择有效的所属分类');return;}if(EVENTS.some(function(e,i){return e.cat===cat&&e.name.toLowerCase()===name.toLowerCase()&&i!==curEvIdx;})){toast('该分类下已存在同名事件');return;}var data={cat:cat,name:name,key:((document.getElementById('evKey')||{}).value||'').trim(),level:document.getElementById('evLevel').value,on:document.getElementById('evOn').value==='1'?1:0,audit:document.getElementById('evAudit').value==='1'?1:0,th:document.getElementById('evTh').value==='1'?1:0,thing:thing,ths:(function(){var el=document.getElementById('evThs');var v=el?(el.value||'').trim():'';return (document.getElementById('evTh').value==='1')?v:'';})(),desc:(document.getElementById('evDesc').value||'').trim()};if(curEvIdx>=0)EVENTS[curEvIdx]=data;else EVENTS.push(data);persist();closeLayer('evModal');activeCategory=cat;refresh();toast('预警事件已保存');}
+  function newEvent(){if(!CATS.length){toast('暂无可用分类');return;}curEvIdx=-1;document.getElementById('evTitle').textContent='新增预警事件';['evName','evKey','evThing','evDesc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('evLevel').value='高危';document.getElementById('evOn').value='1';document.getElementById('evAudit').value='1';document.getElementById('evTh').value='1';var thsEl2=document.getElementById('evThs');if(thsEl2)thsEl2.value='';toggleThsField();document.getElementById('evCat').value=activeCategory||CATS[0].name;renderEvNameOptions('');var nmEl2=document.getElementById('evName');if(nmEl2){nmEl2.disabled=false;}openLayer('evModal');}
+  function editEv(idx){var e=EVENTS[idx];if(!e)return;curEvIdx=idx;document.getElementById('evTitle').textContent='编辑预警事件';renderEvNameOptions(e.name);var nmEl=document.getElementById('evName');if(nmEl){nmEl.disabled=true;}
+    var k1=document.getElementById('evKey');if(k1)k1.value=e.key||'';document.getElementById('evThing').value=e.thing||'';var dHit=EVENT_DICT.filter(function(d){return d[0]===e.name;})[0];document.getElementById('evDesc').value=e.desc||(dHit?dHit[2]:'')||'';document.getElementById('evLevel').value=e.level;document.getElementById('evOn').value=e.on?'1':'0';document.getElementById('evAudit').value=e.audit?'1':'0';document.getElementById('evTh').value=e.th?'1':'0';var thsEl=document.getElementById('evThs');if(thsEl)thsEl.value=e.ths||defaultThs(e.name);toggleThsField();document.getElementById('evCat').value=e.cat;openLayer('evModal');}
+  function saveEv(){var name=(document.getElementById('evName').value||'').trim(),cat=document.getElementById('evCat').value,thing=(document.getElementById('evThing').value||'').trim();if(!name){toast('请选择事件名称');document.getElementById('evName').focus();return;}if(name.length>40){toast('事件名称不能超过40个字');return;}if(!cat||!CATS.some(function(c){return c.name===cat;})){toast('请选择有效的所属分类');return;}if(EVENTS.some(function(e,i){return e.cat===cat&&e.name.toLowerCase()===name.toLowerCase()&&i!==curEvIdx;})){toast('该分类下已存在同名事件');return;}var data={cat:cat,name:name,key:((document.getElementById('evKey')||{}).value||'').trim(),level:document.getElementById('evLevel').value,on:document.getElementById('evOn').value==='1'?1:0,audit:document.getElementById('evAudit').value==='1'?1:0,th:document.getElementById('evTh').value==='1'?1:0,thing:thing,ths:(function(){var el=document.getElementById('evThs');var v=el?(el.value||'').trim():'';return (document.getElementById('evTh').value==='1')?v:'';})(),desc:(document.getElementById('evDesc').value||'').trim()};if(curEvIdx>=0)EVENTS[curEvIdx]=data;else EVENTS.push(data);persist();closeLayer('evModal');activeCategory=cat;refresh();toast('预警事件已保存');}
   function delEv(idx){if(!EVENTS[idx])return;delTarget={type:'ev',idx:idx};document.getElementById('delTip').textContent='确定删除该预警事件？删除后不可恢复。';openLayer('delModal');}
   function doDel(){if(!delTarget){closeLayer('delModal');return;}if(delTarget.type==='ev'){EVENTS.splice(delTarget.idx,1);}else{var name=CATS[delTarget.idx]&&CATS[delTarget.idx].name;if(name){CATS.splice(delTarget.idx,1);EVENTS=EVENTS.filter(function(e){return e.cat!==name;});if(activeCategory===name)activeCategory='';}}delTarget=null;persist();closeLayer('delModal');refresh();toast('已删除');}
   function closeCatEdit(i){closeLayer('catListModal');editCat(i);}
@@ -572,6 +573,42 @@
     var box = document.getElementById('thsField');
     if (!th || !box) return;
     box.style.display = th.value === '1' ? '' : 'none';
+  }
+
+  // 事件集值表（来自开发配置）
+  var EVENT_DICT = [
+    ['冷却水温高', 'coolant_temp_high', '冷却液温度持续超过设定阈值'],
+    ['液压油温度高', 'hyd_oil_temp_high', '液压系统油温异常升高'],
+    ['设备离线', 'device_offline', '设备超过设定时长未上报数据'],
+    ['故障码', 'fault_code', '设备上报故障码'],
+    ['危险力矩', 'dangerous_torque', '力矩百分比超过安全范围'],
+    ['超速', 'overspeed', '行驶速度超过设定上限'],
+    ['疲劳驾驶', 'fatigue_driving', '连续作业时长超过安全限值'],
+    ['主动安全报警', 'active_safety_alarm', '设备主动安全系统触发报警'],
+    ['电子围栏报警', 'geofence_alarm', '设备驶出允许作业区域'],
+    ['油耗异常', 'fuel_abnormal', '单位时间油耗超过正常范围'],
+    ['燃油液位偏低', 'fuel_level_low', '燃油液位低于设定下限'],
+    ['保养临期', 'maintenance_due', '距下次保养时间不足']
+  ];
+
+  function renderEvNameOptions(cur){
+    var sel = document.getElementById('evName');
+    if (!sel) return;
+    var names = EVENT_DICT.map(function (d) { return d[0]; });
+    if (cur && names.indexOf(cur) < 0) names.unshift(cur);
+    sel.innerHTML = '<option value="">请选择</option>'
+      + names.map(function (n) { return '<option value="' + n + '">' + n + '</option>'; }).join('');
+    if (cur) sel.value = cur;
+  }
+
+  function onEvNamePick(){
+    var sel = document.getElementById('evName');
+    var key = document.getElementById('evKey');
+    var desc = document.getElementById('evDesc');
+    if (!sel) return;
+    var hit = EVENT_DICT.filter(function (d) { return d[0] === sel.value; })[0];
+    if (key) key.value = hit ? hit[1] : '';
+    if (desc) desc.value = hit ? (hit[2] || '') : '';
   }
 
 </script>
